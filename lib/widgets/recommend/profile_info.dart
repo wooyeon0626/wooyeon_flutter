@@ -1,6 +1,7 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:swipable_stack/swipable_stack.dart';
+import 'package:wooyeon_flutter/utils/util.dart';
 
 import '../../config/palette.dart';
 import '../../models/data/recommend_data.dart';
@@ -65,7 +66,7 @@ class _ProfileInfoState extends State<ProfileInfo> {
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 10),
                           child: Text(
-                            ": ${widget.profile.birthday}",
+                            "${birthdayToAge(widget.profile.birthday)}",
                             style: const TextStyle(
                                 color: Colors.white, fontSize: 20),
                           ),

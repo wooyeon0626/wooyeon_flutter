@@ -1,4 +1,6 @@
+import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:wooyeon_flutter/config/palette.dart';
 
 class ImageSlider extends StatefulWidget {
   final List<String> images;
@@ -39,6 +41,15 @@ class _ImageSlider extends State<ImageSlider> {
         width: widget.width,
         child: Stack(
           children: [
+            Container(
+              color: Palette.inactive,
+              child: const Center(
+                  child: Icon(
+                EvaIcons.image,
+                color: Colors.white,
+                size: 96,
+              )),
+            ),
             PageView(
               controller: _controller,
               physics: const NeverScrollableScrollPhysics(),
@@ -74,6 +85,10 @@ class _ImageSlider extends State<ImageSlider> {
     final double totalIndicatorSize = widget.width - 20;
     final double indicatorSize =
         totalIndicatorSize / (widget.images.length + 1) - 4;
+
+    if (widget.images.length < 2) {
+      return [];
+    }
 
     return List<Widget>.generate(widget.images.length, (index) {
       return AnimatedContainer(

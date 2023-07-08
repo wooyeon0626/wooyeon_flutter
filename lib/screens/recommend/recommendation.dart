@@ -49,6 +49,7 @@ class _RecommendationState extends State<Recommendation> {
           padding: const EdgeInsets.all(20),
           height: MediaQuery.of(context).size.height - screenHeight,
           child: SwipableStack(
+            //itemCount: recommendProfiles.length,
             detectableSwipeDirections: const {
               SwipeDirection.right,
               SwipeDirection.left,
