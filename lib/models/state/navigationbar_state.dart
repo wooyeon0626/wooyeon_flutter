@@ -4,8 +4,8 @@ import 'package:wooyeon_flutter/screens/chat/chat.dart';
 import 'package:wooyeon_flutter/screens/match/match.dart';
 import 'package:wooyeon_flutter/screens/mypage/profile.dart';
 import 'package:wooyeon_flutter/screens/recommend/recommendation_appbar.dart';
-import 'package:wooyeon_flutter/screens/rounge/rounge.dart';
-
+import '../../screens/lounge/lounge.dart';
+import '../../screens/lounge/lounge_appbar.dart';
 import '../../screens/recommend/recommendation.dart';
 
 class NavigationBarState extends GetxController{
@@ -19,7 +19,7 @@ class NavigationBarState extends GetxController{
       case 0:
         return const Recommendation();
       case 1:
-        return const Rounge();
+        return const Lounge();
       case 2:
         return const Match();
       case 3:
@@ -35,6 +35,8 @@ class NavigationBarState extends GetxController{
     switch (_selected.value) {
       case 0:
         return const RecommendationAppbar();
+      case 1:
+        return const LoungeAppbar();
       default:
         return const RecommendationAppbar();
     }
