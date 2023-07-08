@@ -182,11 +182,22 @@ class _RecommendationDetailState extends State<RecommendationDetail> {
                           const EdgeInsets.symmetric(horizontal: 40),
                           child: Align(
                             alignment: Alignment.centerLeft,
-                            child: Text("${widget.profile.intro}", style: const TextStyle(
-                              fontSize: 16,
-                              color: Palette.black,
-                            ),),
+                            child: Column(
+                              children: [
+                                if (widget.profile.intro != null)
+                                Text("${widget.profile.intro}", style: const TextStyle(
+                                  fontSize: 16,
+                                  color: Palette.black,
+                                ),)
+                                else
+                                  const Text("내 소개가 없어요", style: TextStyle(
+                                    fontSize: 16,
+                                    color: Palette.lightGrey,
+                                  ),),
+                              ],
+                            ),
                           )),
+                      if (widget.profile.mbti != null || widget.profile.interest != null || widget.profile.hobby != null)
                       const Padding(
                         padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
                         child: Divider(
@@ -194,6 +205,7 @@ class _RecommendationDetailState extends State<RecommendationDetail> {
                           color: Palette.inactive,
                         ),
                       ),
+                      if (widget.profile.mbti != null)
                       Padding(
                           padding:
                           const EdgeInsets.only(left: 40, bottom: 20),
