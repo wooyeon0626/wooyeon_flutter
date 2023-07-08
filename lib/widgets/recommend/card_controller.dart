@@ -42,12 +42,13 @@ class CardController extends StatelessWidget {
                     controller.rewind();
                   },
                   icon: const IconOutline(
-                    size: 60,
+                    size: 50,
                     icon: EvaIcons.refresh,
                     color: Palette.yellow,
-                    iconSize: 40,
+                    iconSize: 32,
+                    borderSize: 2.5,
                   ),
-                  iconSize: 60,
+                  iconSize: 50,
                 ),
               ),
               Padding(

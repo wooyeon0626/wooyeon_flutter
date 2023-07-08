@@ -82,7 +82,7 @@ class _RecommendationState extends State<Recommendation> {
                   child: Stack(
                     children: [
                       BackgroundProfile(recommendProfiles[itemIndex]),
-                      ProfileInfo(recommendProfiles[itemIndex]),
+                      ProfileInfo(recommendProfiles[itemIndex], controller),
                       CardController(controller),
                       if (properties.stackIndex == 0 &&
                           properties.direction != null)
