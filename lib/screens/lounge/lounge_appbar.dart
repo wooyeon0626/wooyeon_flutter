@@ -24,7 +24,7 @@ class _LoungeAppbar extends State<LoungeAppbar> {
                   onPressed: () {
                   },
                   icon: const Icon(
-                    EvaIcons.people,
+                    EvaIcons.shoppingBag,
                     color: Palette.lightGrey,
                   ))),
         ),

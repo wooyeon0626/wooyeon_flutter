@@ -2,8 +2,8 @@ import 'dart:developer' as dev;
 
 import 'package:flutter/material.dart';
 import 'package:swipable_stack/swipable_stack.dart';
-import 'package:wooyeon_flutter/screens/recommend/recommendation_detail.dart';
 import 'package:wooyeon_flutter/widgets/recommend/background_profile.dart';
+import 'package:wooyeon_flutter/widgets/recommend/card_controller.dart';
 import 'package:wooyeon_flutter/widgets/recommend/profile_info.dart';
 
 import '../../config/palette.dart';
@@ -82,7 +82,8 @@ class _RecommendationState extends State<Recommendation> {
                   child: Stack(
                     children: [
                       BackgroundProfile(recommendProfiles[itemIndex]),
-                      ProfileInfo(recommendProfiles[itemIndex], controller),
+                      ProfileInfo(recommendProfiles[itemIndex]),
+                      CardController(controller),
                       if (properties.stackIndex == 0 &&
                           properties.direction != null)
                         CardOverlay(
