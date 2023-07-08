@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:wooyeon_flutter/screens/chat/chat.dart';
 import 'package:wooyeon_flutter/screens/match/match.dart';
+import 'package:wooyeon_flutter/screens/match/match_appbar.dart';
 import 'package:wooyeon_flutter/screens/mypage/profile.dart';
 import 'package:wooyeon_flutter/screens/recommend/recommendation_appbar.dart';
 import '../../screens/lounge/lounge.dart';
@@ -37,6 +38,8 @@ class NavigationBarState extends GetxController{
         return const RecommendationAppbar();
       case 1:
         return const LoungeAppbar();
+      case 2:
+        return const MatchAppbar();
       default:
         return const RecommendationAppbar();
     }
