@@ -40,13 +40,15 @@ class _RecommendationAppbar extends State<RecommendationAppbar> {
                     alignment: Alignment.bottomRight,
                     child: Stack(children: [
                       IconButton(
-                          onPressed: () {
-                            togglePressed();
-                          },
-                          icon: const Icon(
-                            EvaIcons.bell,
-                            color: Palette.lightGrey,
-                          )),
+                        onPressed: () {
+                          togglePressed();
+                        },
+                        icon: const Icon(
+                          EvaIcons.bell,
+                          color: Palette.lightGrey,
+                        ),
+                        splashColor: Colors.transparent,
+                      ),
                       Positioned(
                         left: 25,
                         top: 12,
