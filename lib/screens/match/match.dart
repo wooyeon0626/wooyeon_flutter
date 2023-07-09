@@ -15,6 +15,8 @@ class _Match extends State<Match> with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _animation;
 
+  late PageController _pageController;
+
   @override
   void initState() {
     super.initState();
@@ -37,11 +39,22 @@ class _Match extends State<Match> with SingleTickerProviderStateMixin {
         curve: Curves.ease,
       ),
     );
+    _pageController = PageController(initialPage: 0);
+
+    _pageController.addListener(() {
+      int next = _pageController.page!.round();
+
+      if (tabController.getInx().toInt() != next) {
+        tabController.setInx(next);
+        _startAnimation();
+      }
+    });
   }
 
   @override
   void dispose() {
     _animationController.dispose();
+    _pageController.dispose();
     super.dispose();
   }
 
@@ -65,6 +78,7 @@ class _Match extends State<Match> with SingleTickerProviderStateMixin {
                     child: GestureDetector(
                       onTap: () {
                         tabController.setInx(0);
+                        _pageController.jumpToPage(0);
                         _startAnimation();
                       },
                       child: AnimatedContainer(
@@ -107,6 +121,7 @@ class _Match extends State<Match> with SingleTickerProviderStateMixin {
                     child: GestureDetector(
                       onTap: () {
                         tabController.setInx(1);
+                        _pageController.jumpToPage(1);
                         _startAnimation();
                       },
                       child: AnimatedContainer(
@@ -149,6 +164,7 @@ class _Match extends State<Match> with SingleTickerProviderStateMixin {
                     child: GestureDetector(
                       onTap: () {
                         tabController.setInx(2);
+                        _pageController.jumpToPage(2);
                         _startAnimation();
                       },
                       child: AnimatedContainer(
@@ -192,7 +208,12 @@ class _Match extends State<Match> with SingleTickerProviderStateMixin {
             ),
           ),
           Expanded(
-            child: tabController.getSelectedWidget(),
+            child: PageView(controller: _pageController,
+              children: tabController.getWidgets(),
+              onPageChanged: (index) {
+                tabController.setInx(index);
+                _startAnimation();
+              },),
           ),
         ],
       ),

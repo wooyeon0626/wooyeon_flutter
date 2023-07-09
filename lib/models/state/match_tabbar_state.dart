@@ -12,16 +12,11 @@ class MatchTabBarState extends GetxController{
   getInx() => _selected.value;
   setInx(val) => _selected.value = val;
 
-  Widget getSelectedWidget() {
-    switch (_selected.value) {
-      case 0:
-        return const LikeFrom();
-      case 1:
-        return const LikeTo();
-      case 2:
-        return const Matched();
-      default:
-        return const LikeFrom();
-    }
+  List<Widget> getWidgets() {
+    return const [
+      LikeFrom(),
+      LikeTo(),
+      Matched(),
+    ];
   }
 }
