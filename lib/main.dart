@@ -1,7 +1,9 @@
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:flutter/material.dart';
 import 'config/palette.dart';
+import 'models/controller/chat_controller.dart';
 import 'screens/main_screen.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 
@@ -21,7 +23,10 @@ class MyApp extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
+      initialBinding: BindingsBuilder(() {
+        Get.put(ChatController());
+      }),
       debugShowCheckedModeBanner: false,
       title: '우연',
       theme: ThemeData(

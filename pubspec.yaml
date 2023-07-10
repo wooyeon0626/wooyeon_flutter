@@ -19,6 +19,9 @@ dependencies:
   intl: ^0.18.1
   smooth_page_indicator: ^1.1.0
   swipable_stack: ^2.0.0
+  flutter_keyboard_visibility: ^5.4.1
+  emoji_picker_flutter: ^1.6.1
+  flutter_keyboard_size: ^1.0.1
 
 dev_dependencies:
   flutter_test:

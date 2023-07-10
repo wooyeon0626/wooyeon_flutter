@@ -36,6 +36,7 @@ class _MainScreen extends State<MainScreen> {
 
     return SafeArea(
       child: Obx(() => Scaffold(
+        resizeToAvoidBottomInset : false,
         appBar: PreferredSize(
           preferredSize: const Size.fromHeight(60),
           child: AppBar(

@@ -13,11 +13,11 @@ class RoundedTextField extends StatefulWidget {
 class _RoundedTextFieldState extends State<RoundedTextField> {
   @override
   Widget build(BuildContext context) {
-    TextEditingController _textEditingController = TextEditingController();
+    TextEditingController textEditingController = TextEditingController();
 
     void clearText() {
       setState(() {
-        _textEditingController.clear();
+        textEditingController.clear();
       });
     }
 
@@ -30,12 +30,12 @@ class _RoundedTextFieldState extends State<RoundedTextField> {
 
     @override
     void dispose() {
-      _textEditingController.dispose();
+      textEditingController.dispose();
       super.dispose();
     }
 
     return TextField(
-      controller: _textEditingController,
+      controller: textEditingController,
       decoration: InputDecoration(
         hintText: widget.hintText,
         prefixIcon: const Icon(EvaIcons.search),

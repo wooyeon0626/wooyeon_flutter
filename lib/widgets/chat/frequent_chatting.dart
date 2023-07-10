@@ -1,53 +1,59 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:wooyeon_flutter/screens/chat/chat_detail.dart';
 
 import '../../config/palette.dart';
-import '../../models/data/chat_room_data.dart';
+import '../../models/controller/chat_controller.dart';
 
 class FrequentChatting extends StatelessWidget {
-  final List<ChatRoom> items;
-  const FrequentChatting(this.items, {super.key});
+  const FrequentChatting({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 80.0,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: items.length,
-        itemBuilder: (context, index) {
-          return InkWell(
-            onTap: () {
-              Navigator.push(
-                context,
-                PageRouteBuilder(
-                  pageBuilder: (context, animation, secondaryAnimation) =>
-                      ChatDetail(chatRoom: items[index]),
-                  transitionsBuilder:
-                      (context, animation, secondaryAnimation, child) {
-                    var begin = const Offset(1.0, 0.0);
-                    var end = Offset.zero;
-                    var curve = Curves.ease;
+    return GetBuilder<ChatController>(
+      init: Get.find<ChatController>(),
+      builder: (controller) {
+        var frequentChatRooms = controller.frequentChatting;
+        return SizedBox(
+          height: 80.0,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: frequentChatRooms.length,
+            itemBuilder: (context, index) {
+              return InkWell(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    PageRouteBuilder(
+                      pageBuilder: (context, animation, secondaryAnimation) =>
+                          ChatDetail(chatRoomId: frequentChatRooms[index].chatRoomId),
+                      transitionsBuilder:
+                          (context, animation, secondaryAnimation, child) {
+                        var begin = const Offset(1.0, 0.0);
+                        var end = Offset.zero;
+                        var curve = Curves.ease;
 
-                    var tween = Tween(begin: begin, end: end)
-                        .chain(CurveTween(curve: curve));
+                        var tween = Tween(begin: begin, end: end)
+                            .chain(CurveTween(curve: curve));
 
-                    return SlideTransition(
-                      position: animation.drive(tween),
-                      child: child,
-                    );
-                  },
+                        return SlideTransition(
+                          position: animation.drive(tween),
+                          child: child,
+                        );
+                      },
+                    ),
+                  );
+                },
+                child: CircleAvatar(
+                  radius: 50.0,
+                  backgroundColor: Palette.inactive,
+                  backgroundImage: NetworkImage(frequentChatRooms[index].matched.profilePhoto[0]),
                 ),
               );
             },
-            child: CircleAvatar(
-              radius: 50.0,
-              backgroundColor: Palette.inactive,
-              backgroundImage: NetworkImage(items[index].matched.profilePhoto[0]),
-            ),
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 }

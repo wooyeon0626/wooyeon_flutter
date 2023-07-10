@@ -22,15 +22,21 @@ List<ChatData> chatData = [
   ChatData(chatId: 2, isSender: false, message: '상대가 보낸 메시지', sendTime: DateTime(2023, 7, 8, 10, 15, 32, 50), isCheck: true),
   ChatData(chatId: 3, isSender: true, message: '내가 보낸 중간 길이의 메시지', sendTime: DateTime(2023, 7, 8, 10, 16, 32, 50), isCheck: true),
   ChatData(chatId: 4, isSender: true, message: '짧은 메시지', sendTime: DateTime(2023, 7, 8, 10, 16, 37, 50), isCheck: true),
-  ChatData(chatId: 5, isSender: true, message: '내가 보낸 긴 길이의 메시지. 최대 몇자까지 보여줄지는 아직 정해지지 않았음. 내가 보낸 긴 길이의 메시지. 최대 몇자까지 보여줄지는 아직 정해지지 않았음.', sendTime: DateTime(2023, 7, 8, 10, 17, 10, 50), isCheck: true),
+  ChatData(chatId: 5, isSender: true, message: '내가 보낸 긴 길이의 메시지. 최대 몇자까지 보여줄지는 아직 정해지지 않았음. 내가 보낸 긴 길이의 메시지. 최대 몇자까지 보여줄지는 아직 정해지지 않았음. 내가 보낸 긴 길이의 메시지. 최대 몇자까지 보여줄지는 아직 정해지지 않았음. 내가 보낸 긴 길이의 메시지. 최대 몇자까지 보여줄지는 아직 정해지지 않았음.', sendTime: DateTime(2023, 7, 8, 10, 17, 10, 50), isCheck: true),
   ChatData(chatId: 6, isSender: false, message: '상대가 보낸 중간 길이의 메시지', sendTime: DateTime(2023, 7, 8, 10, 17, 20, 50), isCheck: true),
   ChatData(chatId: 7, isSender: false, message: '상대가 보낸 중간 길이의 메시지2', sendTime: DateTime(2023, 7, 8, 10, 17, 30, 50), isCheck: true),
   ChatData(chatId: 8, isSender: false, message: '짧은 메시지', sendTime: DateTime(2023, 7, 8, 10, 17, 40, 50), isCheck: true),
   ChatData(chatId: 9, isSender: false, message: '상대가 보낸 약간 긴 길이의 메시지. 상대가 보낸 약간 긴 길이의 메시지.', sendTime: DateTime(2023, 7, 8, 10, 18, 32, 50), isCheck: true),
-  ChatData(chatId: 10, isSender: true, message: '메시지 메시지', sendTime: DateTime(2023, 7, 8, 10, 19, 32, 50), isCheck: true),
-  ChatData(chatId: 11, isSender: false, message: '확인 안한 메시지', sendTime: DateTime(2023, 7, 8, 10, 19, 50, 50), isCheck: false),
-  ChatData(chatId: 12, isSender: false, message: '여기 처리부분 아직 모르겠음', sendTime: DateTime(2023, 7, 8, 10, 20, 10, 50), isCheck: false),
-  ChatData(chatId: 13, isSender: false, message: '최근 채팅 메시지는 여기에 보이게 됩니다.', sendTime: DateTime(2023, 7, 8, 10, 20, 15, 50), isCheck: false),
+  ChatData(chatId: 10, isSender: true, message: '단답', sendTime: DateTime(2023, 7, 8, 12, 19, 32, 50), isCheck: true),
+  ChatData(chatId: 10, isSender: true, message: 'ㅇ', sendTime: DateTime(2023, 7, 8, 12, 19, 35, 50), isCheck: true),
+  ChatData(chatId: 10, isSender: false, message: '스크롤을\n위해서\n매우 긴\n채팅을\n일부러\n생성\n함', sendTime: DateTime(2023, 7, 8, 12, 20, 35, 50), isCheck: true),
+  ChatData(chatId: 10, isSender: false, message: '스크롤을\n위해서\n매우 긴\n채팅을\n일부러\n생성\n함', sendTime: DateTime(2023, 7, 8, 12, 20, 40, 50), isCheck: true),
+  ChatData(chatId: 10, isSender: false, message: '스크롤을\n위해서\n매우 긴\n채팅을\n일부러\n생성\n함', sendTime: DateTime(2023, 7, 8, 12, 21, 40, 50), isCheck: true),
+
+  ChatData(chatId: 10, isSender: true, message: '날짜가 달라진 메시지', sendTime: DateTime(2023, 7, 9, 10, 19, 32, 50), isCheck: true),
+  ChatData(chatId: 11, isSender: false, message: '확인 안한 메시지', sendTime: DateTime(2023, 7, 9, 10, 19, 50, 50), isCheck: false),
+  ChatData(chatId: 12, isSender: false, message: '여기 처리부분 아직 모르겠음', sendTime: DateTime(2023, 7, 9, 10, 20, 10, 50), isCheck: false),
+  ChatData(chatId: 13, isSender: false, message: '최근 채팅 메시지는 여기에 보이게 됩니다.', sendTime: DateTime(2023, 7, 9, 10, 20, 15, 50), isCheck: false),
 ];
 
 List<ChatData> chatData2 = [
