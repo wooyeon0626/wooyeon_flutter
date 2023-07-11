@@ -1,25 +1,24 @@
-import 'package:get/get.dart';
-import 'package:intl/intl.dart';
-import 'package:intl/date_symbol_data_local.dart';
 import 'package:flutter/material.dart';
-import 'config/palette.dart';
+import 'package:get/get.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:wooyeon_flutter/screens/login/login.dart';
+import 'package:wooyeon_flutter/service/auth.dart';
+
 import 'models/controller/chat_controller.dart';
 import 'screens/main_screen.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'config/palette.dart';
 
 void main() {
   // WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   // FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   initializeDateFormatting('ko_KR', null).then((_) {
-    runApp(const MyApp());
+    runApp(MyApp());
   });
 }
 
-// whenever your initialization is completed, remove the splash screen:
-// FlutterNativeSplash.remove();
-
-class MyApp extends StatelessWidget{
-  const MyApp({super.key});
+class MyApp extends StatelessWidget {
+  MyApp({Key? key}) : super(key: key);
+  final Auth _auth = Auth();
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +33,20 @@ class MyApp extends StatelessWidget{
         primarySwatch: ColorService.createMaterialColor(Palette.primary),
         fontFamily: 'Pretendard',
       ),
-      home: const MainScreen(),
+      home: FutureBuilder<bool>(
+        future: _auth.isUserLoggedIn(),
+        builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            if (snapshot.data == true) {
+              return const MainScreen();
+            } else {
+              return const MainScreen(); //const Login();
+            }
+          } else {
+            return CircularProgressIndicator();
+          }
+        },
+      ),
     );
   }
 }
