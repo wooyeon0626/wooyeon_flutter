@@ -5,27 +5,16 @@ import 'package:wooyeon_flutter/screens/login/register/register_0.dart';
 import 'package:wooyeon_flutter/widgets/basic_textfield.dart';
 import 'package:wooyeon_flutter/widgets/next_button.dart';
 
-import '../../config/palette.dart';
-import 'login/login_0.dart';
+import '../../../config/palette.dart';
 
-class LoginInput extends StatelessWidget {
-  LoginInput({super.key});
+class Register1 extends StatelessWidget {
+  final String email;
 
-  final buttonActive = ValueNotifier<bool>(false);
-  final email = ValueNotifier<String>("");
-
-  final RegExp emailValidator = RegExp(
-    r'^[a-zA-Z0-9.a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$',
-  );
+  const Register1({required this.email, super.key});
 
   @override
   Widget build(BuildContext context) {
     TextEditingController textFieldController = TextEditingController();
-
-    textFieldController.addListener(() {
-      email.value = textFieldController.text;
-      buttonActive.value = emailValidator.hasMatch(textFieldController.text);
-    });
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -65,7 +54,7 @@ class LoginInput extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  "이메일 주소를\n입력해주세요",
+                  "비밀번호를\n설정해주세요",
                   style: TextStyle(
                     color: Palette.black,
                     fontSize: 44,
@@ -76,27 +65,13 @@ class LoginInput extends StatelessWidget {
                   height: 40,
                 ),
                 BasicTextField(
-                  hintText: "이메일 주소를 입력해주세요.",
+                  hintText: "비밀번호를 입력해주세요.",
                   controller: textFieldController,
-                  inputType: TextInputType.emailAddress,
+                  inputType: TextInputType.visiblePassword,
                   autoFocus: true,
                 ),
                 const SizedBox(
                   height: 120,
-                ),
-                ValueListenableBuilder<String>(
-                  valueListenable: email,
-                  builder: (context, emailValue, child) {
-                    // todo: 백엔드와 통신 필요. 이메일 전송 -> 회원인지 아닌지 체크 -> 회원이라면 true, 아니라면 false & 해당 메일로 인증 메일 발송 & 생성된 코드도 함께 받기
-
-                    bool isRegistered = false;
-                    String? code = "abc123";
-
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10),
-                      child: NextButton(nextPage: isRegistered ? Login0(email: emailValue,) : Register0(email: emailValue, code: code,), text: "다음", isActive: buttonActive),
-                    );
-                  }
                 ),
               ],
             ),

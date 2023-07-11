@@ -32,40 +32,37 @@ class _MainScreen extends State<MainScreen> {
         MediaQuery.of(context).padding.bottom -
         80;
 
-    // Todo : Status Bar Color 정하기
-    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      statusBarColor: Colors.white,
-      statusBarBrightness: Brightness.light,
-      statusBarIconBrightness: Brightness.dark,
-    ));
+    return Obx(() => Scaffold(
+      resizeToAvoidBottomInset : false,
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(60),
+        child: AppBar(
+          systemOverlayStyle: const SystemUiOverlayStyle(
+            statusBarColor: Colors.white,
 
-    return SafeArea(
-      child: Obx(() => Scaffold(
-        resizeToAvoidBottomInset : false,
-        appBar: PreferredSize(
-          preferredSize: const Size.fromHeight(60),
-          child: AppBar(
-            title: controller.getSelectedAppbar(),
-            backgroundColor: Colors.white,
-            elevation: 0,
+            statusBarIconBrightness: Brightness.dark, // 안드로이드용 (어두운 아이콘)
+            statusBarBrightness: Brightness.light, // iOS용 (어두운 아이콘)
           ),
+          title: controller.getSelectedAppbar(),
+          backgroundColor: Colors.white,
+          elevation: 0,
         ),
-            body: controller.getSelectedWidget(bodyHeight),
+      ),
+          body: controller.getSelectedWidget(bodyHeight),
+          backgroundColor: Colors.white,
+          bottomNavigationBar: AnimatedBottomNavigationBar(
+            height: 80,
+            splashSpeedInMilliseconds: 200,
+            gapLocation: GapLocation.end,
+            gapWidth: 0,
             backgroundColor: Colors.white,
-            bottomNavigationBar: AnimatedBottomNavigationBar(
-              height: 80,
-              splashSpeedInMilliseconds: 200,
-              gapLocation: GapLocation.end,
-              gapWidth: 0,
-              backgroundColor: Colors.white,
-              inactiveColor: Palette.inactive,
-              activeColor: Palette.primary,
-              icons: iconList,
-              activeIndex: controller.getInx(),
-              onTap: (index) => controller.setInx(index),
-              iconSize: 36,
-            ),
-          )),
-    );
+            inactiveColor: Palette.inactive,
+            activeColor: Palette.primary,
+            icons: iconList,
+            activeIndex: controller.getInx(),
+            onTap: (index) => controller.setInx(index),
+            iconSize: 36,
+          ),
+        ));
   }
 }

@@ -20,5 +20,4 @@ class BasicTextField extends StatelessWidget {
       autofocus: autoFocus,
     );
   }
-
 }

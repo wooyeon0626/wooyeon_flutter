@@ -23,13 +23,19 @@ class Login extends StatelessWidget {
     );
   }
 
+
   @override
   Widget build(BuildContext context) {
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        systemOverlayStyle: SystemUiOverlayStyle.light,
+        systemOverlayStyle: const SystemUiOverlayStyle(
+          statusBarColor: Palette.primary,
+
+          statusBarIconBrightness: Brightness.light, // 안드로이드용 (밝은 아이콘)
+          statusBarBrightness: Brightness.dark, // iOS용 (밝은 아이콘)
+        ),
         elevation: 0,
       ),
       body: Container(
@@ -49,26 +55,7 @@ class Login extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 40),
               child: InkWell(
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    PageRouteBuilder(
-                      pageBuilder: (context, animation, secondaryAnimation) => const LoginInput(),
-                      transitionsBuilder:
-                          (context, animation, secondaryAnimation, child) {
-                        var begin = const Offset(1.0, 0.0);
-                        var end = Offset.zero;
-                        var curve = Curves.ease;
-
-                        var tween = Tween(begin: begin, end: end)
-                            .chain(CurveTween(curve: curve));
-
-                        return SlideTransition(
-                          position: animation.drive(tween),
-                          child: child,
-                        );
-                      },
-                    ),
-                  );
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => LoginInput()));
                 },
                 child: Container(
                   height: 70,
