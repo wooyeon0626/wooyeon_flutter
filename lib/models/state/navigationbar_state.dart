@@ -15,20 +15,20 @@ class NavigationBarState extends GetxController{
   getInx() => _selected.value;
   setInx(val) => _selected.value = val;
 
-  Widget getSelectedWidget() {
+  Widget getSelectedWidget(double bodyHeight) {
     switch (_selected.value) {
       case 0:
-        return const Recommendation();
+        return Recommendation(bodyHeight);
       case 1:
-        return const Lounge();
+        return Lounge(bodyHeight);
       case 2:
-        return const Match();
+        return Match(bodyHeight);
       case 3:
-        return const Chat();
+        return Chat(bodyHeight);
       case 4:
-        return const Profile();
+        return Profile(bodyHeight);
       default:
-        return const Recommendation();
+        return Recommendation(bodyHeight);
     }
   }
 

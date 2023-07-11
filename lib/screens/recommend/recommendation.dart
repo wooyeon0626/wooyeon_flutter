@@ -11,7 +11,8 @@ import '../../models/data/recommend_data.dart';
 import '../../widgets/recommend/card_overlay.dart';
 
 class Recommendation extends StatefulWidget {
-  const Recommendation({super.key});
+  final double bodyHeight;
+  const Recommendation(this.bodyHeight, {super.key});
 
   @override
   State<Recommendation> createState() => _RecommendationState();
@@ -38,64 +39,62 @@ class _RecommendationState extends State<Recommendation> {
 
   @override
   Widget build(BuildContext context) {
-    final appBarHeight = AppBar().preferredSize.height;
-    const bottomNavigationBarHeight = 80;
 
-    final screenHeight = appBarHeight + bottomNavigationBarHeight + 50;
+    return Center(
+      child: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(20),
+            height: widget.bodyHeight - 10,
+            child: SwipableStack(
+              //itemCount: recommendProfiles.length,
+              detectableSwipeDirections: const {
+                SwipeDirection.right,
+                SwipeDirection.left,
+              },
+              controller: controller,
+              stackClipBehaviour: Clip.none,
+              onSwipeCompleted: (index, direction) {
+                dev.log('$index, $direction');
+              },
+              horizontalSwipeThreshold: 0.7,
+              verticalSwipeThreshold: 0.7,
+              allowVerticalSwipe: false,
+              builder: (BuildContext context, properties) {
+                final itemIndex = properties.index % recommendProfiles.length;
 
-    return Column(
-      children: [
-        Container(
-          padding: const EdgeInsets.all(20),
-          height: MediaQuery.of(context).size.height - screenHeight,
-          child: SwipableStack(
-            //itemCount: recommendProfiles.length,
-            detectableSwipeDirections: const {
-              SwipeDirection.right,
-              SwipeDirection.left,
-            },
-            controller: controller,
-            stackClipBehaviour: Clip.none,
-            onSwipeCompleted: (index, direction) {
-              dev.log('$index, $direction');
-            },
-            horizontalSwipeThreshold: 0.7,
-            verticalSwipeThreshold: 0.7,
-            allowVerticalSwipe: false,
-            builder: (BuildContext context, properties) {
-              final itemIndex = properties.index % recommendProfiles.length;
-
-              return Container(
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: Palette.inactive,
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.2),
-                        spreadRadius: 2,
-                        blurRadius: 4,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: Stack(
-                    children: [
-                      BackgroundProfile(recommendProfiles[itemIndex]),
-                      ProfileInfo(recommendProfiles[itemIndex], controller),
-                      CardController(controller),
-                      if (properties.stackIndex == 0 &&
-                          properties.direction != null)
-                        CardOverlay(
-                          swipeProgress: properties.swipeProgress,
-                          direction: properties.direction!,
-                        )
-                    ],
-                  ));
-            },
+                return Container(
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: Palette.inactive,
+                      borderRadius: BorderRadius.circular(10),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.2),
+                          spreadRadius: 2,
+                          blurRadius: 4,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: Stack(
+                      children: [
+                        BackgroundProfile(recommendProfiles[itemIndex]),
+                        ProfileInfo(recommendProfiles[itemIndex], controller),
+                        CardController(controller),
+                        if (properties.stackIndex == 0 &&
+                            properties.direction != null)
+                          CardOverlay(
+                            swipeProgress: properties.swipeProgress,
+                            direction: properties.direction!,
+                          )
+                      ],
+                    ));
+              },
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

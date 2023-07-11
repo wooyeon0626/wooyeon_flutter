@@ -26,6 +26,11 @@ class _MainScreen extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
+    double bodyHeight = MediaQuery.of(context).size.height -
+        AppBar().preferredSize.height -
+        MediaQuery.of(context).padding.top -
+        MediaQuery.of(context).padding.bottom -
+        80;
 
     // Todo : Status Bar Color 정하기
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
@@ -45,7 +50,7 @@ class _MainScreen extends State<MainScreen> {
             elevation: 0,
           ),
         ),
-            body: controller.getSelectedWidget(),
+            body: controller.getSelectedWidget(bodyHeight),
             backgroundColor: Colors.white,
             bottomNavigationBar: AnimatedBottomNavigationBar(
               height: 80,
