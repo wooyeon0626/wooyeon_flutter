@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class Profile extends StatefulWidget {
-  const Profile({super.key});
+  final double bodyHeight;
+  const Profile(this.bodyHeight, {super.key});
 
   @override
   State<Profile> createState() => _Profile();

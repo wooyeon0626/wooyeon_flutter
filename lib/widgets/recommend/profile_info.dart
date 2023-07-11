@@ -18,6 +18,7 @@ class ProfileInfo extends StatefulWidget {
 }
 
 class _ProfileInfoState extends State<ProfileInfo> {
+  // Todo : IOS 스타일 이상함 수정 필요.
   void showBottomSheet() {
     showModalBottomSheet(
       backgroundColor: Colors.white,

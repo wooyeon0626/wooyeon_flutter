@@ -7,9 +7,9 @@ class MatchAppbar extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       child: Padding(
-        padding: const EdgeInsets.only(top: 20),
-        child: Padding(
-          padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
+        padding: const EdgeInsets.only(top: 30, left: 10, right: 10),
+        child: Align(
+          alignment: Alignment.centerLeft,
           child: Image.asset(
             "assets/image/logo_wooyeon.png",
             fit: BoxFit.cover,

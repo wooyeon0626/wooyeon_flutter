@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class Lounge extends StatefulWidget {
-  const Lounge({super.key});
+  final double bodyHeight;
+  const Lounge(this.bodyHeight, {super.key});
 
   @override
   State<Lounge> createState() => _Lounge();

@@ -4,7 +4,8 @@ import '../../config/palette.dart';
 import '../../models/state/match_tabbar_state.dart';
 
 class Match extends StatefulWidget {
-  const Match({super.key});
+  final double bodyHeight;
+  const Match(this.bodyHeight, {super.key});
 
   @override
   State<Match> createState() => _Match();
