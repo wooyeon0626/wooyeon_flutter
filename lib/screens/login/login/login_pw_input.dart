@@ -4,10 +4,10 @@ import 'package:flutter/services.dart';
 
 import '../../../config/palette.dart';
 
-class Login0 extends StatelessWidget {
+class LoginPWInput extends StatelessWidget {
   final String email;
 
-  const Login0({Key? key, required this.email}) : super(key: key);
+  const LoginPWInput({Key? key, required this.email}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

@@ -1,12 +1,12 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:wooyeon_flutter/screens/login/register/register_0.dart';
+import 'package:wooyeon_flutter/screens/login/register/register_code_input.dart';
 import 'package:wooyeon_flutter/widgets/basic_textfield.dart';
 import 'package:wooyeon_flutter/widgets/next_button.dart';
 
 import '../../config/palette.dart';
-import 'login/login_0.dart';
+import 'login/login_pw_input.dart';
 
 class LoginInput extends StatelessWidget {
   LoginInput({super.key});
@@ -94,7 +94,7 @@ class LoginInput extends StatelessWidget {
 
                     return Padding(
                       padding: const EdgeInsets.symmetric(vertical: 10),
-                      child: NextButton(nextPage: isRegistered ? Login0(email: emailValue,) : Register0(email: emailValue, code: code,), text: "다음", isActive: buttonActive),
+                      child: NextButton(nextPage: isRegistered ? LoginPWInput(email: emailValue,) : RegisterCodeInput(email: emailValue, code: code,), text: "다음", isActive: buttonActive),
                     );
                   }
                 ),

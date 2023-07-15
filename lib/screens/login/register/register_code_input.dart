@@ -2,16 +2,16 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pin_input_text_field/pin_input_text_field.dart' as pin;
-import 'package:wooyeon_flutter/screens/login/register/register_1.dart';
+import 'package:wooyeon_flutter/screens/login/register/register_pw_input.dart';
 
 import '../../../config/palette.dart';
 import '../../../widgets/next_button.dart';
 
-class Register0 extends StatelessWidget {
+class RegisterCodeInput extends StatelessWidget {
   final String email;
   final String code;
 
-  Register0({required this.email, required this.code, super.key});
+  RegisterCodeInput({required this.email, required this.code, super.key});
 
   final buttonActive = ValueNotifier<bool>(false);
   final inputCode = ValueNotifier<String>("");
@@ -158,7 +158,7 @@ class Register0 extends StatelessWidget {
                               PageRouteBuilder(
                                 pageBuilder:
                                     (context, animation, secondaryAnimation) =>
-                                        Register1(email: email),
+                                        RegisterPWInput(email: email),
                                 transitionsBuilder: (context, animation,
                                     secondaryAnimation, child) {
                                   var begin = const Offset(1.0, 0.0);

@@ -1,16 +1,16 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:wooyeon_flutter/screens/login/register/register_0.dart';
+import 'package:wooyeon_flutter/screens/login/register/register_code_input.dart';
 import 'package:wooyeon_flutter/widgets/basic_textfield.dart';
 import 'package:wooyeon_flutter/widgets/next_button.dart';
 
 import '../../../config/palette.dart';
 
-class Register1 extends StatelessWidget {
+class RegisterPWInput extends StatelessWidget {
   final String email;
 
-  const Register1({required this.email, super.key});
+  const RegisterPWInput({required this.email, super.key});
 
   @override
   Widget build(BuildContext context) {
