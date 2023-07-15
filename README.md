@@ -4,4 +4,4 @@ A dating app.
 
 ## READ ME
 
-slack connect test
+slack connect retest
