@@ -1,76 +1,29 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:mobile_number/mobile_number.dart';
-import 'package:wooyeon_flutter/screens/login/phone_code_input.dart';
-import 'package:wooyeon_flutter/screens/login/register/register_code_input.dart';
+import 'package:wooyeon_flutter/screens/login/login/phone_code_input.dart';
+import 'package:wooyeon_flutter/screens/login/register/register_code_waiting.dart';
 import 'package:wooyeon_flutter/widgets/basic_textfield.dart';
 import 'package:wooyeon_flutter/widgets/next_button.dart';
 
-import '../../config/palette.dart';
-import 'login/login_pw_input.dart';
+import '../../../config/palette.dart';
 
-class LoginByPhone extends StatefulWidget {
-  const LoginByPhone({super.key});
-
-  @override
-  State<LoginByPhone> createState() => _LoginByPhoneState();
-}
-
-class _LoginByPhoneState extends State<LoginByPhone> {
+class RegisterEmailInput extends StatelessWidget {
+  RegisterEmailInput({super.key});
 
   final buttonActive = ValueNotifier<bool>(false);
-  final phone = ValueNotifier<String>("");
-  String? _phoneNum;
+  final email = ValueNotifier<String>("");
 
   final RegExp phoneValidator = RegExp(
-    r'^01(?:0|1|[6-9])\d{8}$',
+    r'^[a-zA-Z\d._%+-]+@[a-zA-Z\d.-]+\.[a-zA-Z]{2,}$',
   );
-
-  @override
-  void initState() {
-    super.initState();
-    MobileNumber.listenPhonePermission((isPermissionGranted) {
-      if (isPermissionGranted) {
-        initMobileNumberState();
-      }
-    });
-
-    initMobileNumberState();
-  }
-
-  Future<void> initMobileNumberState() async {
-    if (!await MobileNumber.hasPhonePermission) {
-      await MobileNumber.requestPhonePermission;
-      return;
-    }
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    try {
-      _phoneNum = (await MobileNumber.mobileNumber)!;
-    } on PlatformException catch (e) {
-      debugPrint("Failed to get mobile number because of '${e.message}'");
-    }
-
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
-    if (!mounted) return;
-
-    setState(() {});
-  }
 
   @override
   Widget build(BuildContext context) {
     TextEditingController textFieldController = TextEditingController();
-    if (_phoneNum != null) {
-      textFieldController.text = _phoneNum!.substring(2);
-      phone.value = textFieldController.text;
-      buttonActive.value = phoneValidator.hasMatch(textFieldController.text);
-    }
 
     textFieldController.addListener(() {
-      phone.value = textFieldController.text;
+      email.value = textFieldController.text;
       buttonActive.value = phoneValidator.hasMatch(textFieldController.text);
     });
 
@@ -112,7 +65,7 @@ class _LoginByPhoneState extends State<LoginByPhone> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  "전화번호를\n입력해주세요",
+                  "이메일을\n입력해주세요",
                   style: TextStyle(
                     color: Palette.black,
                     fontSize: 44,
@@ -123,15 +76,15 @@ class _LoginByPhoneState extends State<LoginByPhone> {
                   height: 40,
                 ),
                 BasicTextField(
-                  hintText: "전화번호를 입력해주세요.",
+                  hintText: "이메일을 입력해주세요.",
                   controller: textFieldController,
-                  inputType: TextInputType.phone,
+                  inputType: TextInputType.emailAddress,
                   autoFocus: true,
                 ),
                 const Padding(
                   padding: EdgeInsets.only(top: 20),
                   child: Text(
-                    "하이픈(-)을 제외한 숫자만 입력해주세요!",
+                    "입력한 이메일로 인증코드를 발송하므로, 꼭 확인 가능한 메일 주소를 적어주세요",
                     style: TextStyle(
                       color: Palette.grey,
                       fontSize: 16,
@@ -144,14 +97,14 @@ class _LoginByPhoneState extends State<LoginByPhone> {
                     child: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 40),
                       child: ValueListenableBuilder<String>(
-                          valueListenable: phone,
+                          valueListenable: email,
                           builder: (context, emailValue, child) {
-                            //todo : 여기서 백엔드에 전화번호 전송
+                            //todo : 여기서 백엔드에 이메일 전송
 
                             return Padding(
                               padding: const EdgeInsets.symmetric(vertical: 10),
                               child: NextButton(
-                                  nextPage: PhoneCodeInput(phone: emailValue),
+                                  nextPage: RegisterCodeWaiting(email: emailValue),
                                   text: "다음",
                                   isActive: buttonActive),
                             );
@@ -167,4 +120,5 @@ class _LoginByPhoneState extends State<LoginByPhone> {
       ),
     );
   }
+
 }

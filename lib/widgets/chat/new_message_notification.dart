@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../config/palette.dart';
+import '../../config/palette.dart';
 
 class NewMessageNotification extends StatelessWidget {
   final String count;

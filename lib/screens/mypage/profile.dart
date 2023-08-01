@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:wooyeon_flutter/config/palette.dart';
 import 'package:wooyeon_flutter/service/auth.dart';
 
+import '../login/login.dart';
+
 class Profile extends StatefulWidget {
   final double bodyHeight;
 
@@ -18,6 +20,11 @@ class _Profile extends State<Profile> {
         child: ElevatedButton(
       onPressed: () {
         Auth().logout();
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (BuildContext context) => const Login()),
+              (Route<dynamic> route) => false,
+        );
       },
       child: Container(
         color: Palette.primary,
@@ -25,10 +32,11 @@ class _Profile extends State<Profile> {
         width: 250,
         child: const Center(
           child: Text(
-            '로그아웃', style: TextStyle(
-            color: Colors.white,
-            fontSize: 18,
-          ),
+            '로그아웃',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 18,
+            ),
           ),
         ),
       ),

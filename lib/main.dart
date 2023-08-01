@@ -4,6 +4,7 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:wooyeon_flutter/screens/login/login.dart';
 import 'package:wooyeon_flutter/service/auth.dart';
 
+import 'loading.dart';
 import 'models/controller/chat_controller.dart';
 import 'screens/main_screen.dart';
 import 'config/palette.dart';
@@ -34,7 +35,7 @@ class MyApp extends StatelessWidget {
         fontFamily: 'Pretendard',
       ),
       home: FutureBuilder<bool>(
-        future: _auth.isUserLoggedIn(),
+        future: _auth.autoLogin(),
         builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             if (snapshot.data == true) {
@@ -43,7 +44,7 @@ class MyApp extends StatelessWidget {
               return const Login();
             }
           } else {
-            return CircularProgressIndicator();
+            return const Loading();
           }
         },
       ),

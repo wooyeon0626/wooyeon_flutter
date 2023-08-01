@@ -32,11 +32,11 @@ import 'package:http/http.dart' as http;
 // }
 
 class LoginService {
-  Future<http.Response> register(String username, String password) {
+  Future<http.Response> register(String phone, String code) {
     return Future.value(http.Response('{"token": "dummy_token"}', 200));
   }
 
-  Future<http.Response> login(String username, String password) {
+  Future<http.Response> login(String phone, String code) {
     return Future.value(http.Response('{"token": "dummy_token"}', 200));
   }
 }

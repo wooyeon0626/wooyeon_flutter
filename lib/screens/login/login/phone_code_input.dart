@@ -1,17 +1,23 @@
+import 'dart:developer';
+
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pin_input_text_field/pin_input_text_field.dart' as pin;
-import 'package:wooyeon_flutter/screens/login/register/register_pw_input.dart';
+import 'package:wooyeon_flutter/screens/login/register/register_email_input.dart';
+import 'package:wooyeon_flutter/utils/notifier.dart';
+import 'package:wooyeon_flutter/utils/transition.dart';
 
-import '../../../config/palette.dart';
-import '../../../widgets/next_button.dart';
+import '../../../../config/palette.dart';
+import '../../../../widgets/next_button.dart';
+import 'login_success.dart';
 
-class RegisterCodeInput extends StatelessWidget {
-  final String email;
-  final String code;
+class PhoneCodeInput extends StatelessWidget {
+  final String phone;
+  final String code =
+      "abc123"; //todo : 코드 문자에서 자동 긁어오기 또는 입력 -> sms_autofill 패키지 활용하기
 
-  RegisterCodeInput({required this.email, required this.code, super.key});
+  PhoneCodeInput({required this.phone, super.key});
 
   final buttonActive = ValueNotifier<bool>(false);
   final inputCode = ValueNotifier<String>("");
@@ -69,7 +75,7 @@ class RegisterCodeInput extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(left: 5, top: 20),
                   child: Text(
-                    email,
+                    phone,
                     style: const TextStyle(
                       color: Palette.black,
                       fontSize: 20,
@@ -111,7 +117,7 @@ class RegisterCodeInput extends StatelessWidget {
                 const Padding(
                   padding: EdgeInsets.only(top: 20),
                   child: Text(
-                    "입력한 이메일 주소로 본인 인증을 위한 코드를 보내드렸어요.",
+                    "문자로 본인 인증을 위한 코드를 보내드렸어요.",
                     style: TextStyle(
                       color: Palette.grey,
                       fontSize: 16,
@@ -127,8 +133,37 @@ class RegisterCodeInput extends StatelessWidget {
                         fontSize: 16,
                       ),
                     ),
-                    TextButton(
-                      onPressed: () {},
+                    InkWell(
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: const Center(
+                                  child: Text(
+                                    '코드 재전송',
+                                    style: TextStyle(color: Palette.primary),
+                                  )),
+                              content: const Text(
+                                '코드를 정말 재전송할까요?',
+                                textAlign: TextAlign.center,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(
+                                    20),
+                              ),
+                              actions: <Widget>[
+                                TextButton(
+                                  child: Text('확인'),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
                       child: const Text(
                         "코드 재전송",
                         style: TextStyle(
@@ -146,6 +181,12 @@ class RegisterCodeInput extends StatelessWidget {
                 ValueListenableBuilder<String>(
                   valueListenable: inputCode,
                   builder: (context, codeValue, child) {
+                    //todo : 1. 백엔드에 코드를 전송하여 일치하는지 확인,  2. 로그인인지 회원가입인지 상태 확인
+
+                    bool isRegistered = false; // 회원가입 정보, 백엔드에서 가져오기
+                    bool isProfile = false; // 프로필을 끝까지 등록했는지 또는 아닌지, pref로 저장하기
+                    bool isAgreement = false; // 이용약관에 동의했는지 또는 아닌지, pref로 저장하기
+
                     return Padding(
                       padding: const EdgeInsets.symmetric(vertical: 10),
                       child: NextButton(
@@ -153,43 +194,13 @@ class RegisterCodeInput extends StatelessWidget {
                         isActive: buttonActive,
                         func: () {
                           if (codeValue == code) {
-                            Navigator.push(
-                              context,
-                              PageRouteBuilder(
-                                pageBuilder:
-                                    (context, animation, secondaryAnimation) =>
-                                        RegisterPWInput(email: email),
-                                transitionsBuilder: (context, animation,
-                                    secondaryAnimation, child) {
-                                  var begin = const Offset(1.0, 0.0);
-                                  var end = Offset.zero;
-                                  var curve = Curves.ease;
-
-                                  var tween = Tween(begin: begin, end: end)
-                                      .chain(CurveTween(curve: curve));
-
-                                  return SlideTransition(
-                                    position: animation.drive(tween),
-                                    child: child,
-                                  );
-                                },
-                              ),
-                            );
+                            navigateHorizontally(
+                                context: context, widget: isRegistered ? LoginSuccess(phone: phone, code: code,) : RegisterEmailInput());
                           } else {
                             textFieldController.text = "";
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                backgroundColor: Palette.red,
-                                content: Center(
-                                  child: Text(
-                                    '틀린 코드입니다!',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white),
-                                  ),
-                                ),
-                              ),
-                            );
+                            showCustomSnackBar(context: context,
+                                text: '틀린 코드입니다!',
+                                color: Palette.red);
                           }
                         },
                       ),

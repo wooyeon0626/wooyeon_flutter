@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:wooyeon_flutter/config/palette.dart';
 import 'package:wooyeon_flutter/utils/util.dart';
-import 'package:wooyeon_flutter/widgets/new_message_notification.dart';
+import 'package:wooyeon_flutter/widgets/chat/new_message_notification.dart';
 
 import '../../models/controller/chat_controller.dart';
 import '../../screens/chat/chat_detail.dart';

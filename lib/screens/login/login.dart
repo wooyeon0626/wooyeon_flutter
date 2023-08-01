@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:wooyeon_flutter/config/palette.dart';
-import 'package:wooyeon_flutter/screens/login/login_by_phone.dart';
+import 'package:wooyeon_flutter/screens/login/login/login_by_phone.dart';
 import 'package:wooyeon_flutter/widgets/login/login_is_not_working.dart';
 
 class Login extends StatefulWidget {
