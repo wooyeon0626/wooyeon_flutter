@@ -1,13 +1,19 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:wooyeon_flutter/config/palette.dart';
-import 'package:wooyeon_flutter/screens/login/login_input.dart';
+import 'package:wooyeon_flutter/screens/login/login_by_phone.dart';
 import 'package:wooyeon_flutter/widgets/login/login_is_not_working.dart';
 
-class Login extends StatelessWidget {
+class Login extends StatefulWidget {
   const Login({super.key});
 
+  @override
+  State<Login> createState() => _LoginState();
+}
+
+class _LoginState extends State<Login> {
   void _showModal(BuildContext context) {
     showModalBottomSheet(
       context: context,
@@ -23,6 +29,21 @@ class Login extends StatelessWidget {
     );
   }
 
+  @override
+  void initState() {
+    permission();
+  }
+
+  Future<bool> permission() async {
+    Map<Permission, PermissionStatus> status =
+    await [Permission.location, Permission.phone].request();
+
+    if (await Permission.location.isGranted && await Permission.phone.isGranted) {
+      return Future.value(true);
+    } else {
+      return Future.value(false);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,10 +73,60 @@ class Login extends StatelessWidget {
               ),
             ),
             Padding(
+              padding: const EdgeInsets.only(left: 80, right: 80, bottom: 30),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  InkWell(
+                    onTap: () {
+                      //Navigator.of(context).push(MaterialPageRoute(builder: (context) => LoginInput()));
+                    },
+                    child: Container(
+                      height: 60,
+                      width: 60,
+                      decoration: BoxDecoration(
+                        color: Colors.transparent,
+                        borderRadius: BorderRadius.circular(100),
+                      ),
+                      child: Image.asset('assets/image/google.png'),
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      //Navigator.of(context).push(MaterialPageRoute(builder: (context) => LoginInput()));
+                    },
+                    child: Container(
+                      height: 60,
+                      width: 60,
+                      decoration: BoxDecoration(
+                        color: Colors.transparent,
+                        borderRadius: BorderRadius.circular(100),
+                      ),
+                      child: Image.asset('assets/image/kakao.png'),
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      //Navigator.of(context).push(MaterialPageRoute(builder: (context) => LoginInput()));
+                    },
+                    child: Container(
+                      height: 60,
+                      width: 60,
+                      decoration: BoxDecoration(
+                        color: Colors.transparent,
+                        borderRadius: BorderRadius.circular(100),
+                      ),
+                      child: Image.asset('assets/image/naver.png'),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
               padding: const EdgeInsets.symmetric(horizontal: 40),
               child: InkWell(
                 onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => LoginInput()));
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => LoginByPhone()));
                 },
                 child: Container(
                   height: 70,
@@ -74,12 +145,12 @@ class Login extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(
-                        EvaIcons.emailOutline,
+                        EvaIcons.phoneOutline,
                         color: Colors.white,
                       ),
                       SizedBox(width: 10),
                       Text(
-                        '이메일로 로그인',
+                        '전화번호로 로그인',
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 16,
