@@ -1,12 +1,15 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mobile_number/mobile_number.dart';
 import 'package:wooyeon_flutter/screens/login/login/phone_code_input.dart';
+import 'package:wooyeon_flutter/screens/login/login/privacy_policy.dart';
 import 'package:wooyeon_flutter/widgets/basic_textfield.dart';
 import 'package:wooyeon_flutter/widgets/next_button.dart';
 
 import '../../../config/palette.dart';
+import '../register_profile/rp_name.dart';
 
 class LoginByPhone extends StatefulWidget {
   const LoginByPhone({super.key});
@@ -16,7 +19,6 @@ class LoginByPhone extends StatefulWidget {
 }
 
 class _LoginByPhoneState extends State<LoginByPhone> {
-
   final buttonActive = ValueNotifier<bool>(false);
   final phone = ValueNotifier<String>("");
   String? _phoneNum;
@@ -135,6 +137,39 @@ class _LoginByPhoneState extends State<LoginByPhone> {
                     ),
                   ),
                 ),
+                Text.rich(
+                  TextSpan(children: <TextSpan>[
+                    const TextSpan(
+                      text: '다음 버튼을 누르면 ',
+                      style: TextStyle(
+                        color: Palette.grey,
+                        fontSize: 16,
+                      ),
+                    ),
+                    TextSpan(
+                        text: '개인정보 처리방침',
+                        style: const TextStyle(
+                          color: Palette.primary,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          decoration: TextDecoration.underline,
+                        ),
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const PrivacyPolicy()));
+                          }),
+                    const TextSpan(
+                      text: '에 동의하는 것으로 간주합니다.',
+                      style: TextStyle(
+                        color: Palette.grey,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ]),
+                ),
                 Expanded(
                   child: Align(
                     alignment: Alignment.bottomCenter,
@@ -152,8 +187,7 @@ class _LoginByPhoneState extends State<LoginByPhone> {
                                   text: "다음",
                                   isActive: buttonActive),
                             );
-                          }
-                      ),
+                          }),
                     ),
                   ),
                 ),

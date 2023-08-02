@@ -126,7 +126,8 @@ class _LoginState extends State<Login> {
               padding: const EdgeInsets.symmetric(horizontal: 40),
               child: InkWell(
                 onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => LoginByPhone()));
+                  //todo: access token이 있는지 없는지 체크??
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => const LoginByPhone()));
                 },
                 child: Container(
                   height: 70,

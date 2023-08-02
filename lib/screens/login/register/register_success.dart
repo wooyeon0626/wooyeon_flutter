@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
+import 'package:wooyeon_flutter/screens/login/register_profile/rp_name.dart';
 import '../../../config/palette.dart';
 import '../../../widgets/next_button.dart';
 
@@ -73,7 +73,12 @@ class RegisterSuccess extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.only(bottom: 40),
                   child: NextButton(
-                      //nextPage: ,
+                      func: () {
+                        Navigator.of(context).pushAndRemoveUntil(
+                          MaterialPageRoute(builder: (BuildContext context) => RPName()),
+                              (Route<dynamic> route) => route.isFirst,
+                        );
+                      },
                       text: "프로필 등록하기",
                       isActive: buttonActive),
                 ),
