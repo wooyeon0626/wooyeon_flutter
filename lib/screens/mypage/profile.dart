@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wooyeon_flutter/config/palette.dart';
-import 'package:wooyeon_flutter/service/auth.dart';
+import 'package:wooyeon_flutter/service/login/auto_login/auth.dart';
 
 import '../login/login.dart';
 

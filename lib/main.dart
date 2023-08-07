@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:wooyeon_flutter/screens/login/login.dart';
-import 'package:wooyeon_flutter/service/auth.dart';
+import 'package:wooyeon_flutter/service/login/auto_login/auth.dart';
 
 import 'loading.dart';
 import 'models/controller/chat_controller.dart';

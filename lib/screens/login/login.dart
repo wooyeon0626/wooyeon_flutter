@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -31,6 +33,7 @@ class _LoginState extends State<Login> {
 
   @override
   void initState() {
+    super.initState();
     permission();
   }
 
@@ -38,11 +41,15 @@ class _LoginState extends State<Login> {
     Map<Permission, PermissionStatus> status =
     await [Permission.location, Permission.phone].request();
 
-    if (await Permission.location.isGranted && await Permission.phone.isGranted) {
-      return Future.value(true);
-    } else {
-      return Future.value(false);
-    }
+    bool flag = true;
+    status.forEach((key, value) async {
+      if(!(await key.isGranted)) {
+        flag = false;
+      }
+      log('[Permission Status] $key : $value');
+    });
+
+    return Future(() => flag);
   }
 
   @override

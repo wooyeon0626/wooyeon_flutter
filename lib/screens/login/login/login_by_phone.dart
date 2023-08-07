@@ -1,15 +1,17 @@
+import 'dart:developer';
+
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mobile_number/mobile_number.dart';
+import 'package:wooyeon_flutter/config/config.dart';
 import 'package:wooyeon_flutter/screens/login/login/phone_code_input.dart';
 import 'package:wooyeon_flutter/screens/login/login/privacy_policy.dart';
 import 'package:wooyeon_flutter/widgets/basic_textfield.dart';
 import 'package:wooyeon_flutter/widgets/next_button.dart';
 
 import '../../../config/palette.dart';
-import '../register_profile/rp_name.dart';
 
 class LoginByPhone extends StatefulWidget {
   const LoginByPhone({super.key});
@@ -33,6 +35,7 @@ class _LoginByPhoneState extends State<LoginByPhone> {
     MobileNumber.listenPhonePermission((isPermissionGranted) {
       if (isPermissionGranted) {
         initMobileNumberState();
+      } else {
       }
     });
 
@@ -48,7 +51,7 @@ class _LoginByPhoneState extends State<LoginByPhone> {
     try {
       _phoneNum = (await MobileNumber.mobileNumber)!;
     } on PlatformException catch (e) {
-      debugPrint("Failed to get mobile number because of '${e.message}'");
+      log("Failed to get mobile number because of '${e.message}'");
     }
 
     // If the widget was removed from the tree while the asynchronous platform
@@ -147,7 +150,7 @@ class _LoginByPhoneState extends State<LoginByPhone> {
                       ),
                     ),
                     TextSpan(
-                        text: '개인정보 처리방침',
+                        text: '개인정보처리방침',
                         style: const TextStyle(
                           color: Palette.primary,
                           fontSize: 16,
