@@ -5,8 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pin_input_text_field/pin_input_text_field.dart' as pin;
 import 'package:wooyeon_flutter/screens/login/register/register_email_input.dart';
+import 'package:wooyeon_flutter/service/login/phone_auth.dart';
 import 'package:wooyeon_flutter/utils/notifier.dart';
 import 'package:wooyeon_flutter/utils/transition.dart';
+import 'package:wooyeon_flutter/widgets/next_button_async.dart';
 
 import '../../../../config/palette.dart';
 import '../../../../widgets/next_button.dart';
@@ -182,28 +184,73 @@ class PhoneCodeInput extends StatelessWidget {
                   valueListenable: inputCode,
                   builder: (context, codeValue, child) {
                     //todo : 1. 백엔드에 코드를 전송하여 일치하는지 확인,  2. 로그인인지 회원가입인지 상태 확인
-
-                    bool isRegistered = false; // 회원가입 정보, 백엔드에서 가져오기
-                    bool isProfile = false; // 프로필을 끝까지 등록했는지 또는 아닌지, pref로 저장하기
-                    bool isAgreement = false; // 이용약관에 동의했는지 또는 아닌지, pref로 저장하기
-
                     return Padding(
                       padding: const EdgeInsets.symmetric(vertical: 10),
-                      child: NextButton(
-                        text: "다음",
-                        isActive: buttonActive,
-                        func: () {
-                          if (codeValue == code) {
-                            navigateHorizontally(
-                                context: context, widget: isRegistered ? LoginSuccess(phone: phone, code: code,) : RegisterEmailInput());
-                          } else {
-                            textFieldController.text = "";
-                            showCustomSnackBar(context: context,
-                                text: '틀린 코드입니다!',
-                                color: Palette.red);
-                          }
+                      child: Builder(
+                        builder: (newContext) {
+                          // 새로운 context를 변수에 저장
+                          final ctx = newContext;
+
+                          return NextButtonAsync(
+                            text: "다음",
+                            isActive: buttonActive,
+                            func: () async {
+                              final dynamic phoneAuth = await PhoneAuth().sendPhoneVerifyRequest(phone: phone, code: codeValue);
+
+                              /// todo: 테스트
+                              /// 실제 테스트 시 해당 부분 지우기
+                              WidgetsBinding.instance.addPostFrameCallback((_) {
+                                navigateHorizontally(
+                                    context: ctx,
+                                    widget: false
+                                        ? LoginSuccess(phone: phone, code: code,)
+                                        : RegisterEmailInput()
+                                );
+                              });
+                              /// 여기까지 테스트
+
+                              if (phoneAuth != false) {
+                                final bool isAuth  = phoneAuth['phoneAuth'] == 'success' ? true : false; // 인증 완료 여부
+                                final bool isRegistered = phoneAuth['register'] == 'success' ? true : false; // 회원가입 정보, 백엔드에서 가져오기
+                                final bool isProfile = phoneAuth['profile'] == 'success' ? true : false; // 프로필을 끝까지 등록했는지 또는 아닌지, pref로 저장하기
+                                final bool isAgreement = phoneAuth['serviceTerms'] == 'success' ? true : false; // 이용약관에 동의했는지 또는 아닌지, pref로 저장하기
+
+                                if (isAuth) {
+                                  // 저장된 context 사용
+                                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                                    navigateHorizontally(
+                                        context: ctx,
+                                        widget: isRegistered
+                                            ? LoginSuccess(phone: phone, code: code,)
+                                            : RegisterEmailInput()
+                                    );
+                                  });
+                                } else {
+                                  textFieldController.text = "";
+                                  // 저장된 context 사용
+                                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                                    showCustomSnackBar(
+                                        context: ctx,
+                                        text: '코드가 틀렸습니다!',
+                                        color: Palette.red
+                                    );
+                                  });
+                                }
+                              } else {
+                                textFieldController.text = "";
+                                // 저장된 context 사용
+                                WidgetsBinding.instance.addPostFrameCallback((_) {
+                                  showCustomSnackBar(
+                                      context: ctx,
+                                      text: '인증 오류가 발생했습니다!',
+                                      color: Palette.red
+                                  );
+                                });
+                              }
+                            },
+                          );
                         },
-                      ),
+                      )
                     );
                   },
                 ),

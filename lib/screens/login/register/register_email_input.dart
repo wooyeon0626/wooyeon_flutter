@@ -1,12 +1,13 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:wooyeon_flutter/screens/login/login/phone_code_input.dart';
 import 'package:wooyeon_flutter/screens/login/register/register_code_waiting.dart';
+import 'package:wooyeon_flutter/service/login/register/email_auth.dart';
 import 'package:wooyeon_flutter/widgets/basic_textfield.dart';
 import 'package:wooyeon_flutter/widgets/next_button.dart';
 
 import '../../../config/palette.dart';
+import '../../../utils/transition.dart';
 
 class RegisterEmailInput extends StatelessWidget {
   RegisterEmailInput({super.key});
@@ -103,10 +104,27 @@ class RegisterEmailInput extends StatelessWidget {
 
                             return Padding(
                               padding: const EdgeInsets.symmetric(vertical: 10),
-                              child: NextButton(
-                                  nextPage: RegisterCodeWaiting(email: emailValue),
-                                  text: "다음",
-                                  isActive: buttonActive),
+                              child: Builder(
+                                builder: (newContext) {
+                                  // 새로운 context를 변수에 저장
+                                  final ctx = newContext;
+
+                                  return NextButton(
+                                    text: "다음",
+                                    isActive: buttonActive,
+                                    func: () async {
+                                      await EmailAuth().sendEmailRequest(email: emailValue);
+
+                                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                                        navigateHorizontally(
+                                          context: ctx,
+                                          widget: RegisterCodeWaiting(email: emailValue),
+                                        );
+                                      });
+                                    },
+                                  );
+                                },
+                              )
                             );
                           }
                       ),

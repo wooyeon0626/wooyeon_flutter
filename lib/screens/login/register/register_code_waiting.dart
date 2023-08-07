@@ -77,6 +77,8 @@ class RegisterCodeWaiting extends StatelessWidget {
                   ),
                 ),
               ),
+
+
               Expanded(child: Align(
                 alignment: Alignment.bottomCenter,
                 child: Padding(
@@ -87,6 +89,8 @@ class RegisterCodeWaiting extends StatelessWidget {
                       isActive: buttonActive),
                 ),
               ))
+
+
             ],
           ),
         ),

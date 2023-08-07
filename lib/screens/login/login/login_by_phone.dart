@@ -8,10 +8,12 @@ import 'package:mobile_number/mobile_number.dart';
 import 'package:wooyeon_flutter/config/config.dart';
 import 'package:wooyeon_flutter/screens/login/login/phone_code_input.dart';
 import 'package:wooyeon_flutter/screens/login/login/privacy_policy.dart';
+import 'package:wooyeon_flutter/service/login/phone_auth.dart';
 import 'package:wooyeon_flutter/widgets/basic_textfield.dart';
 import 'package:wooyeon_flutter/widgets/next_button.dart';
 
 import '../../../config/palette.dart';
+import '../../../utils/transition.dart';
 
 class LoginByPhone extends StatefulWidget {
   const LoginByPhone({super.key});
@@ -185,10 +187,27 @@ class _LoginByPhoneState extends State<LoginByPhone> {
 
                             return Padding(
                               padding: const EdgeInsets.symmetric(vertical: 10),
-                              child: NextButton(
-                                  nextPage: PhoneCodeInput(phone: phoneValue),
-                                  text: "다음",
-                                  isActive: buttonActive),
+                              child: Builder(
+                                builder: (newContext) {
+                                  // 새로운 context를 변수에 저장
+                                  final ctx = newContext;
+
+                                  return NextButton(
+                                    text: "다음",
+                                    isActive: buttonActive,
+                                    func: () async {
+                                      await PhoneAuth().sendPhoneNumberRequest(phone: phoneValue);
+
+                                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                                        navigateHorizontally(
+                                            context: ctx,
+                                            widget: PhoneCodeInput(phone: phoneValue),
+                                        );
+                                      });
+                                    },
+                                  );
+                                },
+                              )
                             );
                           }),
                     ),
