@@ -77,20 +77,6 @@ class RegisterCodeWaiting extends StatelessWidget {
                   ),
                 ),
               ),
-
-
-              Expanded(child: Align(
-                alignment: Alignment.bottomCenter,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 40),
-                  child: NextButton(
-                      nextPage: RegisterSuccess(),
-                      text: "원래는 이 버튼 없음..",
-                      isActive: buttonActive),
-                ),
-              ))
-
-
             ],
           ),
         ),

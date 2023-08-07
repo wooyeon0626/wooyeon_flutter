@@ -1,6 +1,7 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:wooyeon_flutter/models/pref.dart';
 import 'package:wooyeon_flutter/screens/login/register/register_code_waiting.dart';
 import 'package:wooyeon_flutter/service/login/register/email_auth.dart';
 import 'package:wooyeon_flutter/widgets/basic_textfield.dart';
@@ -114,6 +115,7 @@ class RegisterEmailInput extends StatelessWidget {
                                     isActive: buttonActive,
                                     func: () async {
                                       await EmailAuth().sendEmailRequest(email: emailValue);
+                                      await Pref.instance.save('email_address', emailValue);
 
                                       WidgetsBinding.instance.addPostFrameCallback((_) {
                                         navigateHorizontally(
