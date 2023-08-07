@@ -37,8 +37,7 @@ class _LoginByPhoneState extends State<LoginByPhone> {
     MobileNumber.listenPhonePermission((isPermissionGranted) {
       if (isPermissionGranted) {
         initMobileNumberState();
-      } else {
-      }
+      } else {}
     });
 
     initMobileNumberState();
@@ -112,68 +111,73 @@ class _LoginByPhoneState extends State<LoginByPhone> {
           color: Colors.white,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 40),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            child: Stack(
               children: [
-                const Text(
-                  "전화번호를\n입력해주세요",
-                  style: TextStyle(
-                    color: Palette.black,
-                    fontSize: 44,
-                    letterSpacing: -2.5,
-                  ),
-                ),
-                const SizedBox(
-                  height: 40,
-                ),
-                BasicTextField(
-                  hintText: "전화번호를 입력해주세요.",
-                  controller: textFieldController,
-                  inputType: TextInputType.phone,
-                  autoFocus: true,
-                ),
-                const Padding(
-                  padding: EdgeInsets.only(top: 20),
-                  child: Text(
-                    "하이픈(-)을 제외한 숫자만 입력해주세요!",
-                    style: TextStyle(
-                      color: Palette.grey,
-                      fontSize: 16,
-                    ),
-                  ),
-                ),
-                Text.rich(
-                  TextSpan(children: <TextSpan>[
-                    const TextSpan(
-                      text: '다음 버튼을 누르면 ',
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      "전화번호를\n입력해주세요",
                       style: TextStyle(
-                        color: Palette.grey,
-                        fontSize: 16,
+                        color: Palette.black,
+                        fontSize: 44,
+                        letterSpacing: -2.5,
                       ),
                     ),
-                    TextSpan(
-                        text: '개인정보처리방침',
-                        style: const TextStyle(
-                          color: Palette.primary,
+                    const SizedBox(
+                      height: 40,
+                    ),
+                    BasicTextField(
+                      hintText: "전화번호를 입력해주세요.",
+                      controller: textFieldController,
+                      inputType: TextInputType.phone,
+                      autoFocus: true,
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.only(top: 20),
+                      child: Text(
+                        "하이픈(-)을 제외한 숫자만 입력해주세요!",
+                        style: TextStyle(
+                          color: Palette.grey,
                           fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          decoration: TextDecoration.underline,
                         ),
-                        recognizer: TapGestureRecognizer()
-                          ..onTap = () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const PrivacyPolicy()));
-                          }),
-                    const TextSpan(
-                      text: '에 동의하는 것으로 간주합니다.',
-                      style: TextStyle(
-                        color: Palette.grey,
-                        fontSize: 16,
                       ),
                     ),
-                  ]),
+                    Text.rich(
+                      TextSpan(children: <TextSpan>[
+                        const TextSpan(
+                          text: '다음 버튼을 누르면 ',
+                          style: TextStyle(
+                            color: Palette.grey,
+                            fontSize: 16,
+                          ),
+                        ),
+                        TextSpan(
+                            text: '개인정보처리방침',
+                            style: const TextStyle(
+                              color: Palette.primary,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              decoration: TextDecoration.underline,
+                            ),
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const PrivacyPolicy()));
+                              }),
+                        const TextSpan(
+                          text: '에 동의하는 것으로 간주합니다.',
+                          style: TextStyle(
+                            color: Palette.grey,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ]),
+                    ),
+                  ],
                 ),
                 Expanded(
                   child: Align(
@@ -186,29 +190,33 @@ class _LoginByPhoneState extends State<LoginByPhone> {
                             //todo : 여기서 백엔드에 전화번호 전송
 
                             return Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 10),
-                              child: Builder(
-                                builder: (newContext) {
-                                  // 새로운 context를 변수에 저장
-                                  final ctx = newContext;
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 10),
+                                child: Builder(
+                                  builder: (newContext) {
+                                    // 새로운 context를 변수에 저장
+                                    final ctx = newContext;
 
-                                  return NextButton(
-                                    text: "다음",
-                                    isActive: buttonActive,
-                                    func: () async {
-                                      await PhoneAuth().sendPhoneNumberRequest(phone: phoneValue);
+                                    return NextButton(
+                                      text: "다음",
+                                      isActive: buttonActive,
+                                      func: () async {
+                                        await PhoneAuth()
+                                            .sendPhoneNumberRequest(
+                                            phone: phoneValue);
 
-                                      WidgetsBinding.instance.addPostFrameCallback((_) {
-                                        navigateHorizontally(
+                                        WidgetsBinding.instance
+                                            .addPostFrameCallback((_) {
+                                          navigateHorizontally(
                                             context: ctx,
-                                            widget: PhoneCodeInput(phone: phoneValue),
-                                        );
-                                      });
-                                    },
-                                  );
-                                },
-                              )
-                            );
+                                            widget: PhoneCodeInput(
+                                                phone: phoneValue),
+                                          );
+                                        });
+                                      },
+                                    );
+                                  },
+                                ));
                           }),
                     ),
                   ),

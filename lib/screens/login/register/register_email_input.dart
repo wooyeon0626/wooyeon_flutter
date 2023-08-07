@@ -63,35 +63,39 @@ class RegisterEmailInput extends StatelessWidget {
           color: Colors.white,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 40),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            child: Stack(
               children: [
-                const Text(
-                  "이메일을\n입력해주세요",
-                  style: TextStyle(
-                    color: Palette.black,
-                    fontSize: 44,
-                    letterSpacing: -2.5,
-                  ),
-                ),
-                const SizedBox(
-                  height: 40,
-                ),
-                BasicTextField(
-                  hintText: "이메일을 입력해주세요.",
-                  controller: textFieldController,
-                  inputType: TextInputType.emailAddress,
-                  autoFocus: true,
-                ),
-                const Padding(
-                  padding: EdgeInsets.only(top: 20),
-                  child: Text(
-                    "입력한 이메일로 인증코드를 발송하므로, 꼭 확인 가능한 메일 주소를 적어주세요",
-                    style: TextStyle(
-                      color: Palette.grey,
-                      fontSize: 16,
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      "이메일을\n입력해주세요",
+                      style: TextStyle(
+                        color: Palette.black,
+                        fontSize: 44,
+                        letterSpacing: -2.5,
+                      ),
                     ),
-                  ),
+                    const SizedBox(
+                      height: 40,
+                    ),
+                    BasicTextField(
+                      hintText: "이메일을 입력해주세요.",
+                      controller: textFieldController,
+                      inputType: TextInputType.emailAddress,
+                      autoFocus: true,
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.only(top: 20),
+                      child: Text(
+                        "입력한 이메일로 인증코드를 발송하므로, 꼭 확인 가능한 메일 주소를 적어주세요",
+                        style: TextStyle(
+                          color: Palette.grey,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
                 Expanded(
                   child: Align(
@@ -104,32 +108,35 @@ class RegisterEmailInput extends StatelessWidget {
                             //todo : 여기서 백엔드에 이메일 전송
 
                             return Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 10),
-                              child: Builder(
-                                builder: (newContext) {
-                                  // 새로운 context를 변수에 저장
-                                  final ctx = newContext;
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 10),
+                                child: Builder(
+                                  builder: (newContext) {
+                                    // 새로운 context를 변수에 저장
+                                    final ctx = newContext;
 
-                                  return NextButton(
-                                    text: "다음",
-                                    isActive: buttonActive,
-                                    func: () async {
-                                      await EmailAuth().sendEmailRequest(email: emailValue);
-                                      await Pref.instance.save('email_address', emailValue);
+                                    return NextButton(
+                                      text: "다음",
+                                      isActive: buttonActive,
+                                      func: () async {
+                                        await EmailAuth().sendEmailRequest(
+                                            email: emailValue);
+                                        await Pref.instance
+                                            .save('email_address', emailValue);
 
-                                      WidgetsBinding.instance.addPostFrameCallback((_) {
-                                        navigateHorizontally(
-                                          context: ctx,
-                                          widget: RegisterCodeWaiting(email: emailValue),
-                                        );
-                                      });
-                                    },
-                                  );
-                                },
-                              )
-                            );
-                          }
-                      ),
+                                        WidgetsBinding.instance
+                                            .addPostFrameCallback((_) {
+                                          navigateHorizontally(
+                                            context: ctx,
+                                            widget: RegisterCodeWaiting(
+                                                email: emailValue),
+                                          );
+                                        });
+                                      },
+                                    );
+                                  },
+                                ));
+                          }),
                     ),
                   ),
                 ),
@@ -140,5 +147,4 @@ class RegisterEmailInput extends StatelessWidget {
       ),
     );
   }
-
 }

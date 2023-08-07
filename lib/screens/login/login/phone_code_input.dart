@@ -63,196 +63,227 @@ class PhoneCodeInput extends StatelessWidget {
           color: Colors.white,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 40),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            child: Stack(
               children: [
-                const Text(
-                  "코드를\n입력해주세요",
-                  style: TextStyle(
-                    color: Palette.black,
-                    fontSize: 44,
-                    letterSpacing: -2.5,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 5, top: 20),
-                  child: Text(
-                    phone,
-                    style: const TextStyle(
-                      color: Palette.black,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 40,
-                ),
-                pin.PinInputTextField(
-                  pinLength: codeLength,
-                  decoration: pin.UnderlineDecoration(
-                    colorBuilder: pin.PinListenColorBuilder(
-                        Palette.primary, Palette.lightGrey),
-                  ),
-                  controller: textFieldController,
-                  autoFocus: true,
-                  textInputAction: TextInputAction.done,
-                  keyboardType: TextInputType.name,
-                  onChanged: (value) {
-                    RegExp regExp = RegExp(r'^[a-zA-Z\d]+$');
-                    if (value.isNotEmpty && !regExp.hasMatch(value)) {
-                      textFieldController.text = textFieldController.text
-                          .substring(0, textFieldController.text.length - 1);
-                    }
-                  },
-                  cursor: pin.Cursor(
-                      width: 2,
-                      height: 30,
-                      color: Palette.primary,
-                      radius: const Radius.circular(1),
-                      enabled: true,
-                      orientation: pin.Orientation.vertical),
-                  onSubmit: (pin) {
-                    debugPrint('submit pin:$pin');
-                  },
-                ),
-                const Padding(
-                  padding: EdgeInsets.only(top: 20),
-                  child: Text(
-                    "문자로 본인 인증을 위한 코드를 보내드렸어요.",
-                    style: TextStyle(
-                      color: Palette.grey,
-                      fontSize: 16,
-                    ),
-                  ),
-                ),
-                Row(
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
-                      "혹시 메일이 오지 않았나요?",
+                      "코드를\n입력해주세요",
                       style: TextStyle(
-                        color: Palette.grey,
-                        fontSize: 16,
+                        color: Palette.black,
+                        fontSize: 44,
+                        letterSpacing: -2.5,
                       ),
                     ),
-                    InkWell(
-                      onTap: () {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: const Center(
-                                  child: Text(
-                                    '코드 재전송',
-                                    style: TextStyle(color: Palette.primary),
-                                  )),
-                              content: const Text(
-                                '코드를 정말 재전송할까요?',
-                                textAlign: TextAlign.center,
-                              ),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(
-                                    20),
-                              ),
-                              actions: <Widget>[
-                                TextButton(
-                                  child: Text('확인'),
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      },
-                      child: const Text(
-                        "코드 재전송",
-                        style: TextStyle(
-                          color: Palette.red,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w800,
+                    Padding(
+                      padding: const EdgeInsets.only(left: 5, top: 20),
+                      child: Text(
+                        phone,
+                        style: const TextStyle(
+                          color: Palette.black,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
+                    const SizedBox(
+                      height: 40,
+                    ),
+                    pin.PinInputTextField(
+                      pinLength: codeLength,
+                      decoration: pin.UnderlineDecoration(
+                        colorBuilder: pin.PinListenColorBuilder(
+                            Palette.primary, Palette.lightGrey),
+                      ),
+                      controller: textFieldController,
+                      autoFocus: true,
+                      textInputAction: TextInputAction.done,
+                      keyboardType: TextInputType.name,
+                      onChanged: (value) {
+                        RegExp regExp = RegExp(r'^[a-zA-Z\d]+$');
+                        if (value.isNotEmpty && !regExp.hasMatch(value)) {
+                          textFieldController.text = textFieldController.text
+                              .substring(
+                                  0, textFieldController.text.length - 1);
+                        }
+                      },
+                      cursor: pin.Cursor(
+                          width: 2,
+                          height: 30,
+                          color: Palette.primary,
+                          radius: const Radius.circular(1),
+                          enabled: true,
+                          orientation: pin.Orientation.vertical),
+                      onSubmit: (pin) {
+                        debugPrint('submit pin:$pin');
+                      },
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.only(top: 20),
+                      child: Text(
+                        "문자로 본인 인증을 위한 코드를 보내드렸어요.",
+                        style: TextStyle(
+                          color: Palette.grey,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                    Row(
+                      children: [
+                        const Text(
+                          "혹시 메일이 오지 않았나요?",
+                          style: TextStyle(
+                            color: Palette.grey,
+                            fontSize: 16,
+                          ),
+                        ),
+                        InkWell(
+                          onTap: () {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: const Center(
+                                      child: Text(
+                                    '코드 재전송',
+                                    style: TextStyle(color: Palette.primary),
+                                  )),
+                                  content: const Text(
+                                    '코드를 정말 재전송할까요?',
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      child: Text('확인'),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          },
+                          child: const Text(
+                            "코드 재전송",
+                            style: TextStyle(
+                              color: Palette.red,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
-                const SizedBox(
-                  height: 40,
-                ),
-                ValueListenableBuilder<String>(
-                  valueListenable: inputCode,
-                  builder: (context, codeValue, child) {
-                    //todo : 1. 백엔드에 코드를 전송하여 일치하는지 확인,  2. 로그인인지 회원가입인지 상태 확인
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10),
-                      child: Builder(
-                        builder: (newContext) {
-                          // 새로운 context를 변수에 저장
-                          final ctx = newContext;
+                Expanded(
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 40),
+                      child: ValueListenableBuilder<String>(
+                        valueListenable: inputCode,
+                        builder: (context, codeValue, child) {
+                          //todo : 1. 백엔드에 코드를 전송하여 일치하는지 확인,  2. 로그인인지 회원가입인지 상태 확인
+                          return Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 10),
+                              child: Builder(
+                                builder: (newContext) {
+                                  // 새로운 context를 변수에 저장
+                                  final ctx = newContext;
 
-                          return NextButtonAsync(
-                            text: "다음",
-                            isActive: buttonActive,
-                            func: () async {
-                              final dynamic phoneAuth = await PhoneAuth().sendPhoneVerifyRequest(phone: phone, code: codeValue);
+                                  return NextButtonAsync(
+                                    text: "다음",
+                                    isActive: buttonActive,
+                                    func: () async {
+                                      final dynamic phoneAuth = await PhoneAuth()
+                                          .sendPhoneVerifyRequest(
+                                          phone: phone, code: codeValue);
 
-                              /// todo: 테스트
-                              /// 실제 테스트 시 해당 부분 지우기
-                              WidgetsBinding.instance.addPostFrameCallback((_) {
-                                navigateHorizontally(
-                                    context: ctx,
-                                    widget: false
-                                        ? LoginSuccess(phone: phone, code: code,)
-                                        : RegisterEmailInput()
-                                );
-                              });
-                              /// 여기까지 테스트
+                                      /// todo: 테스트
+                                      /// 실제 테스트 시 해당 부분 지우기
+                                      WidgetsBinding.instance
+                                          .addPostFrameCallback((_) {
+                                        navigateHorizontally(
+                                            context: ctx,
+                                            widget: false
+                                                ? LoginSuccess(
+                                              phone: phone,
+                                              code: code,
+                                            )
+                                                : RegisterEmailInput());
+                                      });
 
-                              if (phoneAuth != false) {
-                                final bool isAuth  = phoneAuth['phoneAuth'] == 'success' ? true : false; // 인증 완료 여부
-                                final bool isRegistered = phoneAuth['register'] == 'success' ? true : false; // 회원가입 정보, 백엔드에서 가져오기
-                                final bool isProfile = phoneAuth['profile'] == 'success' ? true : false; // 프로필을 끝까지 등록했는지 또는 아닌지, pref로 저장하기
-                                final bool isAgreement = phoneAuth['serviceTerms'] == 'success' ? true : false; // 이용약관에 동의했는지 또는 아닌지, pref로 저장하기
+                                      /// 여기까지 테스트
 
-                                if (isAuth) {
-                                  // 저장된 context 사용
-                                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                                    navigateHorizontally(
-                                        context: ctx,
-                                        widget: isRegistered
-                                            ? LoginSuccess(phone: phone, code: code,)
-                                            : RegisterEmailInput()
-                                    );
-                                  });
-                                } else {
-                                  textFieldController.text = "";
-                                  // 저장된 context 사용
-                                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                                    showCustomSnackBar(
-                                        context: ctx,
-                                        text: '코드가 틀렸습니다!',
-                                        color: Palette.red
-                                    );
-                                  });
-                                }
-                              } else {
-                                textFieldController.text = "";
-                                // 저장된 context 사용
-                                WidgetsBinding.instance.addPostFrameCallback((_) {
-                                  showCustomSnackBar(
-                                      context: ctx,
-                                      text: '인증 오류가 발생했습니다!',
-                                      color: Palette.red
+                                      if (phoneAuth != false) {
+                                        final bool isAuth =
+                                        phoneAuth['phoneAuth'] == 'success'
+                                            ? true
+                                            : false; // 인증 완료 여부
+                                        final bool isRegistered =
+                                        phoneAuth['register'] == 'success'
+                                            ? true
+                                            : false; // 회원가입 정보, 백엔드에서 가져오기
+                                        final bool isProfile = phoneAuth[
+                                        'profile'] ==
+                                            'success'
+                                            ? true
+                                            : false; // 프로필을 끝까지 등록했는지 또는 아닌지, pref로 저장하기
+                                        final bool isAgreement = phoneAuth[
+                                        'serviceTerms'] ==
+                                            'success'
+                                            ? true
+                                            : false; // 이용약관에 동의했는지 또는 아닌지, pref로 저장하기
+
+                                        if (isAuth) {
+                                          // 저장된 context 사용
+                                          WidgetsBinding.instance
+                                              .addPostFrameCallback((_) {
+                                            navigateHorizontally(
+                                                context: ctx,
+                                                widget: isRegistered
+                                                    ? LoginSuccess(
+                                                  phone: phone,
+                                                  code: code,
+                                                )
+                                                    : RegisterEmailInput());
+                                          });
+                                        } else {
+                                          textFieldController.text = "";
+                                          // 저장된 context 사용
+                                          WidgetsBinding.instance
+                                              .addPostFrameCallback((_) {
+                                            showCustomSnackBar(
+                                                context: ctx,
+                                                text: '코드가 틀렸습니다!',
+                                                color: Palette.red);
+                                          });
+                                        }
+                                      } else {
+                                        textFieldController.text = "";
+                                        // 저장된 context 사용
+                                        WidgetsBinding.instance
+                                            .addPostFrameCallback((_) {
+                                          showCustomSnackBar(
+                                              context: ctx,
+                                              text: '인증 오류가 발생했습니다!',
+                                              color: Palette.red);
+                                        });
+                                      }
+                                    },
                                   );
-                                });
-                              }
-                            },
-                          );
+                                },
+                              ));
                         },
-                      )
-                    );
-                  },
+                      ),
+                    ),
+                  ),
                 ),
               ],
             ),
