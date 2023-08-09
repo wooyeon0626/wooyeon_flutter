@@ -59,7 +59,7 @@ class EmailAuth {
       }
     } else {
       log("Error with status code : ${response.statusCode}");
-      return true; // todo: false로 바꾸기
+      return false;
     }
   }
 }

@@ -14,6 +14,7 @@ import 'package:wooyeon_flutter/widgets/next_button.dart';
 
 import '../../../config/palette.dart';
 import '../../../utils/transition.dart';
+import '../../../widgets/next_button_async.dart';
 
 class LoginByPhone extends StatefulWidget {
   const LoginByPhone({super.key});
@@ -197,7 +198,7 @@ class _LoginByPhoneState extends State<LoginByPhone> {
                                     // 새로운 context를 변수에 저장
                                     final ctx = newContext;
 
-                                    return NextButton(
+                                    return NextButtonAsync(
                                       text: "다음",
                                       isActive: buttonActive,
                                       func: () async {

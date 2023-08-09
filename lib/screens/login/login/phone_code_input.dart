@@ -11,7 +11,6 @@ import 'package:wooyeon_flutter/utils/transition.dart';
 import 'package:wooyeon_flutter/widgets/next_button_async.dart';
 
 import '../../../../config/palette.dart';
-import '../../../../widgets/next_button.dart';
 import 'login_success.dart';
 
 class PhoneCodeInput extends StatelessWidget {
@@ -204,22 +203,6 @@ class PhoneCodeInput extends StatelessWidget {
                                       final dynamic phoneAuth = await PhoneAuth()
                                           .sendPhoneVerifyRequest(
                                           phone: phone, code: codeValue);
-
-                                      /// todo: 테스트
-                                      /// 실제 테스트 시 해당 부분 지우기
-                                      WidgetsBinding.instance
-                                          .addPostFrameCallback((_) {
-                                        navigateHorizontally(
-                                            context: ctx,
-                                            widget: false
-                                                ? LoginSuccess(
-                                              phone: phone,
-                                              code: code,
-                                            )
-                                                : RegisterEmailInput());
-                                      });
-
-                                      /// 여기까지 테스트
 
                                       if (phoneAuth != false) {
                                         final bool isAuth =
