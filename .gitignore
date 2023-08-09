@@ -10,6 +10,9 @@
 .svn/
 migrate_working_dir/
 
+# Config file
+./lib/config/config.dart
+
 # IntelliJ related
 *.iml
 *.ipr

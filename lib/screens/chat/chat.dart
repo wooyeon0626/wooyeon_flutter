@@ -11,7 +11,8 @@ import '../../models/controller/chat_controller.dart';
 import '../../models/data/chat_room_data.dart';
 
 class Chat extends StatelessWidget {
-  const Chat({Key? key}) : super(key: key);
+  final double bodyHeight;
+  const Chat(this.bodyHeight, {super.key});
 
   @override
   Widget build(BuildContext context) {
