@@ -170,7 +170,8 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver{
             if (snapshot.data == true) {
               return const MainScreen();
             } else {
-              return const Login();
+              // Login() 무시, MainScreen 우선 실행
+              return const MainScreen();//Login();
             }
           } else {
             return const Loading();
