@@ -36,7 +36,7 @@ class _ProfileInfoState extends State<ProfileInfo> {
     return Positioned(
       child: GestureDetector(
         onVerticalDragUpdate: (details) {
-          if (details.delta.dy.abs() > 8) {
+          if ((details.delta.dy.abs() > 8) & (details.delta.direction < 0)) {
             showBottomSheet();
           }
         },

@@ -2,12 +2,14 @@ import 'dart:developer' as dev;
 
 import 'package:flutter/material.dart';
 import 'package:swipable_stack/swipable_stack.dart';
+import 'package:wooyeon_flutter/service/recommend/recommend_service.dart';
 import 'package:wooyeon_flutter/widgets/recommend/background_profile.dart';
 import 'package:wooyeon_flutter/widgets/recommend/card_controller.dart';
 import 'package:wooyeon_flutter/widgets/recommend/profile_info.dart';
 
 import '../../config/palette.dart';
 import '../../models/data/recommend_data.dart';
+import '../../models/data/recommend_profile_model.dart';
 import '../../widgets/recommend/card_overlay.dart';
 
 class Recommendation extends StatefulWidget {
@@ -19,13 +21,22 @@ class Recommendation extends StatefulWidget {
 }
 
 class _RecommendationState extends State<Recommendation> {
+  List<RecommendProfileModel> recommendProfileList = [];
+  bool isLoading = true;
   late final SwipableStackController controller;
 
   void _listenController() => setState(() {});
+  void waitForRecommendProfileList() async{
+    recommendProfileList = await RecommendService.getRecommendProfileList();
+    isLoading = false;
+    setState(() {});
+  }
 
   @override
   void initState() {
     super.initState();
+    // ToDo : fetch RecommendProfileList from API
+    //waitForRecommendProfileList();
     controller = SwipableStackController()..addListener(_listenController);
   }
 
@@ -47,7 +58,7 @@ class _RecommendationState extends State<Recommendation> {
             padding: const EdgeInsets.all(20),
             height: widget.bodyHeight - 10,
             child: SwipableStack(
-              //itemCount: recommendProfiles.length,
+              itemCount: recommendProfiles.length,
               detectableSwipeDirections: const {
                 SwipeDirection.right,
                 SwipeDirection.left,
@@ -55,13 +66,15 @@ class _RecommendationState extends State<Recommendation> {
               controller: controller,
               stackClipBehaviour: Clip.none,
               onSwipeCompleted: (index, direction) {
+                // ToDo : swipe 완료 후, like 정보 API 로 전달
+                // ToDo :
                 dev.log('$index, $direction');
               },
               horizontalSwipeThreshold: 0.7,
               verticalSwipeThreshold: 0.7,
               allowVerticalSwipe: false,
               builder: (BuildContext context, properties) {
-                final itemIndex = properties.index % recommendProfiles.length;
+                final itemIndex = properties.index;// % recommendProfiles.length;
 
                 return Container(
                     alignment: Alignment.center,
@@ -79,6 +92,7 @@ class _RecommendationState extends State<Recommendation> {
                     ),
                     child: Stack(
                       children: [
+                        // ToDo : recommendProfileList data from API 로 변경
                         BackgroundProfile(recommendProfiles[itemIndex]),
                         ProfileInfo(recommendProfiles[itemIndex], controller),
                         CardController(controller),
@@ -89,7 +103,8 @@ class _RecommendationState extends State<Recommendation> {
                             direction: properties.direction!,
                           )
                       ],
-                    ));
+                    ),
+                );
               },
             ),
           ),
