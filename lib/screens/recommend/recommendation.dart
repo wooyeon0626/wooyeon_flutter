@@ -36,7 +36,7 @@ class _RecommendationState extends State<Recommendation> {
   void initState() {
     super.initState();
     // ToDo : fetch RecommendProfileList from API
-    //waitForRecommendProfileList();
+    waitForRecommendProfileList();
     controller = SwipableStackController()..addListener(_listenController);
   }
 
@@ -66,7 +66,7 @@ class _RecommendationState extends State<Recommendation> {
               controller: controller,
               stackClipBehaviour: Clip.none,
               onSwipeCompleted: (index, direction) {
-                // ToDo : swipe 완료 후, like 정보 API 로 전달
+                // ToDo : swipe 완료 후, like 라면, 정보 API 로 전달
                 // ToDo :
                 dev.log('$index, $direction');
               },
