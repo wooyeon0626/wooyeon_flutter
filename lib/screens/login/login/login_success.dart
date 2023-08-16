@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:get/route_manager.dart';
 import 'package:wooyeon_flutter/screens/main_screen.dart';
 import 'package:wooyeon_flutter/service/login/auto_login/auth.dart';
 

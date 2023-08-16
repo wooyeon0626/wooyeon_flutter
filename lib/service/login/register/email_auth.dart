@@ -20,7 +20,7 @@ class EmailAuth {
       }),
     );
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 200 || response.statusCode == 201 || response.statusCode == 202 || response.statusCode == 204) {
       return true;
     } else {
       log("Error with status code : ${response.statusCode}");
@@ -44,7 +44,7 @@ class EmailAuth {
       }),
     );
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 200 || response.statusCode == 201 || response.statusCode == 202 || response.statusCode == 204) {
       Map<String, dynamic> decodedResponse = jsonDecode(response.body);
 
       final String emailAuth = decodedResponse['emailAuth'];

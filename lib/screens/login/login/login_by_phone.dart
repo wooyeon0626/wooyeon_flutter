@@ -5,6 +5,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mobile_number/mobile_number.dart';
+import 'package:sms_autofill/sms_autofill.dart';
 import 'package:wooyeon_flutter/config/config.dart';
 import 'package:wooyeon_flutter/screens/login/login/phone_code_input.dart';
 import 'package:wooyeon_flutter/screens/login/login/privacy_policy.dart';
@@ -180,46 +181,48 @@ class _LoginByPhoneState extends State<LoginByPhone> {
                     ),
                   ],
                 ),
-                Expanded(
-                  child: Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 40),
-                      child: ValueListenableBuilder<String>(
-                          valueListenable: phone,
-                          builder: (context, phoneValue, child) {
-                            //todo : 여기서 백엔드에 전화번호 전송
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 40),
+                    child: ValueListenableBuilder<String>(
+                        valueListenable: phone,
+                        builder: (context, phoneValue, child) {
+                          //todo : 여기서 백엔드에 전화번호 전송
 
-                            return Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 10),
-                                child: Builder(
-                                  builder: (newContext) {
-                                    // 새로운 context를 변수에 저장
-                                    final ctx = newContext;
+                          return Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 10),
+                              child: Builder(
+                                builder: (newContext) {
+                                  // 새로운 context를 변수에 저장
+                                  final ctx = newContext;
 
-                                    return NextButtonAsync(
-                                      text: "다음",
-                                      isActive: buttonActive,
-                                      func: () async {
-                                        await PhoneAuth()
-                                            .sendPhoneNumberRequest(
-                                            phone: phoneValue);
+                                  return NextButtonAsync(
+                                    text: "다음",
+                                    isActive: buttonActive,
+                                    func: () async {
+                                      var signature = await SmsAutoFill().getAppSignature;
 
-                                        WidgetsBinding.instance
-                                            .addPostFrameCallback((_) {
-                                          navigateHorizontally(
-                                            context: ctx,
-                                            widget: PhoneCodeInput(
-                                                phone: phoneValue),
-                                          );
-                                        });
-                                      },
-                                    );
-                                  },
-                                ));
-                          }),
-                    ),
+                                      log(signature);
+
+                                      await PhoneAuth()
+                                          .sendPhoneNumberRequest(
+                                          phone: phoneValue, signature: signature);
+
+                                      WidgetsBinding.instance
+                                          .addPostFrameCallback((_) {
+                                        navigateHorizontally(
+                                          context: ctx,
+                                          widget: PhoneCodeInput(
+                                              phone: phoneValue),
+                                        );
+                                      });
+                                    },
+                                  );
+                                },
+                              ));
+                        }),
                   ),
                 ),
               ],
