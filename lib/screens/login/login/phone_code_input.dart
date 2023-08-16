@@ -1,8 +1,10 @@
 import 'dart:developer';
 
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:pin_input_text_field/pin_input_text_field.dart' as pin;
 import 'package:sms_autofill/sms_autofill.dart';
 import 'package:wooyeon_flutter/screens/login/register/register_email_input.dart';
@@ -12,6 +14,7 @@ import 'package:wooyeon_flutter/utils/transition.dart';
 import 'package:wooyeon_flutter/widgets/next_button_async.dart';
 
 import '../../../../config/palette.dart';
+import '../../../models/controller/timer_controller.dart';
 import 'login_success.dart';
 
 class PhoneCodeInput extends StatefulWidget {
@@ -26,6 +29,8 @@ class PhoneCodeInput extends StatefulWidget {
 class _PhoneCodeInputState extends State<PhoneCodeInput> {
   final buttonActive = ValueNotifier<bool>(false);
   final inputCode = ValueNotifier<String>("");
+  final TimerController _timerController = Get.put(TimerController());
+  bool codeResend = false;
 
   @override
   void initState() {
@@ -152,51 +157,53 @@ class _PhoneCodeInputState extends State<PhoneCodeInput> {
                     Row(
                       children: [
                         const Text(
-                          "혹시 메일이 오지 않았나요?",
+                          "혹시 문자가 오지 않았나요? ",
                           style: TextStyle(
                             color: Palette.grey,
                             fontSize: 16,
                           ),
                         ),
-                        InkWell(
-                          onTap: () {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  title: const Center(
-                                      child: Text(
-                                    '코드 재전송',
-                                    style: TextStyle(color: Palette.primary),
-                                  )),
-                                  content: const Text(
-                                    '코드를 정말 재전송할까요?',
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  actions: <Widget>[
-                                    TextButton(
-                                      child: const Text('확인'),
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                    ),
-                                  ],
-                                );
+                        Obx(() {
+                          final ctx = context;
+                          if (_timerController.remainingTime.value.isNegative || _timerController.remainingTime.value == Duration.zero) {
+                            return InkWell(
+                              onTap: () async {
+                                var signature = await SmsAutoFill().getAppSignature;
+
+                                log(signature);
+
+                                await PhoneAuth()
+                                    .sendPhoneNumberRequest(
+                                    phone: widget.phone, signature: signature);
+
+                                WidgetsBinding.instance
+                                    .addPostFrameCallback((_) {
+                                  showCustomSnackBar(context: ctx, text: '코드를 재전송했어요!', color: Palette.green);
+                                });
+
+
+                                _timerController.resetTimer();
                               },
+                              child: const Text(
+                                "코드 재전송",
+                                style: TextStyle(
+                                  color: Palette.red,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w800,
+                                  decoration: TextDecoration.underline,
+                                ),
+                              ),
                             );
-                          },
-                          child: const Text(
-                            "코드 재전송",
-                            style: TextStyle(
-                              color: Palette.red,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w800,
-                            ),
-                          ),
-                        ),
+                          } else {
+                            return Text(
+                              '${_timerController.remainingTime.value.inMinutes}:${(_timerController.remainingTime.value.inSeconds % 60).toString().padLeft(2, '0')}',
+                              style: const TextStyle(
+                                color: Palette.primary,
+                                fontSize: 16,
+                              ),
+                            );
+                          }
+                        }),
                       ],
                     ),
                   ],
@@ -220,11 +227,10 @@ class _PhoneCodeInputState extends State<PhoneCodeInput> {
                                   text: "다음",
                                   isActive: buttonActive,
                                   func: () async {
-                                    final dynamic phoneAuth =
-                                        await PhoneAuth()
-                                            .sendPhoneVerifyRequest(
-                                                phone: widget.phone,
-                                                code: codeValue);
+                                    final dynamic phoneAuth = await PhoneAuth()
+                                        .sendPhoneVerifyRequest(
+                                            phone: widget.phone,
+                                            code: codeValue);
 
                                     if (phoneAuth != false) {
                                       final bool isAuth =
