@@ -1,14 +1,14 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:swipable_stack/swipable_stack.dart';
+import 'package:wooyeon_flutter/models/data/recommend_profile_model.dart';
 import 'package:wooyeon_flutter/utils/util.dart';
 
 import '../../config/palette.dart';
-import '../../models/data/recommend_data.dart';
 import '../../screens/recommend/recommendation_detail.dart';
 
 class ProfileInfo extends StatefulWidget {
-  final RecommendProfiles profile;
+  final RecommendProfileModel profile;
   final SwipableStackController controller;
 
   const ProfileInfo(this.profile, this.controller, {super.key});
