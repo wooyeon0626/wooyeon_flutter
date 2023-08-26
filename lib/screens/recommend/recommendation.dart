@@ -22,25 +22,23 @@ class Recommendation extends StatefulWidget {
 }
 
 class _RecommendationState extends State<Recommendation> {
-  bool isLoading = false;
+  List<RecommendProfileModel> recommendProfiles = [];
+  bool isLoading = true;
   late final SwipableStackController controller;
 
   void _listenController() => setState(() {});
 
-  /*
-  List<RecommendProfileModel> recommendProfileList = [];
   void waitForRecommendProfileList() async {
-    recommendProfileList = await RecommendService.getRecommendProfileList();
+    recommendProfiles = await RecommendService.getRecommendProfileList();
     isLoading = false;
     setState(() {});
   }
-   */
 
   @override
   void initState() {
     super.initState();
     // ToDo : fetch RecommendProfileList from API
-    //waitForRecommendProfileList();
+    waitForRecommendProfileList();
     controller = SwipableStackController()..addListener(_listenController);
   }
 
@@ -92,9 +90,9 @@ class _RecommendationState extends State<Recommendation> {
                       // 오른쪽 swipe == 좋아요
                       if (direction == SwipeDirection.right) {
                         // ToDo : swipe 완료 후, like 라면, 정보 API 로 전달
-                        final toUserId = recommendProfiles[index].userId;
+                        final toUserCode = recommendProfiles[index].userCode;
                         dev.log(
-                            'RecommendService.postLikeTo(toUserId: $toUserId);');
+                            'RecommendService.postLikeTo(toUserId: $toUserCode);');
                       }
                     },
                     horizontalSwipeThreshold: 0.7,

@@ -1,8 +1,7 @@
 class RecommendProfileModel {
   // ToDo : 속성 API에 맞게 바꾸기
   // ToDo : 속성 바꾼 후에, recommend widget들에 들어가는 값도 맞추어 수정
-  int userId;
-  int profileId;
+  String userCode;
   String gender;
   String nickname;
   String birthday;
@@ -16,8 +15,7 @@ class RecommendProfileModel {
   List<String> profilePhoto;
 
   RecommendProfileModel({
-    required this.userId,
-    required this.profileId,
+    required this.userCode,
     required this.gender,
     required this.nickname,
     required this.birthday,
@@ -33,11 +31,10 @@ class RecommendProfileModel {
 
   factory RecommendProfileModel.fromJsom(Map<String, dynamic> json) {
     /* ToDo : 실제 API 값으로 수정
-    *  userID, birthday, authenticatedAccount, hobby, interest, profilePhoto
+    *  birthday, authenticatedAccount, hobby, interest, profilePhoto
     */
 
-    final int userId = -1;
-    final int profileId = json['profileId'];
+    final String userCode = json['userCode'];
     final String gender = json['gender'];
     final String nickname = json['nickname'];
     // ToDo : birthday format, "YYYYMMDD" -> 이를 통해, 나이 계산
@@ -57,8 +54,7 @@ class RecommendProfileModel {
     ];
 
     return RecommendProfileModel(
-      userId: userId,
-      profileId: profileId,
+      userCode: userCode,
       gender: gender,
       nickname: nickname,
       birthday: birthday,
@@ -74,11 +70,13 @@ class RecommendProfileModel {
   }
 }
 
+// dummy Data
+/*
 List<RecommendProfileModel> recommendProfiles = [
   RecommendProfileModel(
     profileId: 1,
     gpsLocationInfo: "3km",
-    userId: 1,
+    userCode: 1,
     gender: 'M',
     nickname: "유저1",
     profilePhoto: [
@@ -98,7 +96,7 @@ List<RecommendProfileModel> recommendProfiles = [
   RecommendProfileModel(
     profileId: 1,
     gpsLocationInfo: "3km",
-    userId: 2,
+    userCode: 2,
     gender: 'F',
     nickname: "DOGE",
     profilePhoto: [
@@ -120,7 +118,7 @@ List<RecommendProfileModel> recommendProfiles = [
   RecommendProfileModel(
     profileId: 1,
     gpsLocationInfo: "3km",
-    userId: 3,
+    userCode: 3,
     gender: 'F',
     nickname: "점메추",
     profilePhoto: [
@@ -137,7 +135,7 @@ List<RecommendProfileModel> recommendProfiles = [
   RecommendProfileModel(
     profileId: 1,
     gpsLocationInfo: "3km",
-    userId: 4,
+    userCode: 4,
     gender: 'M',
     nickname: "닉네임 최대 몇 자?",
     profilePhoto: [
@@ -159,7 +157,7 @@ List<RecommendProfileModel> recommendProfiles = [
   RecommendProfileModel(
     profileId: 1,
     gpsLocationInfo: "3km",
-    userId: 5,
+    userCode: 5,
     gender: 'M',
     nickname: "GIF",
     profilePhoto: [
@@ -175,3 +173,4 @@ List<RecommendProfileModel> recommendProfiles = [
     authenticatedAccount: true,
   ),
 ];
+ */
