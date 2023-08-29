@@ -1,25 +1,47 @@
+import 'dart:developer';
+
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:wooyeon_flutter/models/pref.dart';
 import 'package:wooyeon_flutter/screens/login/register_profile/rp_gender.dart';
 import 'package:wooyeon_flutter/widgets/login/profile_progressbar.dart';
+import 'package:wooyeon_flutter/widgets/next_button_async.dart';
 
 import '../../../config/palette.dart';
+import '../../../utils/transition.dart';
 import '../../../widgets/basic_textfield.dart';
-import '../../../widgets/next_button.dart';
 
-class RPName extends StatelessWidget {
-  RPName({super.key});
+class RPName extends StatefulWidget {
+  const RPName({super.key});
 
+  @override
+  State<RPName> createState() => _RPNameState();
+}
+
+class _RPNameState extends State<RPName> {
   final buttonActive = ValueNotifier<bool>(false);
   final nickname = ValueNotifier<String>("");
+  String? _nickname;
 
   final RegExp nicknameValidator = RegExp(
     r'^[ㄱ-힣a-zA-Z\d_ -]+$',
   );
 
   @override
+  void initState() {
+    super.initState();
+    _nickname = Pref.instance.profileData?.nickname;
+  }
+
+  @override
   Widget build(BuildContext context) {
     TextEditingController textFieldController = TextEditingController();
+
+    if (_nickname != null) {
+      textFieldController.text = _nickname!;
+      nickname.value = textFieldController.text;
+      buttonActive.value = nicknameValidator.hasMatch(textFieldController.text);
+    }
 
     textFieldController.addListener(() {
       nickname.value = textFieldController.text;
@@ -36,7 +58,10 @@ class RPName extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const ProfileProgressBar(start: 0, end: 0.125,),
+              const ProfileProgressBar(
+                start: 0,
+                end: 0.125,
+              ),
               Padding(
                 padding: const EdgeInsets.only(left: 12, top: 25, bottom: 25),
                 child: IconButton(
@@ -55,9 +80,10 @@ class RPName extends StatelessWidget {
                 child: Text(
                   "당신을 알아가는 시간을 가져볼게요.",
                   style: TextStyle(
-                      color: Palette.primary,
-                      fontSize: 18,
-                      letterSpacing: -2.5,),
+                    color: Palette.primary,
+                    fontSize: 18,
+                    letterSpacing: -2.5,
+                  ),
                 ),
               ),
               const Padding(
@@ -97,21 +123,37 @@ class RPName extends StatelessWidget {
                 child: Align(
                   alignment: Alignment.bottomCenter,
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 40),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 40, horizontal: 40),
                     child: ValueListenableBuilder<String>(
                         valueListenable: nickname,
                         builder: (context, nicknameValue, child) {
-                          // todo: 여기서 pref에 저장하기
-
                           return Padding(
                             padding: const EdgeInsets.symmetric(vertical: 10),
-                            child: NextButton(
-                                nextPage: RPGender(),
-                                text: "다음",
-                                isActive: buttonActive),
+                            child: Builder(
+                              builder: (newContext) {
+                                final ctx = newContext;
+
+                                return NextButtonAsync(
+                                    text: "다음",
+                                    isActive: buttonActive,
+                                    func: () async {
+                                      Pref.instance.profileData?.nickname = nicknameValue;
+                                      log(Pref.instance.profileData.toString());
+                                      await Pref.instance.saveProfile();
+
+                                      WidgetsBinding.instance
+                                          .addPostFrameCallback((_) {
+                                        navigateHorizontally(
+                                          context: ctx,
+                                          widget: const RPGender(),
+                                        );
+                                      });
+                                    });
+                              },
+                            ),
                           );
-                        }
-                    ),
+                        }),
                   ),
                 ),
               ),
@@ -121,5 +163,4 @@ class RPName extends StatelessWidget {
       ),
     );
   }
-
 }

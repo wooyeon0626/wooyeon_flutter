@@ -1,6 +1,13 @@
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'data/user_data.dart';
+
 class Pref {
+  Profile? profileData;
+
   Pref._privateConstructor();
 
   static final Pref _instance = Pref._privateConstructor();
@@ -15,5 +22,27 @@ class Pref {
   Future<String?> get(String key) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString(key);
+  }
+
+  Future<void> saveProfile() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    String profileString = jsonEncode(profileData!.toJson());
+
+    prefs.setString('profile_data', profileString);
+  }
+
+  Future<void> loadProfile() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    String? profileString = prefs.getString('profile_data');
+
+    if (profileString != null) {
+      Map<String, dynamic> profileMap = jsonDecode(profileString);
+      log(profileString);
+      profileData = Profile.fromJson(profileMap);
+    } else {
+      profileData = Profile();
+    }
   }
 }

@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:wooyeon_flutter/config/palette.dart';
+import 'package:wooyeon_flutter/models/pref.dart';
 import 'package:wooyeon_flutter/screens/login/login/login_by_phone.dart';
+import 'package:wooyeon_flutter/screens/login/register_profile/rp_name.dart';
 import 'package:wooyeon_flutter/widgets/login/login_is_not_working.dart';
 
 class Login extends StatefulWidget {
@@ -31,10 +33,16 @@ class _LoginState extends State<Login> {
     );
   }
 
+  Future<void> _profileDataLoad() async {
+    await Pref.instance.loadProfile();
+    log("Profile loaded.");
+  }
+
   @override
   void initState() {
     super.initState();
     permission();
+    _profileDataLoad();
   }
 
   Future<bool> permission() async {
@@ -134,7 +142,7 @@ class _LoginState extends State<Login> {
               child: InkWell(
                 onTap: () {
                   //todo: access token이 있는지 없는지 체크??
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => const LoginByPhone()));
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => RPName()/*const LoginByPhone()*/));
                 },
                 child: Container(
                   height: 70,

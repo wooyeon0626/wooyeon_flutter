@@ -6,12 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mobile_number/mobile_number.dart';
 import 'package:sms_autofill/sms_autofill.dart';
-import 'package:wooyeon_flutter/config/config.dart';
 import 'package:wooyeon_flutter/screens/login/login/phone_code_input.dart';
 import 'package:wooyeon_flutter/screens/login/login/privacy_policy.dart';
 import 'package:wooyeon_flutter/service/login/phone_auth.dart';
 import 'package:wooyeon_flutter/widgets/basic_textfield.dart';
-import 'package:wooyeon_flutter/widgets/next_button.dart';
 
 import '../../../config/palette.dart';
 import '../../../utils/transition.dart';
