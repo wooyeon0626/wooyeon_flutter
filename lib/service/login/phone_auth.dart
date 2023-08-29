@@ -16,10 +16,13 @@ class PhoneAuth {
     },
       body: jsonEncode(<String, String>{
         'to': phone,
+        'signature': signature
       }),
     );
 
     if(response.statusCode == 200 || response.statusCode == 201 || response.statusCode == 202 || response.statusCode == 204) {
+      Map<String, dynamic> decodedResponse = jsonDecode(response.body);
+      //decodedResponse['statusName'] == 'success' || 'duplicated';
       return true;
     } else {
       log("Error with status code : ${response.statusCode}");

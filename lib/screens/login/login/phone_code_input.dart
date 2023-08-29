@@ -1,7 +1,6 @@
 import 'dart:developer';
 
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -165,22 +164,26 @@ class _PhoneCodeInputState extends State<PhoneCodeInput> {
                         ),
                         Obx(() {
                           final ctx = context;
-                          if (_timerController.remainingTime.value.isNegative || _timerController.remainingTime.value == Duration.zero) {
+                          if (_timerController.remainingTime.value.isNegative ||
+                              _timerController.remainingTime.value ==
+                                  Duration.zero) {
                             return InkWell(
                               onTap: () async {
-                                var signature = await SmsAutoFill().getAppSignature;
+                                var signature =
+                                    await SmsAutoFill().getAppSignature;
 
                                 log(signature);
 
-                                await PhoneAuth()
-                                    .sendPhoneNumberRequest(
+                                await PhoneAuth().sendPhoneNumberRequest(
                                     phone: widget.phone, signature: signature);
 
                                 WidgetsBinding.instance
                                     .addPostFrameCallback((_) {
-                                  showCustomSnackBar(context: ctx, text: '코드를 재전송했어요!', color: Palette.green);
+                                  showCustomSnackBar(
+                                      context: ctx,
+                                      text: '코드를 재전송했어요!',
+                                      color: Palette.green);
                                 });
-
 
                                 _timerController.resetTimer();
                               },
@@ -238,17 +241,18 @@ class _PhoneCodeInputState extends State<PhoneCodeInput> {
                                               ? true
                                               : false; // 인증 완료 여부
                                       final bool isRegistered =
-                                          phoneAuth['register'] == 'success'
+                                          phoneAuth['registerProc'] ==
+                                                  'register'
                                               ? true
                                               : false; // 회원가입 정보, 백엔드에서 가져오기
                                       final bool isProfile = phoneAuth[
-                                                  'profile'] ==
-                                              'success'
+                                                  'registerProc'] ==
+                                              'profile'
                                           ? true
                                           : false; // 프로필을 끝까지 등록했는지 또는 아닌지, pref로 저장하기
                                       final bool isAgreement = phoneAuth[
-                                                  'serviceTerms'] ==
-                                              'success'
+                                                  'registerProc'] ==
+                                              'serviceTerms'
                                           ? true
                                           : false; // 이용약관에 동의했는지 또는 아닌지, pref로 저장하기
 
