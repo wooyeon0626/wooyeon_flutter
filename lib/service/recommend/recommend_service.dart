@@ -29,23 +29,25 @@ class RecommendService {
     throw Error();
   }
 
-  static Future<void> postLikeTo({required String toUserId}) async {
-    //final url = Uri.parse('$baseUrl/like/user/$toUserId');
-    final url = Uri.parse('/like/user/$toUserId');
+  static Future<void> postLikeTo({required String toUserCode}) async {
+    final url = Uri.parse('$baseUrl/like/user');
     final response = await http.post(
       url,
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode(<String, String>{
-        // ToDo : 현재 로그인 된 사용자의 userId 가져오기
-        'fromUserId': "현재 로그인 된 사용자의 userId",
-        'toUserId': toUserId,
+        // ToDo : 현재 로그인 된 사용자의 UUID 가져오기
+        //'likeFromUserUUID': "현재 로그인 된 사용자의 UUID",
+        // 우선은, 1번 유저의 UUID
+        'likeFromUserUUID': "484501f9-783e-44de-abbd-6516c0d15cc8",
+        'likeToUserUUID': toUserCode,
       }),
     );
 
     if (response.statusCode >= 200 && response.statusCode <= 206) {
       log("Post like success");
+      log(response.body);
     } else {
       log("Error with status code : ${response.statusCode}");
     }
