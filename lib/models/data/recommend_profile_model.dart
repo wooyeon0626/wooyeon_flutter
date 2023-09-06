@@ -37,8 +37,7 @@ class RecommendProfileModel {
     final String userCode = json['userCode'];
     final String gender = json['gender'];
     final String nickname = json['nickname'];
-    // ToDo : birthday format, "YYYYMMDD" -> 이를 통해, 나이 계산
-    final String birthday = "19990630";
+    final String birthday = json['birthday'];
     //final String birthday= json['birthday'];
     final String locationInfo = json['locationInfo'];
     final String gpsLocationInfo = json['gpsLocationInfo'];
@@ -48,9 +47,9 @@ class RecommendProfileModel {
     final List<String>? hobby = ["취미1", "취미2"];
     final List<String>? interest = ["관심사1", "관심사2", "관심사3"];
     final List<String> profilePhoto = [
-      "https://i.imgur.com/I9WKCGw.jpeg",
-      "https://i.imgur.com/FVawQVf.jpeg",
-      "https://i.imgur.com/UoYBf21.jpeg"
+      "https://i.imgur.com/PyVmvKL.jpeg",
+      "https://i.imgur.com/KMnZXmG.jpeg",
+      "https://i.imgur.com/mbcfBjq.jpeg"
     ];
 
     return RecommendProfileModel(

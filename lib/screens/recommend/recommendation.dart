@@ -29,17 +29,59 @@ class _RecommendationState extends State<Recommendation> {
 
   void _listenController() => setState(() {});
 
-  void waitForRecommendProfileList() async {
+  // init recommendProfiles from API
+  void initRecommendProfiles() async {
     recommendProfiles = await RecommendService.getRecommendProfileList();
     isLoading = false;
     setState(() {});
+  }
+
+  // add recommendProfiles with Redundancy checking
+  void addRecommendProfiles() async {
+    // fetch 새로운 recommendProfiles from API
+    final newRecommendProfiles =
+        await RecommendService.getRecommendProfileList();
+
+    // 기존의 recommendProfiles 를 'userCode' 속성을 기준으로 정렬
+    final existingRecommendProfiles = recommendProfiles;
+    existingRecommendProfiles.sort((a, b) => a.userCode.compareTo(b.userCode));
+
+    for (var newRecommendProfile in newRecommendProfiles) {
+      // 이진 검색을 수행
+      int left = 0;
+      int right = existingRecommendProfiles.length - 1;
+      RecommendProfileModel? foundObject;
+
+      while (left <= right) {
+        int mid = (left + right) ~/ 2;
+        int compareResult = existingRecommendProfiles[mid]
+            .userCode
+            .compareTo(newRecommendProfile.userCode);
+
+        if (compareResult == 0) {
+          foundObject = existingRecommendProfiles[mid]; // 일치하는 요소를 찾았음
+          break;
+        } else if (compareResult < 0) {
+          left = mid + 1; // 중간 요소보다 큰 부분에서 검색
+        } else {
+          right = mid - 1; // 중간 요소보다 작은 부분에서 검색
+        }
+      }
+
+      if (foundObject != null) {
+        dev.log("중복된 프로필 입니다 : ${foundObject.userCode}");
+      } else {
+        dev.log("중복된 프로필이 아닙니다. recommendProfiles 에 추가!");
+        recommendProfiles.add(newRecommendProfile);
+      }
+    }
   }
 
   @override
   void initState() {
     super.initState();
     // ToDo : fetch RecommendProfileList from API
-    waitForRecommendProfileList();
+    initRecommendProfiles();
     controller = SwipableStackController()..addListener(_listenController);
   }
 
@@ -59,13 +101,13 @@ class _RecommendationState extends State<Recommendation> {
           Container(
             padding: const EdgeInsets.all(20),
             height: widget.bodyHeight - 10,
-            child: (swipedIndex == recommendProfiles.length - 1)
-                ? Center(child: Text("추천 정보가 없어요...")) // Todo : UI 꾸미기
-                : isLoading
-                    ? Center(
-                        child: LoadingAnimationWidget.fourRotatingDots(
-                            color: Palette.primary, size: 40), // 로딩 애니메이션
-                      )
+            child: isLoading
+                ? Center(
+                    child: LoadingAnimationWidget.fourRotatingDots(
+                        color: Palette.primary, size: 40), // 로딩 애니메이션
+                  )
+                : (swipedIndex == recommendProfiles.length - 1)
+                    ? Center(child: Text("추천 정보가 없어요...")) // Todo : UI 꾸미기
                     : SwipableStack(
                         itemCount: recommendProfiles.length,
                         detectableSwipeDirections: const {
@@ -77,27 +119,28 @@ class _RecommendationState extends State<Recommendation> {
                         onSwipeCompleted: (index, direction) async {
                           dev.log('$index, $direction');
                           swipedIndex = index;
+
+                          // swipe 완료 후, like 라면 (오른쪽 swipe == 좋아요) like 정보 post
+                          if (direction == SwipeDirection.right) {
+                            final toUserCode =
+                                recommendProfiles[index].userCode;
+                            dev.log(
+                                'RecommendService.postLikeTo(toUserId: $toUserCode);');
+                            // ToDo : Like 정보 API 로 전달
+                            //RecommendService.postLikeTo(toUserCode: toUserCode);
+                          }
+
                           // 마지막 카드가 swipe 되면, 로딩 상태로 변경 후 데이터 fetch
                           if (index == recommendProfiles.length - 1) {
                             setState(() {
                               isLoading = true;
                             });
-                            final newRecommendProfiles = await RecommendService
-                                .getRecommendProfileList();
-                            recommendProfiles.addAll(newRecommendProfiles);
+                            // add recommendProfiles with Redundancy checking
+                            addRecommendProfiles();
+                            // 데이터 fetch 완료 후, 로딩 종료
                             setState(() {
                               isLoading = false;
                             });
-                          }
-
-                          // 오른쪽 swipe == 좋아요
-                          if (direction == SwipeDirection.right) {
-                            // ToDo : swipe 완료 후, like 라면, 정보 API 로 전달
-                            final toUserCode =
-                                recommendProfiles[index].userCode;
-                            dev.log(
-                                'RecommendService.postLikeTo(toUserId: $toUserCode);');
-                            //RecommendService.postLikeTo(toUserCode: toUserCode);
                           }
                         },
                         horizontalSwipeThreshold: 0.7,
