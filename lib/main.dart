@@ -35,6 +35,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver{
   final Auth _auth = Auth();
   bool? _isEmailAuth;
   bool _isLoading = true;
+  bool isDeepLinkHandled = false;
 
   @override
   void initState() {
@@ -52,8 +53,9 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver{
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
-    if (state == AppLifecycleState.resumed) {
+    if (state == AppLifecycleState.resumed && !isDeepLinkHandled) {
       _initUniLinksForeground();
+      isDeepLinkHandled = true;
     }
   }
 
