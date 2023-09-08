@@ -66,6 +66,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver{
 
     if (initialLink != null) {
       _handleIncomingLink(initialLink);
+      isDeepLinkHandled = true;
     }
   }
 
