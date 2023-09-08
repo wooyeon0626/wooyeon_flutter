@@ -1,17 +1,34 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:wooyeon_flutter/screens/login/register/register_success.dart';
 
 import '../../../config/palette.dart';
-import '../../../widgets/next_button.dart';
+import '../../../models/pref.dart';
+import '../../../service/login/register/email_auth.dart';
 
-class RegisterCodeWaiting extends StatelessWidget {
+class RegisterCodeWaiting extends StatefulWidget {
   final String email;
 
-  RegisterCodeWaiting({required this.email, super.key});
+  const RegisterCodeWaiting({required this.email, super.key});
 
-  final buttonActive = ValueNotifier<bool>(true);
+  @override
+  State<RegisterCodeWaiting> createState() => _RegisterCodeWaitingState();
+}
+
+class _RegisterCodeWaitingState extends State<RegisterCodeWaiting> {
+
+  Future<void> sendEmail() async {
+    await EmailAuth().sendEmailRequest(
+        email: widget.email);
+    await Pref.instance
+        .save('email_address', widget.email);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    sendEmail();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +76,7 @@ class RegisterCodeWaiting extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(left: 5, top: 10),
                 child: Text(
-                  email,
+                  widget.email,
                   style: const TextStyle(
                     color: Palette.black,
                     fontSize: 20,
@@ -83,5 +100,4 @@ class RegisterCodeWaiting extends StatelessWidget {
       ),
     );
   }
-
 }

@@ -12,6 +12,7 @@ import 'package:wooyeon_flutter/service/login/phone_auth.dart';
 import 'package:wooyeon_flutter/widgets/basic_textfield.dart';
 
 import '../../../config/palette.dart';
+import '../../../models/pref.dart';
 import '../../../utils/transition.dart';
 import '../../../widgets/next_button_async.dart';
 
@@ -207,6 +208,9 @@ class _LoginByPhoneState extends State<LoginByPhone> {
                                       await PhoneAuth()
                                           .sendPhoneNumberRequest(
                                           phone: phoneValue, signature: signature);
+
+                                      await Pref.instance
+                                          .save('phone_number', phoneValue);
 
                                       WidgetsBinding.instance
                                           .addPostFrameCallback((_) {

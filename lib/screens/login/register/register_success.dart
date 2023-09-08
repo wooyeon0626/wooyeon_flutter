@@ -71,23 +71,22 @@ class RegisterSuccess extends StatelessWidget {
                 ),
               ],
             ),
-            Expanded(
-                child: Align(
+            Align(
               alignment: Alignment.bottomCenter,
               child: Padding(
-                padding: const EdgeInsets.only(bottom: 40),
-                child: NextButton(
-                    func: () {
-                      Navigator.of(context).pushAndRemoveUntil(
-                        MaterialPageRoute(
-                            builder: (BuildContext context) => RPName()),
-                        (Route<dynamic> route) => route.isFirst,
-                      );
-                    },
-                    text: "프로필 등록하기",
-                    isActive: buttonActive),
+            padding: const EdgeInsets.only(bottom: 40),
+            child: NextButton(
+                func: () {
+                  Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(
+                        builder: (BuildContext context) => const RPName()),
+                    (Route<dynamic> route) => route.isFirst,
+                  );
+                },
+                text: "프로필 등록하기",
+                isActive: buttonActive),
               ),
-            )),
+            ),
           ]),
         ),
       ),

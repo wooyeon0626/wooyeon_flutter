@@ -97,47 +97,25 @@ class RegisterEmailInput extends StatelessWidget {
                     ),
                   ],
                 ),
-                Expanded(
-                  child: Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 40),
-                      child: ValueListenableBuilder<String>(
-                          valueListenable: email,
-                          builder: (context, emailValue, child) {
-                            //todo : 여기서 백엔드에 이메일 전송
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 40),
+                    child: ValueListenableBuilder<String>(
+                        valueListenable: email,
+                        builder: (context, emailValue, child) {
+                          //todo : 여기서 백엔드에 이메일 전송
 
-                            return Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 10),
-                                child: Builder(
-                                  builder: (newContext) {
-                                    // 새로운 context를 변수에 저장
-                                    final ctx = newContext;
-
-                                    return NextButton(
-                                      text: "다음",
-                                      isActive: buttonActive,
-                                      func: () async {
-                                        await EmailAuth().sendEmailRequest(
-                                            email: emailValue);
-                                        await Pref.instance
-                                            .save('email_address', emailValue);
-
-                                        WidgetsBinding.instance
-                                            .addPostFrameCallback((_) {
-                                          navigateHorizontally(
-                                            context: ctx,
-                                            widget: RegisterCodeWaiting(
-                                                email: emailValue),
-                                          );
-                                        });
-                                      },
-                                    );
-                                  },
-                                ));
-                          }),
-                    ),
+                          return Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 10),
+                              child: NextButton(
+                                text: "다음",
+                                isActive: buttonActive,
+                                nextPage: RegisterCodeWaiting(
+                                    email: emailValue),
+                              ));
+                        }),
                   ),
                 ),
               ],
