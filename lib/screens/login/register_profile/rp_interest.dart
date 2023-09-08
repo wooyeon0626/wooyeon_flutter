@@ -10,6 +10,7 @@ import 'package:wooyeon_flutter/widgets/next_button_async.dart';
 
 import '../../../config/palette.dart';
 import '../../../utils/transition.dart';
+import '../../../widgets/tag_item.dart';
 
 class RPInterest extends StatefulWidget {
   const RPInterest({super.key});
@@ -23,12 +24,13 @@ class _RPInterestState extends State<RPInterest> {
   final buttonActive = ValueNotifier<bool>(false);
   late double _distanceToField;
   List<String>? _interest;
+  List<String> _randomInterest = [];
 
   static const List<String> _pickInterest = <String>[
-    '넷플릭스', 'TV 예능', '야구', '축구', '해외축구', '자격증', '외국어 공부', '환경 보호', '해리포터', '스포티파이', '아쿠아리움',
-    '인스타그램', '언어 교환', '소셜 미디어', '힙합', 'k-pop', '스킨케어', '사진', '시', '소설', '문학', '기후변화', '투자', '주식',
-    '빈티지 패션' '패션', '컨트리 뮤직', '별자리 운세', '평등', '창업', 'SF', '식물', '교환학생', '예술', '정치', '박물관', '먹방',
-    '팟캐스트', '부동산', '수제 맥주', '와인', '칵테일', '브이로그', '발라드', '유튜브', '비건 요리', '리그오브레전드', '배틀그라운드',
+    '넷플릭스', 'TV 예능', '야구', '축구', '해외축구', '자격증', '외국어공부', '환경 보호', '해리포터', '스포티파이', '아쿠아리움',
+    '인스타그램', '언어교환', '소셜미디어', '힙합', 'k-pop', '스킨케어', '사진', '시', '소설', '문학', '기후변화', '투자', '주식',
+    '빈티지패션' '패션', '컨트리뮤직', '별자리운세', '평등', '창업', 'SF', '식물', '교환학생', '예술', '정치', '박물관', '먹방',
+    '팟캐스트', '부동산', '수제맥주', '와인', '칵테일', '브이로그', '발라드', '유튜브', '비건요리', '리그오브레전드', '배틀그라운드',
     '포트나이트', 'NBA', 'MLB', '블로그', '애니메이션', '틱톡', '구제샵', '팝', '락', '자동차', '코딩'
   ];
 
@@ -42,6 +44,15 @@ class _RPInterestState extends State<RPInterest> {
   void initState() {
     super.initState();
     _interest = Pref.instance.profileData?.interest;
+    _pickRandomInterests();
+  }
+
+  void _pickRandomInterests() {
+    _randomInterest.clear();
+    List<String> available =
+    _pickInterest.where((e) => !_interest!.contains(e)).toList();
+    available.shuffle();
+    _randomInterest = available.take(3).toList();
   }
 
   @override
@@ -302,6 +313,43 @@ class _RPInterestState extends State<RPInterest> {
                       },
                     );
                   },
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 40, right: 40, top: 20),
+                child: Row(
+                  children: [
+                    const Text(
+                      "추천 : ",
+                      style: TextStyle(fontSize: 14, color: Palette.grey),
+                    ),
+                    Expanded(
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: _randomInterest.map((e) {
+                            return InkWell(
+                              onTap: () {
+                                setState(() {
+                                  _controller.addTag = e;
+                                  _pickRandomInterests();
+                                });
+                              },
+                              child: TagItem(e),
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                    ),
+                    IconButton(
+                      icon: const Icon(EvaIcons.refresh),
+                      onPressed: () {
+                        setState(() {
+                          _pickRandomInterests();
+                        });
+                      },
+                    ),
+                  ],
                 ),
               ),
               Expanded(

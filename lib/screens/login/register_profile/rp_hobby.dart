@@ -8,6 +8,7 @@ import 'package:wooyeon_flutter/screens/login/register_profile/rp_gender.dart';
 import 'package:wooyeon_flutter/screens/login/register_profile/rp_interest.dart';
 import 'package:wooyeon_flutter/widgets/login/profile_progressbar.dart';
 import 'package:wooyeon_flutter/widgets/next_button_async.dart';
+import 'package:wooyeon_flutter/widgets/tag_item.dart';
 
 import '../../../config/palette.dart';
 import '../../../utils/transition.dart';
@@ -24,20 +25,21 @@ class _RPHobbyState extends State<RPHobby> {
   final buttonActive = ValueNotifier<bool>(false);
   late double _distanceToField;
   List<String>? _hobby;
+  List<String> _randomHobbies = [];
 
   static const List<String> _pickHobby = <String>[
-    '영화 보기',
-    '드라마 정주행',
-    '카페 탐방',
+    '영화보기',
+    '드라마정주행',
+    '카페탐방',
     '홈카페',
-    '코인 노래방',
+    '코인노래방',
     '수다',
     '쇼핑',
     '독서',
-    '맛집 탐방',
+    '맛집탐방',
     '여행',
-    '야구 보기',
-    '축구 보기',
+    '야구보기',
+    '축구보기',
     '등산',
     '러닝',
     '산책',
@@ -47,25 +49,25 @@ class _RPHobbyState extends State<RPHobby> {
     '필라테스/요가',
     '홈트',
     '클라이밍',
-    '자전거 라이딩',
+    '자전거라이딩',
     '드라이브',
     '캠핑',
     '볼링',
     '당구',
     '카공',
     '공부',
-    '원데이 클래스',
+    '원데이클래스',
     '요리',
     '베이킹',
-    '악기 연주',
+    '악기연주',
     '덕질',
-    '음악 듣기',
-    '그림 그리기',
+    '음악듣기',
+    '그림그리기',
     '게임',
     '봉사활동',
-    '전시회 관람',
+    '전시회관람',
     '명상',
-    '프리 다이빙',
+    '프리다이빙',
     '크로스핏',
     '주짓수',
     '방탈출카페',
@@ -101,6 +103,15 @@ class _RPHobbyState extends State<RPHobby> {
   void initState() {
     super.initState();
     _hobby = Pref.instance.profileData?.hobby;
+    _pickRandomHobbies();
+  }
+
+  void _pickRandomHobbies() {
+    _randomHobbies.clear();
+    List<String> available =
+        _pickHobby.where((e) => !_hobby!.contains(e)).toList();
+    available.shuffle();
+    _randomHobbies = available.take(3).toList();
   }
 
   @override
@@ -268,7 +279,7 @@ class _RPHobbyState extends State<RPHobby> {
                       focusNode: tfn,
                       textfieldTagsController: _controller,
                       initialTags: _hobby,
-                      textSeparators: const [' ', ','],
+                      textSeparators: const [' ', ',', '.'],
                       letterCase: LetterCase.normal,
                       validator: (String tag) {
                         if (_controller.getTags!.length >= 5) {
@@ -361,6 +372,43 @@ class _RPHobbyState extends State<RPHobby> {
                       },
                     );
                   },
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 40, right: 40, top: 20),
+                child: Row(
+                  children: [
+                    const Text(
+                      "추천 : ",
+                      style: TextStyle(fontSize: 14, color: Palette.grey),
+                    ),
+                    Expanded(
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: _randomHobbies.map((e) {
+                            return InkWell(
+                              onTap: () {
+                                setState(() {
+                                  _controller.addTag = e;
+                                  _pickRandomHobbies();
+                                });
+                              },
+                              child: TagItem(e),
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                    ),
+                    IconButton(
+                      icon: const Icon(EvaIcons.refresh),
+                      onPressed: () {
+                        setState(() {
+                          _pickRandomHobbies();
+                        });
+                      },
+                    ),
+                  ],
                 ),
               ),
               Expanded(

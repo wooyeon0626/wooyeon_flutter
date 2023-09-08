@@ -11,6 +11,7 @@ class TagItem extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 5),
       child: Container(
+        height: 28,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(50.0),
           color: Palette.secondary
