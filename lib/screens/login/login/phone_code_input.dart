@@ -265,9 +265,7 @@ class _PhoneCodeInputState extends State<PhoneCodeInput> {
                                               widget: isRegistered
                                                   ? LoginSuccess(
                                                       /// Todo: 자동 로그인 시 해당 부분 수정 필요.
-                                                      /// phone, code를 넘기지 않고 여기서 토큰 처리.
-                                                      phone: widget.phone,
-                                                      code: codeValue,
+
                                                     )
                                                   : RegisterEmailInput());
                                         });

@@ -7,10 +7,8 @@ import '../../../config/palette.dart';
 import '../../../widgets/next_button.dart';
 
 class LoginSuccess extends StatelessWidget {
-  final String phone;
-  final String code;
 
-  LoginSuccess({required this.phone, required this.code, super.key});
+  LoginSuccess({super.key});
 
   final buttonActive = ValueNotifier<bool>(true);
 
@@ -68,7 +66,6 @@ class LoginSuccess extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(vertical: 40),
                       child: NextButton(
                           func: () {
-                            Auth().login(phone, code);
                             Navigator.pushAndRemoveUntil(
                               context,
                               MaterialPageRoute(builder: (BuildContext context) => const MainScreen()),
