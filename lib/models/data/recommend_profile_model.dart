@@ -70,12 +70,10 @@ class RecommendProfileModel {
 }
 
 // dummy Data
-/*
-List<RecommendProfileModel> recommendProfiles = [
+List<RecommendProfileModel> dummyRecommendProfiles = [
   RecommendProfileModel(
-    profileId: 1,
     gpsLocationInfo: "3km",
-    userCode: 1,
+    userCode: "1",
     gender: 'M',
     nickname: "유저1",
     profilePhoto: [
@@ -93,9 +91,8 @@ List<RecommendProfileModel> recommendProfiles = [
     authenticatedAccount: true,
   ),
   RecommendProfileModel(
-    profileId: 1,
     gpsLocationInfo: "3km",
-    userCode: 2,
+    userCode: "2",
     gender: 'F',
     nickname: "DOGE",
     profilePhoto: [
@@ -115,9 +112,8 @@ List<RecommendProfileModel> recommendProfiles = [
     authenticatedAccount: false,
   ),
   RecommendProfileModel(
-    profileId: 1,
     gpsLocationInfo: "3km",
-    userCode: 3,
+    userCode: "3",
     gender: 'F',
     nickname: "점메추",
     profilePhoto: [
@@ -132,9 +128,8 @@ List<RecommendProfileModel> recommendProfiles = [
     authenticatedAccount: true,
   ),
   RecommendProfileModel(
-    profileId: 1,
     gpsLocationInfo: "3km",
-    userCode: 4,
+    userCode: "4",
     gender: 'M',
     nickname: "닉네임 최대 몇 자?",
     profilePhoto: [
@@ -154,9 +149,8 @@ List<RecommendProfileModel> recommendProfiles = [
     authenticatedAccount: false,
   ),
   RecommendProfileModel(
-    profileId: 1,
     gpsLocationInfo: "3km",
-    userCode: 5,
+    userCode: "5",
     gender: 'M',
     nickname: "GIF",
     profilePhoto: [
@@ -172,4 +166,3 @@ List<RecommendProfileModel> recommendProfiles = [
     authenticatedAccount: true,
   ),
 ];
- */
