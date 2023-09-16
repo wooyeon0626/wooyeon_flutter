@@ -41,7 +41,7 @@ class _Match extends State<Match> with SingleTickerProviderStateMixin {
         curve: Curves.ease,
       ),
     );
-    _pageController = PageController(initialPage: 0);
+    _pageController = PageController(initialPage: tabController.getInx());
 
     _pageController.addListener(() {
       int next = _pageController.page!.round();
