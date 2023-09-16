@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:uni_links/uni_links.dart';
 import 'package:wooyeon_flutter/models/pref.dart';
+import 'package:wooyeon_flutter/models/state/deeplink_foreground_state.dart';
 import 'package:wooyeon_flutter/screens/login/login.dart';
 import 'package:wooyeon_flutter/screens/login/register/register_email_input.dart';
 import 'package:wooyeon_flutter/screens/login/register/register_success.dart';
@@ -31,7 +32,7 @@ class MyApp extends StatefulWidget {
   State<MyApp> createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MyApp> with WidgetsBindingObserver{
+class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   final Auth _auth = Auth();
   bool? _isEmailAuth;
   bool _isLoading = true;
@@ -54,7 +55,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver{
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
     if (state == AppLifecycleState.resumed && !isDeepLinkHandled) {
-      _initUniLinksForeground();
+      initUniLinksForeground();
       isDeepLinkHandled = true;
     }
   }
@@ -70,24 +71,15 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver{
     }
   }
 
-  _initUniLinksForeground() async {
-    final initialLink = await getInitialLink();
-
-    log('[State] initialLink : $initialLink');
-
-    if (initialLink != null) {
-      _handleIncomingLinkForeground(initialLink);
-    }
-  }
-
   void _verifyTokenWithBackend(String token) async {
     // TODO: 백엔드와 통신하여 토큰 검증
     final String? email = await Pref.instance.get('email_address');
 
-    if(email == null) {
+    if (email == null) {
       return;
     } else {
-      bool isTokenValid = await EmailAuth().sendEmailVerifyRequest(email: email, token: token);
+      bool isTokenValid =
+          await EmailAuth().sendEmailVerifyRequest(email: email, token: token);
 
       setState(() {
         _isEmailAuth = isTokenValid;
@@ -95,24 +87,6 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver{
       });
     }
   }
-
-  Future<bool> _verifyTokenWithBackendForeground(String token) async {
-    // TODO: 백엔드와 통신하여 토큰 검증
-    final String? email = await Pref.instance.get('email_address');
-
-    if(email == null) {
-      return false;
-    } else {
-      bool isTokenValid = await EmailAuth().sendEmailVerifyRequest(email: email, token: token);
-
-      if (isTokenValid) {
-        return true;
-      } else {
-        return false;
-      }
-    }
-  }
-
 
   void _handleIncomingLink(String link) {
     final uri = Uri.parse(link);
@@ -130,31 +104,8 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver{
     }
   }
 
-  void _handleIncomingLinkForeground(String link) {
-    final uri = Uri.parse(link);
-
-    log('[State] uri : ${uri.host}');
-
-    if (uri.host == 'email_auth') {
-      final token = uri.queryParameters['token'];
-
-      log('[State] token : $token');
-
-      if (token != null) {
-        _verifyTokenWithBackendForeground(token).then((value) {
-          if(value) {
-            Get.to(RegisterSuccess());
-          } else {
-            Get.to(RegisterEmailInput());
-          }
-        });
-      }
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-
     return GetMaterialApp(
       initialBinding: BindingsBuilder(() {
         Get.put(ChatController());
@@ -166,21 +117,23 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver{
         primarySwatch: ColorService.createMaterialColor(Palette.primary),
         fontFamily: 'Pretendard',
       ),
-      home: _isEmailAuth != null ? (_isEmailAuth! ? RegisterSuccess() : RegisterEmailInput()) : FutureBuilder<bool>(
-        future: _auth.autoLogin(),
-        builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            if (snapshot.data == true) {
-              return const MainScreen();
-            } else {
-              // Login() 무시, MainScreen 우선 실행
-              return const MainScreen();//Login();
-            }
-          } else {
-            return const Loading();
-          }
-        },
-      ),
+      home: _isEmailAuth != null
+          ? (_isEmailAuth! ? RegisterSuccess() : RegisterEmailInput())
+          : FutureBuilder<bool>(
+              future: _auth.autoLogin(),
+              builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  if (snapshot.data == true) {
+                    return const MainScreen();
+                  } else {
+                    // Login() 무시, MainScreen 우선 실행
+                    return const MainScreen(); //Login();
+                  }
+                } else {
+                  return const Loading();
+                }
+              },
+            ),
     );
   }
 }
