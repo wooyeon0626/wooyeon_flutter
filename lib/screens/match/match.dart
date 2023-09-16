@@ -5,6 +5,7 @@ import '../../models/state/match_tabbar_state.dart';
 
 class Match extends StatefulWidget {
   final double bodyHeight;
+
   const Match(this.bodyHeight, {super.key});
 
   @override
@@ -67,7 +68,7 @@ class _Match extends State<Match> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Obx(
-          () => Column(
+      () => Column(
         children: [
           Padding(
             padding: const EdgeInsets.only(top: 20),
@@ -100,7 +101,9 @@ class _Match extends State<Match> with SingleTickerProviderStateMixin {
                           animation: _animation,
                           builder: (context, child) {
                             return Transform.scale(
-                              scale: tabController.getInx() == 0 ? _animation.value : 1.0,
+                              scale: tabController.getInx() == 0
+                                  ? _animation.value
+                                  : 1.0,
                               child: Text(
                                 '내가 받은\n좋아요',
                                 style: TextStyle(
@@ -143,7 +146,9 @@ class _Match extends State<Match> with SingleTickerProviderStateMixin {
                           animation: _animation,
                           builder: (context, child) {
                             return Transform.scale(
-                              scale: tabController.getInx() == 1 ? _animation.value : 1.0,
+                              scale: tabController.getInx() == 1
+                                  ? _animation.value
+                                  : 1.0,
                               child: Text(
                                 '내가 보낸\n좋아요',
                                 style: TextStyle(
@@ -186,7 +191,9 @@ class _Match extends State<Match> with SingleTickerProviderStateMixin {
                           animation: _animation,
                           builder: (context, child) {
                             return Transform.scale(
-                              scale: tabController.getInx() == 2 ? _animation.value : 1.0,
+                              scale: tabController.getInx() == 2
+                                  ? _animation.value
+                                  : 1.0,
                               child: Text(
                                 '매치된\n친구',
                                 style: TextStyle(
@@ -209,12 +216,15 @@ class _Match extends State<Match> with SingleTickerProviderStateMixin {
             ),
           ),
           Expanded(
-            child: PageView(controller: _pageController,
+            child: PageView(
+              controller: _pageController,
+              physics: const NeverScrollableScrollPhysics(),
               children: tabController.getWidgets(),
               onPageChanged: (index) {
                 tabController.setInx(index);
                 _startAnimation();
-              },),
+              },
+            ),
           ),
         ],
       ),

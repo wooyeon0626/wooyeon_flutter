@@ -48,6 +48,7 @@ class _RecommendationAppbar extends State<RecommendationAppbar> {
                           color: Palette.lightGrey,
                         ),
                         splashColor: Colors.transparent,
+                        highlightColor: Colors.transparent, // 물결 효과 비활성화
                       ),
                       Positioned(
                         left: 25,
