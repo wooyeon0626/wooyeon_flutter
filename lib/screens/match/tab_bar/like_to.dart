@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wooyeon_flutter/service/recommend/recommend_service.dart';
 import 'package:wooyeon_flutter/widgets/match/like_to_profile.dart';
 import '../../../models/data/recommend_profile_model.dart';
 
@@ -11,6 +12,19 @@ class LikeTo extends StatefulWidget {
 
 class _LikeToState extends State<LikeTo> {
   List<RecommendProfileModel> likeFromProfiles = dummyRecommendProfiles;
+
+  // init likeFromProfiles from API
+  void initRecommendProfiles() async {
+    likeFromProfiles = await RecommendService.getLikeToList();
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    // ToDo : fetch RecommendProfileList from API
+    //initRecommendProfiles();
+  }
 
   @override
   Widget build(BuildContext context) {

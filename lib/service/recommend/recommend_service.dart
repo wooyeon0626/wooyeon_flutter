@@ -56,46 +56,42 @@ class RecommendService {
 
   // GET 요청 : 내가 좋아요 한 사람들 리스트
   static Future<List<RecommendProfileModel>> getLikeToList() async {
-    List<RecommendProfileModel> recommendProfileInstances = [];
+    List<RecommendProfileModel> likeToProfileInstances = [];
 
     final url = Uri.parse('$baseUrl/like/to');
     final response = await http.get(url);
 
     if (response.statusCode >= 200 && response.statusCode <= 206) {
-      /*
-      final Map<String, dynamic> recommendProfileMap =
+      final Map<String, dynamic> likeToProfileMap =
           jsonDecode(utf8.decode(response.bodyBytes));
-      final List<dynamic> recommendProfileList = recommendProfileMap['content'];
+      final List<dynamic> likeToProfileList = likeToProfileMap['content'];
 
-      for (var recommendProfile in recommendProfileList) {
-        final instance = RecommendProfileModel.fromJsom(recommendProfile);
-        recommendProfileInstances.add(instance);
+      for (var likeToProfile in likeToProfileList) {
+        final instance = RecommendProfileModel.fromJsom(likeToProfile);
+        likeToProfileInstances.add(instance);
       }
-      */
-      return recommendProfileInstances;
+      return likeToProfileInstances;
     }
     throw Error();
   }
 
   // GET 요청 : 나를 좋아요 한 사람들 리스트
   static Future<List<RecommendProfileModel>> getLikeFromList() async {
-    List<RecommendProfileModel> recommendProfileInstances = [];
+    List<RecommendProfileModel> likeFromProfileInstances = [];
 
     final url = Uri.parse('$baseUrl/like/from');
     final response = await http.get(url);
 
     if (response.statusCode >= 200 && response.statusCode <= 206) {
-      /*
-      final Map<String, dynamic> recommendProfileMap =
+      final Map<String, dynamic> likeFromProfileMap =
           jsonDecode(utf8.decode(response.bodyBytes));
-      final List<dynamic> recommendProfileList = recommendProfileMap['content'];
+      final List<dynamic> likeFromProfileList = likeFromProfileMap['content'];
 
-      for (var recommendProfile in recommendProfileList) {
-        final instance = RecommendProfileModel.fromJsom(recommendProfile);
-        recommendProfileInstances.add(instance);
+      for (var likeFromProfile in likeFromProfileList) {
+        final instance = RecommendProfileModel.fromJsom(likeFromProfile);
+        likeFromProfileInstances.add(instance);
       }
-      */
-      return recommendProfileInstances;
+      return likeFromProfileInstances;
     }
     throw Error();
   }
