@@ -11,11 +11,11 @@ class LikeTo extends StatefulWidget {
 }
 
 class _LikeToState extends State<LikeTo> {
-  List<RecommendProfileModel> likeFromProfiles = dummyRecommendProfiles;
+  List<RecommendProfileModel> likeToProfiles = dummyRecommendProfiles;
 
-  // init likeFromProfiles from API
+  // init likeToProfiles from API
   void initRecommendProfiles() async {
-    likeFromProfiles = await RecommendService.getLikeToList();
+    likeToProfiles = await RecommendService.getLikeToList();
     setState(() {});
   }
 
@@ -35,11 +35,11 @@ class _LikeToState extends State<LikeTo> {
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2, // 2열로 표시
               childAspectRatio: 0.7),
-          itemCount: likeFromProfiles.length,
+          itemCount: likeToProfiles.length,
           itemBuilder: (context, gridIndex) {
             return Container(
               margin: EdgeInsets.all(3.0), // 여기서 마진을 설정합니다.
-              child: LikeToProfile(likeFromProfiles[gridIndex]),
+              child: LikeToProfile(likeToProfiles[gridIndex]),
             );
           },
         ),

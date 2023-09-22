@@ -1,14 +1,16 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:swipable_stack/swipable_stack.dart';
 import 'package:wooyeon_flutter/config/palette.dart';
 import 'package:wooyeon_flutter/models/data/recommend_profile_model.dart';
+import 'package:wooyeon_flutter/screens/recommend/recommendation_detail.dart';
 import 'package:wooyeon_flutter/utils/util.dart';
-import 'package:wooyeon_flutter/widgets/match/like_to_profile_detail.dart';
 
 class LikeFromProfile extends StatefulWidget {
   final RecommendProfileModel profile;
+  final SwipableStackController controller;
 
-  const LikeFromProfile(this.profile, {super.key});
+  const LikeFromProfile(this.profile, this.controller, {super.key});
 
   @override
   State<LikeFromProfile> createState() => _LikeFromProfile();
@@ -22,7 +24,7 @@ class _LikeFromProfile extends State<LikeFromProfile> {
       isScrollControlled: true,
       useSafeArea: true,
       builder: (BuildContext context) {
-        return LikeToProfileDetail(widget.profile);
+        return RecommendationDetail(widget.profile, widget.controller);
       },
     );
   }
