@@ -6,6 +6,7 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:uni_links/uni_links.dart';
 import 'package:wooyeon_flutter/models/pref.dart';
 import 'package:wooyeon_flutter/models/state/deeplink_foreground_state.dart';
+import 'package:wooyeon_flutter/models/state/deeplink_state.dart';
 import 'package:wooyeon_flutter/screens/login/login.dart';
 import 'package:wooyeon_flutter/screens/login/register/register_email_input.dart';
 import 'package:wooyeon_flutter/screens/login/register/register_success.dart';
@@ -33,15 +34,18 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
+  /*
   final Auth _auth = Auth();
   bool? _isEmailAuth;
   bool _isLoading = true;
+
+   */
   bool isDeepLinkHandled = false;
 
   @override
   void initState() {
     super.initState();
-    _initUniLinks();
+    //_initUniLinks();
     WidgetsBinding.instance.addObserver(this);
   }
 
@@ -60,6 +64,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     }
   }
 
+  /*
   _initUniLinks() async {
     final initialLink = await getInitialLink();
 
@@ -104,6 +109,8 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     }
   }
 
+   */
+
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
@@ -117,23 +124,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         primarySwatch: ColorService.createMaterialColor(Palette.primary),
         fontFamily: 'Pretendard',
       ),
-      home: _isEmailAuth != null
-          ? (_isEmailAuth! ? RegisterSuccess() : RegisterEmailInput())
-          : FutureBuilder<bool>(
-              future: _auth.autoLogin(),
-              builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-                if (snapshot.connectionState == ConnectionState.done) {
-                  if (snapshot.data == true) {
-                    return const MainScreen();
-                  } else {
-                    // Login() 무시, MainScreen 우선 실행
-                    return const MainScreen(); //Login();
-                  }
-                } else {
-                  return const Loading();
-                }
-              },
-            ),
+      home: const HomeWidget(),
     );
   }
 }
