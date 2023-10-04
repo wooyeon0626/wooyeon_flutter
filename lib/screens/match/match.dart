@@ -13,10 +13,14 @@ class Match extends StatefulWidget {
 }
 
 class _Match extends State<Match> with SingleTickerProviderStateMixin {
+  // Todo : Getx 로, 상태관리 해야함.
+  bool isNewLikeFrom = true;
+  bool isNewLikeTo = true;
+  bool isNewMatch = true;
+
   final MatchTabBarState tabController = Get.put(MatchTabBarState());
   late AnimationController _animationController;
   late Animation<double> _animation;
-
   late PageController _pageController;
 
   @override
@@ -41,7 +45,20 @@ class _Match extends State<Match> with SingleTickerProviderStateMixin {
         curve: Curves.ease,
       ),
     );
-    _pageController = PageController(initialPage: 0);
+    _pageController = PageController(initialPage: tabController.getInx());
+    switch (tabController.getInx()) {
+      case 0:
+        isNewLikeFrom = false;
+        break;
+      case 1:
+        isNewLikeTo = false;
+        break;
+      case 2:
+        isNewMatch = false;
+        break;
+      default:
+        break;
+    }
 
     _pageController.addListener(() {
       int next = _pageController.page!.round();
@@ -82,42 +99,64 @@ class _Match extends State<Match> with SingleTickerProviderStateMixin {
                         tabController.setInx(0);
                         _pageController.jumpToPage(0);
                         _startAnimation();
+                        setState(() {
+                          isNewLikeFrom = false;
+                        });
                       },
-                      child: AnimatedContainer(
-                        duration: const Duration(milliseconds: 200),
-                        alignment: Alignment.center,
-                        padding: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          border: Border(
-                            bottom: BorderSide(
-                              color: tabController.getInx() == 0
-                                  ? Palette.secondary
-                                  : Palette.inactive,
-                              width: 2,
-                            ),
-                          ),
-                        ),
-                        child: AnimatedBuilder(
-                          animation: _animation,
-                          builder: (context, child) {
-                            return Transform.scale(
-                              scale: tabController.getInx() == 0
-                                  ? _animation.value
-                                  : 1.0,
-                              child: Text(
-                                '내가 받은\n좋아요',
-                                style: TextStyle(
+                      child: Stack(
+                        children: [
+                          AnimatedContainer(
+                            duration: const Duration(milliseconds: 200),
+                            alignment: Alignment.center,
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              border: Border(
+                                bottom: BorderSide(
                                   color: tabController.getInx() == 0
                                       ? Palette.secondary
-                                      : Palette.lightGrey,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
+                                      : Palette.inactive,
+                                  width: 2,
                                 ),
-                                textAlign: TextAlign.center,
                               ),
-                            );
-                          },
-                        ),
+                            ),
+                            child: AnimatedBuilder(
+                              animation: _animation,
+                              builder: (context, child) {
+                                return Transform.scale(
+                                  scale: tabController.getInx() == 0
+                                      ? _animation.value
+                                      : 1.0,
+                                  child: Text(
+                                    '내가 받은\n좋아요',
+                                    style: TextStyle(
+                                      color: tabController.getInx() == 0
+                                          ? Palette.secondary
+                                          : Palette.lightGrey,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                          Positioned(
+                            left: 102,
+                            top: 10,
+                            child: Opacity(
+                              opacity: isNewLikeFrom ? 1.0 : 0.0,
+                              child: Container(
+                                width: 10,
+                                height: 10,
+                                decoration: const BoxDecoration(
+                                  color: Palette.red,
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -127,42 +166,64 @@ class _Match extends State<Match> with SingleTickerProviderStateMixin {
                         tabController.setInx(1);
                         _pageController.jumpToPage(1);
                         _startAnimation();
+                        setState(() {
+                          isNewLikeTo = false;
+                        });
                       },
-                      child: AnimatedContainer(
-                        duration: const Duration(milliseconds: 200),
-                        alignment: Alignment.center,
-                        padding: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          border: Border(
-                            bottom: BorderSide(
-                              color: tabController.getInx() == 1
-                                  ? Palette.secondary
-                                  : Palette.inactive,
-                              width: 2,
-                            ),
-                          ),
-                        ),
-                        child: AnimatedBuilder(
-                          animation: _animation,
-                          builder: (context, child) {
-                            return Transform.scale(
-                              scale: tabController.getInx() == 1
-                                  ? _animation.value
-                                  : 1.0,
-                              child: Text(
-                                '내가 보낸\n좋아요',
-                                style: TextStyle(
+                      child: Stack(
+                        children: [
+                          AnimatedContainer(
+                            duration: const Duration(milliseconds: 200),
+                            alignment: Alignment.center,
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              border: Border(
+                                bottom: BorderSide(
                                   color: tabController.getInx() == 1
                                       ? Palette.secondary
-                                      : Palette.lightGrey,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
+                                      : Palette.inactive,
+                                  width: 2,
                                 ),
-                                textAlign: TextAlign.center,
                               ),
-                            );
-                          },
-                        ),
+                            ),
+                            child: AnimatedBuilder(
+                              animation: _animation,
+                              builder: (context, child) {
+                                return Transform.scale(
+                                  scale: tabController.getInx() == 1
+                                      ? _animation.value
+                                      : 1.0,
+                                  child: Text(
+                                    '내가 보낸\n좋아요',
+                                    style: TextStyle(
+                                      color: tabController.getInx() == 1
+                                          ? Palette.secondary
+                                          : Palette.lightGrey,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                          Positioned(
+                            left: 102,
+                            top: 10,
+                            child: Opacity(
+                              opacity: isNewLikeTo ? 1.0 : 0.0,
+                              child: Container(
+                                width: 10,
+                                height: 10,
+                                decoration: const BoxDecoration(
+                                  color: Palette.red,
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -172,42 +233,64 @@ class _Match extends State<Match> with SingleTickerProviderStateMixin {
                         tabController.setInx(2);
                         _pageController.jumpToPage(2);
                         _startAnimation();
+                        setState(() {
+                          isNewMatch = false;
+                        });
                       },
-                      child: AnimatedContainer(
-                        duration: const Duration(milliseconds: 200),
-                        alignment: Alignment.center,
-                        padding: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          border: Border(
-                            bottom: BorderSide(
-                              color: tabController.getInx() == 2
-                                  ? Palette.secondary
-                                  : Palette.inactive,
-                              width: 2,
-                            ),
-                          ),
-                        ),
-                        child: AnimatedBuilder(
-                          animation: _animation,
-                          builder: (context, child) {
-                            return Transform.scale(
-                              scale: tabController.getInx() == 2
-                                  ? _animation.value
-                                  : 1.0,
-                              child: Text(
-                                '매치된\n친구',
-                                style: TextStyle(
+                      child: Stack(
+                        children: [
+                          AnimatedContainer(
+                            duration: const Duration(milliseconds: 200),
+                            alignment: Alignment.center,
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              border: Border(
+                                bottom: BorderSide(
                                   color: tabController.getInx() == 2
                                       ? Palette.secondary
-                                      : Palette.lightGrey,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
+                                      : Palette.inactive,
+                                  width: 2,
                                 ),
-                                textAlign: TextAlign.center,
                               ),
-                            );
-                          },
-                        ),
+                            ),
+                            child: AnimatedBuilder(
+                              animation: _animation,
+                              builder: (context, child) {
+                                return Transform.scale(
+                                  scale: tabController.getInx() == 2
+                                      ? _animation.value
+                                      : 1.0,
+                                  child: Text(
+                                    '매치된\n친구',
+                                    style: TextStyle(
+                                      color: tabController.getInx() == 2
+                                          ? Palette.secondary
+                                          : Palette.lightGrey,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                          Positioned(
+                            left: 95,
+                            top: 10,
+                            child: Opacity(
+                              opacity: isNewMatch ? 1.0 : 0.0,
+                              child: Container(
+                                width: 10,
+                                height: 10,
+                                decoration: const BoxDecoration(
+                                  color: Palette.red,
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
