@@ -7,6 +7,8 @@ import 'package:get/get.dart';
 import 'package:pin_input_text_field/pin_input_text_field.dart' as pin;
 import 'package:sms_autofill/sms_autofill.dart';
 import 'package:wooyeon_flutter/screens/login/register/register_email_input.dart';
+import 'package:wooyeon_flutter/screens/login/register_profile/rp_name.dart';
+import 'package:wooyeon_flutter/screens/main_screen.dart';
 import 'package:wooyeon_flutter/service/login/phone_auth.dart';
 import 'package:wooyeon_flutter/utils/notifier.dart';
 import 'package:wooyeon_flutter/utils/transition.dart';
@@ -14,6 +16,7 @@ import 'package:wooyeon_flutter/widgets/next_button_async.dart';
 
 import '../../../../config/palette.dart';
 import '../../../models/controller/timer_controller.dart';
+import '../login.dart';
 import 'login_success.dart';
 
 class PhoneCodeInput extends StatefulWidget {
@@ -129,7 +132,7 @@ class _PhoneCodeInputState extends State<PhoneCodeInput> {
                         if (value.isNotEmpty && !regExp.hasMatch(value)) {
                           textFieldController.text = textFieldController.text
                               .substring(
-                                  0, textFieldController.text.length - 1);
+                              0, textFieldController.text.length - 1);
                         }
                       },
                       cursor: pin.Cursor(
@@ -170,7 +173,7 @@ class _PhoneCodeInputState extends State<PhoneCodeInput> {
                             return InkWell(
                               onTap: () async {
                                 var signature =
-                                    await SmsAutoFill().getAppSignature;
+                                await SmsAutoFill().getAppSignature;
 
                                 log(signature);
 
@@ -199,7 +202,10 @@ class _PhoneCodeInputState extends State<PhoneCodeInput> {
                             );
                           } else {
                             return Text(
-                              '${_timerController.remainingTime.value.inMinutes}:${(_timerController.remainingTime.value.inSeconds % 60).toString().padLeft(2, '0')}',
+                              '${_timerController.remainingTime.value
+                                  .inMinutes}:${(_timerController.remainingTime
+                                  .value.inSeconds % 60).toString().padLeft(
+                                  2, '0')}',
                               style: const TextStyle(
                                 color: Palette.primary,
                                 fontSize: 16,
@@ -232,29 +238,30 @@ class _PhoneCodeInputState extends State<PhoneCodeInput> {
                                   func: () async {
                                     final dynamic phoneAuth = await PhoneAuth()
                                         .sendPhoneVerifyRequest(
-                                            phone: widget.phone,
-                                            code: codeValue);
+                                        phone: widget.phone,
+                                        code: codeValue);
 
                                     if (phoneAuth != false) {
                                       final bool isAuth =
-                                          phoneAuth['phoneAuth'] == 'success'
-                                              ? true
-                                              : false; // 인증 완료 여부
-                                      final bool isRegistered =
-                                          phoneAuth['registerProc'] ==
-                                                  'register'
-                                              ? true
-                                              : false; // 회원가입 정보, 백엔드에서 가져오기
-                                      final bool isProfile = phoneAuth[
-                                                  'registerProc'] ==
-                                              'profile'
+                                      phoneAuth['phoneAuth'] == 'success'
                                           ? true
-                                          : false; // 프로필을 끝까지 등록했는지 또는 아닌지, pref로 저장하기
-                                      final bool isAgreement = phoneAuth[
-                                                  'registerProc'] ==
-                                              'serviceTerms'
-                                          ? true
-                                          : false; // 이용약관에 동의했는지 또는 아닌지, pref로 저장하기
+                                          : false; // 인증 완료 여부
+
+                                      late Widget widgetByRegisterProc;
+
+                                      //Todo: 내부적으로 privacy_policy 동의 상태 확인받아야 함
+                                      //Todo: 자동 로그인 관련도 여기 기술
+                                      switch (phoneAuth['registerProc']) {
+                                        case 'email':
+                                          widgetByRegisterProc = RegisterEmailInput();
+                                          break;
+                                        case 'profile':
+                                          widgetByRegisterProc = const RPName();
+                                          break;
+                                        case 'register':
+                                          widgetByRegisterProc = const MainScreen();
+                                          break;
+                                      }
 
                                       if (isAuth) {
                                         // 저장된 context 사용
@@ -262,12 +269,7 @@ class _PhoneCodeInputState extends State<PhoneCodeInput> {
                                             .addPostFrameCallback((_) {
                                           navigateHorizontally(
                                               context: ctx,
-                                              widget: isRegistered
-                                                  ? LoginSuccess(
-                                                      /// Todo: 자동 로그인 시 해당 부분 수정 필요.
-
-                                                    )
-                                                  : RegisterEmailInput());
+                                              widget: widgetByRegisterProc);
                                         });
                                       } else {
                                         textFieldController.text = "";
