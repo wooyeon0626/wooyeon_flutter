@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:wooyeon_flutter/models/data/chat_data.dart';
@@ -7,6 +9,7 @@ class ChatController extends GetxController {
   RxMap<int, ChatRoom> chatRooms =
       {for (var room in chatRoomData) room.chatRoomId: room}.obs;
   RxList<ChatRoom> frequentChatting = List<ChatRoom>.empty(growable: true).obs;
+  RxMap<int, ChatRoom> newMatchedChatRooms = {for (var room in chatRoomData) room.chatRoomId: room}.obs;
   final ScrollController scrollController = ScrollController();
   final showButton = false.obs;
 
@@ -14,6 +17,7 @@ class ChatController extends GetxController {
   void onInit() {
     super.onInit();
     _updateFrequentChatting();
+    _updateNewMatchedChatRooms();
 
     scrollController.addListener(() {
       if (scrollController.position.atEdge) {
@@ -52,6 +56,7 @@ class ChatController extends GetxController {
     update();
 
     _updateFrequentChatting();
+    _updateNewMatchedChatRooms();
   }
 
   void markChatsAsChecked(int chatRoomId) {
@@ -73,6 +78,20 @@ class ChatController extends GetxController {
     List<ChatRoom> sortedRooms = List.from(chatRooms.values);
     sortedRooms.sort((a, b) => a.frequent.compareTo(b.frequent));
     frequentChatting.value = sortedRooms.take(6).toList();
+  }
+
+  void _updateNewMatchedChatRooms() {
+    List<ChatRoom> rooms = List.from(chatRooms.values);
+    Map<int, ChatRoom> noChatRooms = {};
+
+    for (int i = 0; i < rooms.length; i++) {
+      if (rooms[i].chat == null) {
+        noChatRooms[i] = rooms[i];
+        log(rooms[i].chatRoomId.toString());
+      }
+    }
+
+    newMatchedChatRooms.value = noChatRooms;
   }
 
   bool isContinuous(int chatRoomId, int index) {

@@ -6,18 +6,23 @@ import '../../models/data/chat_room_data.dart';
 
 class ChatRoomListView extends StatelessWidget {
   final RxMap<int, ChatRoom> chatRooms;
+
   const ChatRoomListView(this.chatRooms, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Obx(
-          () => ListView.builder(
+      () => ListView.builder(
         itemCount: chatRooms.length,
         itemBuilder: (context, index) {
           return Column(
             children: [
-              ChatRoomListItem(chatRoomId: index,),
-              const SizedBox(height: 20,),
+              ChatRoomListItem(
+                chatRoomId: chatRooms.keys.elementAt(index),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
             ],
           );
         },
@@ -25,4 +30,3 @@ class ChatRoomListView extends StatelessWidget {
     );
   }
 }
-
