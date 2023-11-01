@@ -8,7 +8,6 @@ import '../data/chat_room_data.dart';
 class ChatController extends GetxController {
   RxMap<int, ChatRoom> chatRooms =
       {for (var room in chatRoomData) room.chatRoomId: room}.obs;
-  RxList<ChatRoom> frequentChatting = List<ChatRoom>.empty(growable: true).obs;
   RxMap<int, ChatRoom> newMatchedChatRooms = {for (var room in chatRoomData) room.chatRoomId: room}.obs;
   final ScrollController scrollController = ScrollController();
   final showButton = false.obs;
@@ -16,7 +15,6 @@ class ChatController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    _updateFrequentChatting();
     _updateNewMatchedChatRooms();
 
     scrollController.addListener(() {
@@ -55,7 +53,6 @@ class ChatController extends GetxController {
     room.chat!.add(newChat);
     update();
 
-    _updateFrequentChatting();
     _updateNewMatchedChatRooms();
   }
 
@@ -72,12 +69,6 @@ class ChatController extends GetxController {
       }
       update();
     }
-  }
-
-  void _updateFrequentChatting() {
-    List<ChatRoom> sortedRooms = List.from(chatRooms.values);
-    sortedRooms.sort((a, b) => a.frequent.compareTo(b.frequent));
-    frequentChatting.value = sortedRooms.take(6).toList();
   }
 
   void _updateNewMatchedChatRooms() {
