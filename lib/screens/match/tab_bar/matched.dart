@@ -16,5 +16,4 @@ class Matched extends StatelessWidget {
       ),
     );
   }
-
 }

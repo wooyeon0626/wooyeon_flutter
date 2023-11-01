@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:wooyeon_flutter/screens/chat/chat.dart';
+import 'package:wooyeon_flutter/screens/chat/chat_appbar.dart';
 import 'package:wooyeon_flutter/screens/match/match.dart';
 import 'package:wooyeon_flutter/screens/match/match_appbar.dart';
 import 'package:wooyeon_flutter/screens/mypage/profile.dart';
@@ -40,6 +41,8 @@ class NavigationBarState extends GetxController{
         return const LoungeAppbar();
       case 2:
         return const MatchAppbar();
+      case 3:
+        return const ChatAppbar();
       default:
         return const RecommendationAppbar();
     }
