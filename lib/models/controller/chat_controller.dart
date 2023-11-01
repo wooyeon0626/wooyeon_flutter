@@ -8,7 +8,8 @@ import '../data/chat_room_data.dart';
 class ChatController extends GetxController {
   RxMap<int, ChatRoom> chatRooms =
       {for (var room in chatRoomData) room.chatRoomId: room}.obs;
-  RxMap<int, ChatRoom> newMatchedChatRooms = {for (var room in chatRoomData) room.chatRoomId: room}.obs;
+  RxMap<int, ChatRoom> newMatchedChatRooms =
+      {for (var room in chatRoomData) room.chatRoomId: room}.obs;
   final ScrollController scrollController = ScrollController();
   final showButton = false.obs;
 
