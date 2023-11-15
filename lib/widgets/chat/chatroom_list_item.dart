@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:wooyeon_flutter/config/palette.dart';
+import 'package:wooyeon_flutter/models/data/chat_room_data.dart';
 import 'package:wooyeon_flutter/utils/util.dart';
 import 'package:wooyeon_flutter/widgets/chat/new_message_notification.dart';
 
@@ -10,7 +11,8 @@ import '../../screens/chat/chat_detail.dart';
 class ChatRoomListItem extends StatelessWidget {
   final int chatRoomId;
 
-  const ChatRoomListItem({required this.chatRoomId, Key? key}) : super(key: key);
+  const ChatRoomListItem({required this.chatRoomId, Key? key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -18,9 +20,14 @@ class ChatRoomListItem extends StatelessWidget {
       init: Get.find<ChatController>(),
       builder: (controller) {
         var chatRoom = controller.chatRooms[chatRoomId];
-        if (chatRoom == null) return Container();  // This chat room doesn't exist
+        if (chatRoom == null)
+          return Container(); // This chat room doesn't exist
 
-        int unChecked = chatRoom.chat?.where((chat) => chat.isCheck == false).length ?? 0;
+        int unChecked = 0;
+        if (chatRoom.chat.isNotEmpty) {
+          unChecked =
+              chatRoom.chat.where((chat) => chat.isCheck == false).length;
+        }
 
         return InkWell(
           onTap: () {
@@ -46,11 +53,15 @@ class ChatRoomListItem extends StatelessWidget {
               ),
             );
           },
+          onLongPress: () {
+            _showChatOptionDialog(context, controller);
+          },
           child: SizedBox(
             child: Row(
               children: <Widget>[
                 CircleAvatar(
-                  backgroundImage: NetworkImage(chatRoom.matched.profilePhoto[0]),
+                  backgroundImage:
+                      NetworkImage(chatRoom.matched.profilePhoto[0]),
                   radius: 32,
                 ),
                 const SizedBox(width: 15),
@@ -61,13 +72,29 @@ class ChatRoomListItem extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                          Text(
-                            chatRoom.matched.nickname,
-                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                          Row(
+                            children: [
+                              Text(
+                                chatRoom.matched.nickname,
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 20),
+                              ),
+                              const SizedBox(
+                                width: 4,
+                              ),
+                              if (chatRoom.pinToTop == true)
+                                const Icon(
+                                  Icons.push_pin_rounded,
+                                  size: 15,
+                                  color: Palette.lightGrey,
+                                ),
+                            ],
                           ),
-                          if (chatRoom.chat != null)
-                            Text(formatDateTime(chatRoom.chat!.last.sendTime),
-                              style: const TextStyle(fontSize: 12, color: Palette.grey),
+                          if (chatRoom.chat.isNotEmpty)
+                            Text(
+                              formatDateTime(chatRoom.chat.last.sendTime),
+                              style: const TextStyle(
+                                  fontSize: 12, color: Palette.grey),
                             ),
                         ],
                       ),
@@ -79,16 +106,18 @@ class ChatRoomListItem extends StatelessWidget {
                               alignment: Alignment.centerLeft,
                               child: Column(
                                 children: [
-                                  if (chatRoom.chat != null)
+                                  if (chatRoom.chat.isNotEmpty)
                                     Text(
-                                      chatRoom.chat!.last.message,
+                                      chatRoom.chat.last.message,
                                       overflow: TextOverflow.ellipsis,
-                                      style: const TextStyle(color: Palette.grey),
+                                      style:
+                                          const TextStyle(color: Palette.grey),
                                     )
                                   else
                                     const Text(
                                       "친구에게 먼저 말을 걸어보세요!",
-                                      style: TextStyle(color: Palette.secondary),
+                                      style:
+                                          TextStyle(color: Palette.secondary),
                                     ),
                                 ],
                               ),
@@ -103,6 +132,71 @@ class ChatRoomListItem extends StatelessWidget {
                 ),
               ],
             ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _showChatOptionDialog(BuildContext context, ChatController controller) {
+    ChatRoom chatRoom = controller.chatRooms[chatRoomId]!;
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(chatRoom.matched.nickname),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              InkWell(
+                onTap: () {
+                  controller.togglePin(chatRoomId);
+
+                  Future.delayed(const Duration(milliseconds: 150), () {
+                    Navigator.of(context).pop();
+                  });
+                },
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: (chatRoom.pinToTop == false)
+                        ? const Text('상단에 고정')
+                        : const Text('고정 해제'),
+                  ),
+                ),
+              ),
+              InkWell(
+                onTap: () {
+                  Future.delayed(const Duration(milliseconds: 150), () {
+                    Navigator.of(context).pop();
+                  });
+                },
+                child: const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 10),
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: Text('채팅방 알람 끄기'),
+                  ),
+                ),
+              ),
+              InkWell(
+                onTap: () {
+                  Future.delayed(const Duration(milliseconds: 150), () {
+                    Navigator.of(context).pop();
+                  });
+                },
+                child: const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 10),
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: Text('차단'),
+                  ),
+                ),
+              ),
+            ],
           ),
         );
       },

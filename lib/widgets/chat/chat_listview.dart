@@ -17,10 +17,10 @@ class ChatListView extends GetView<ChatController> {
       children: [
         ListView.builder(
           controller: controller.scrollController,
-          itemCount: controller.chatRooms[chatRoomId]!.chat!.length,
+          itemCount: controller.chatRooms[chatRoomId]!.chat.length,
           reverse: true,
           itemBuilder: (context, index) {
-            final realIndex = controller.chatRooms[chatRoomId]!.chat!.length - 1 - index;
+            final realIndex = controller.chatRooms[chatRoomId]!.chat.length - 1 - index;
             return Padding(
               padding: EdgeInsets.only(
                   bottom: controller.isDifferent(chatRoomId, realIndex) ? 3 : 8),
@@ -32,11 +32,11 @@ class ChatListView extends GetView<ChatController> {
                         padding: const EdgeInsets.symmetric(vertical: 20),
                         child: Text(
                             DateFormat('MM월 dd일', 'ko_KR')
-                                .format(controller.chatRooms[chatRoomId]!.chat![realIndex].sendTime),
+                                .format(controller.chatRooms[chatRoomId]!.chat[realIndex].sendTime),
                             style: const TextStyle(fontWeight: FontWeight.bold, color: Palette.black, fontSize: 16)),
                       ),
                     ),
-                  ChatListItem(controller.chatRooms[chatRoomId]!.chat![realIndex],
+                  ChatListItem(controller.chatRooms[chatRoomId]!.chat[realIndex],
                       controller.isContinuous(chatRoomId, realIndex)),
                 ],
               ),
