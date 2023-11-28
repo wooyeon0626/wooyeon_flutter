@@ -35,21 +35,13 @@ class ChatController extends GetxController {
     super.onClose();
   }
 
-  void addMessage(int chatRoomId, String message) {
+  /*
+      chatRoomId 를 통해, 해당 채팅방에 ChatData 추가
+   */
+  void addChatData(int chatRoomId, ChatData chatData) {
     ChatRoom room = chatRooms[chatRoomId]!;
 
-    int newChatId = room.chat.isEmpty
-        ? 0
-        : room.chat.last.chatId + 1;
-
-    ChatData newChat = ChatData(
-        chatId: newChatId,
-        isSender: true,
-        message: message,
-        sendTime: DateTime.now(),
-        isCheck: true);
-
-    room.chat.add(newChat);
+    room.chat.add(chatData);
     update();
 
     _updateNewMatchedChatRooms();
