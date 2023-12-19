@@ -1,8 +1,11 @@
 import 'dart:developer';
 
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:uni_links/uni_links.dart';
 import 'package:wooyeon_flutter/models/pref.dart';
 import 'package:wooyeon_flutter/screens/login/login.dart';
@@ -10,18 +13,66 @@ import 'package:wooyeon_flutter/screens/login/register/register_email_input.dart
 import 'package:wooyeon_flutter/screens/login/register/register_success.dart';
 import 'package:wooyeon_flutter/service/login/auto_login/auth.dart';
 import 'package:wooyeon_flutter/service/login/register/email_auth.dart';
+import 'firebase_options.dart';
 
 import 'loading.dart';
 import 'models/controller/chat_controller.dart';
 import 'screens/main_screen.dart';
 import 'config/palette.dart';
 
-void main() {
+Future<void> main() async {
   // WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   // FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  // FCM 토큰 받아오기
+  String? fcmToken = await FirebaseMessaging.instance.getToken();
+  print('FCM Token: $fcmToken');
+
+  FirebaseMessaging.onMessage.listen((RemoteMessage? message) {
+    if (message != null) {
+      if (message.notification != null) {
+        debugPrint(message.notification!.title);
+        debugPrint(message.notification!.body);
+        debugPrint(message.data["click_action"]);
+      }
+    }
+  });
+
+  FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage? message) {
+    if (message != null) {
+      if (message.notification != null) {
+        debugPrint(message.notification!.title);
+        debugPrint(message.notification!.body);
+        debugPrint(message.data["click_action"]);
+      }
+    }
+  });
+
+  FirebaseMessaging.instance
+      .getInitialMessage()
+      .then((RemoteMessage? message) {
+    if (message != null) {
+      if (message.notification != null) {
+        debugPrint(message.notification!.title);
+        debugPrint(message.notification!.body);
+        debugPrint(message.data["click_action"]);
+      }
+    }
+  });
+
+
   initializeDateFormatting('ko_KR', null).then((_) {
     runApp(const MyApp());
   });
+
+  if (await Permission.notification.isDenied) {
+    await Permission.notification.request();
+  }
 }
 
 class MyApp extends StatefulWidget {
