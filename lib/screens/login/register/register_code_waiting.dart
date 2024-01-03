@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -18,8 +20,7 @@ class RegisterCodeWaiting extends StatefulWidget {
 class _RegisterCodeWaitingState extends State<RegisterCodeWaiting> {
 
   Future<void> sendEmail() async {
-    await EmailAuth().sendEmailRequest(
-        email: widget.email);
+    //TODO : emailVerify.
     await Pref.instance
         .save('email_address', widget.email);
   }
@@ -69,8 +70,9 @@ class _RegisterCodeWaitingState extends State<RegisterCodeWaiting> {
                 "이메일을\n확인해주세요!",
                 style: TextStyle(
                   color: Palette.black,
-                  fontSize: 44,
-                  letterSpacing: -2.5,
+                  fontSize: 32,
+                  letterSpacing: -1,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
               Padding(
@@ -78,19 +80,19 @@ class _RegisterCodeWaitingState extends State<RegisterCodeWaiting> {
                 child: Text(
                   widget.email,
                   style: const TextStyle(
-                    color: Palette.black,
+                    color: Palette.primary,
                     fontSize: 20,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w400,
                   ),
                 ),
               ),
               const Padding(
-                padding: EdgeInsets.only(top: 80),
+                padding: EdgeInsets.only(top: 60),
                 child: Text(
-                  "인증 메일을 보내드렸어요. 인증 메일 내 버튼을 눌러 이메일 인증을 완료해주세요.",
+                  "인증 메일을 보내드렸어요.\n인증 메일 내 버튼을 눌러 이메일 인증을 완료해주세요.",
                   style: TextStyle(
                     color: Palette.grey,
-                    fontSize: 16,
+                    fontSize: 14,
                   ),
                 ),
               ),
@@ -101,3 +103,4 @@ class _RegisterCodeWaitingState extends State<RegisterCodeWaiting> {
     );
   }
 }
+

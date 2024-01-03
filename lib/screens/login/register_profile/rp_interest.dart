@@ -50,7 +50,7 @@ class _RPInterestState extends State<RPInterest> {
   void _pickRandomInterests() {
     _randomInterest.clear();
     List<String> available =
-    _pickInterest.where((e) => !_interest!.contains(e)).toList();
+    _pickInterest.where((e) => !(_interest?.contains(e) ?? false)).toList();
     available.shuffle();
     _randomInterest = available.take(3).toList();
   }

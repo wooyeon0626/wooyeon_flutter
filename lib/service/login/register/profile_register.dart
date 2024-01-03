@@ -1,6 +1,8 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
+import 'package:http_parser/http_parser.dart';
 import 'package:wooyeon_flutter/config/config.dart';
 
 import 'package:wooyeon_flutter/models/pref.dart';
@@ -12,8 +14,15 @@ class ProfileRegister {
     try {
       Dio dio = Dio();
 
+      log("[JSON]\n${jsonEncode(Pref.instance.profileData?.toJson())}");
+
+      final profileInfoData = MultipartFile.fromString(
+        jsonEncode(Pref.instance.profileData?.toJson()),
+        contentType: MediaType('application', 'json'),
+      );
+
       FormData formData = FormData.fromMap({
-        'profileInfo': Pref.instance.profileData?.toJson(),
+        'profileInfo': profileInfoData,
         'profilePhoto': profilePhotos
       });
 

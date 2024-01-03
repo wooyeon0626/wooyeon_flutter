@@ -109,7 +109,7 @@ class _RPHobbyState extends State<RPHobby> {
   void _pickRandomHobbies() {
     _randomHobbies.clear();
     List<String> available =
-        _pickHobby.where((e) => !_hobby!.contains(e)).toList();
+        _pickHobby.where((e) => !(_hobby?.contains(e) ?? false)).toList();
     available.shuffle();
     _randomHobbies = available.take(3).toList();
   }

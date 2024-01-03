@@ -5,6 +5,7 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:http_parser/http_parser.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:wooyeon_flutter/screens/login/login/login_success.dart';
 import 'package:wooyeon_flutter/service/login/register/profile_register.dart';
@@ -79,7 +80,7 @@ class _RPImageState extends State<RPImage> {
 
     for (var image in imageFiles) {
       var file = File(image.path);
-      var multiPartFile = await MultipartFile.fromFile(file.path, filename: "image_${imageFiles.indexOf(image)}.jpg");
+      var multiPartFile = await MultipartFile.fromFile(file.path, contentType: MediaType("image", "jpg"));
       multiImage.add(multiPartFile);
     }
 
