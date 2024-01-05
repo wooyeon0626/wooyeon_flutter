@@ -1,13 +1,18 @@
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:flutter_client_sse/constants/sse_request_type_enum.dart';
-import 'package:flutter_client_sse/flutter_client_sse.dart';
 import 'package:wooyeon_flutter/config/config.dart';
 import 'package:http/http.dart' as http;
 import 'package:wooyeon_flutter/models/pref.dart';
 
 class EmailAuth {
+  Stream<String>? _stream;
+
+  Stream<String> get stream {
+    _stream ??= emailVerifyRequestAndConnect();
+    return _stream!;
+  }
+
   // /// send email address to server.
   // Future<bool> sendEmailRequest({required String email}) async {
   //   const url = '${Config.domain}/auth/email';
@@ -74,27 +79,32 @@ class EmailAuth {
   // }
 
   //TODO 구현 필요.
-  Future<bool> emailVerifyRequest({required String email}) async {
+  Stream<String> emailVerifyRequestAndConnect() async* {
     const url = '${Config.domain}/auth/email/verify';
+
+    final String? email = await Pref.instance.get('email_address');
 
     log("[EMAIL] $email");
 
-    final response = SSEClient.subscribeToSSE(
-        method: SSERequestType.POST,
-        url: url,
-        header: {
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: {
-          'email': email,
-        }).listen(
-          (event) {
-        log('Id: ${event.id!}');
-        log('Event: ${event.event!}');
-        log('Data: ${event.data!}');
-      },
-    );
+    if (email == null) return;
 
-    return false;
+    Map<String, String> headers = {
+      'Content-Type': 'application/json; charset=UTF-8',
+      'Accept': 'text/event-stream',
+    };
+    String jsonBody = '{"email": "$email"}';
+
+    final client = http.Client();
+    final request = http.Request('POST', Uri.parse(url))
+      ..headers.addAll(headers)
+      ..headers['Content-Type'] = 'application/json; charset=UTF-8'
+      ..body = jsonBody;
+    final response = await client.send(request);
+
+    yield* response.stream
+        .transform(utf8.decoder)
+        .transform(const LineSplitter())
+        .where((line) => line.startsWith('data:'))
+        .map((line) => line.substring(5));
   }
 }

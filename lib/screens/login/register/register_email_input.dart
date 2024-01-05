@@ -107,6 +107,8 @@ class RegisterEmailInput extends StatelessWidget {
                         builder: (context, emailValue, child) {
                           //todo : 여기서 백엔드에 이메일 전송
 
+                          Pref.instance.save('email_address', emailValue);
+
                           return Padding(
                               padding:
                                   const EdgeInsets.symmetric(vertical: 10),

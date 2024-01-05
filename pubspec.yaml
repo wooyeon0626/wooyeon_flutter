@@ -37,7 +37,6 @@ dependencies:
   image: ^4.0.17
   flutter_image_compress: ^2.0.4
   dio: ^5.3.2
-  flutter_client_sse: ^2.0.1
 
 dev_dependencies:
   flutter_test:
