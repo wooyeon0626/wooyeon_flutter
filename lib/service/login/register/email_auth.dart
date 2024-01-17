@@ -80,11 +80,11 @@ class EmailAuth {
 
   //TODO 구현 필요.
   Stream<String> emailVerifyRequestAndConnect() async* {
-    const url = '${Config.domain}/auth/email/verify';
+    const url = '${Config.domain}/auth/email';
 
     final String? email = await Pref.instance.get('email_address');
 
-    log("[EMAIL] $email");
+    log("\n\n[EMAIL] $email");
 
     if (email == null) return;
 
@@ -97,7 +97,6 @@ class EmailAuth {
     final client = http.Client();
     final request = http.Request('POST', Uri.parse(url))
       ..headers.addAll(headers)
-      ..headers['Content-Type'] = 'application/json; charset=UTF-8'
       ..body = jsonBody;
     final response = await client.send(request);
 

@@ -76,6 +76,13 @@ class _RegisterCodeWaitingState extends State<RegisterCodeWaiting> {
       body: StreamBuilder<String>(
         stream: sseClient.stream,
         builder: (context, snapshot) {
+
+          log("\n\n\n======= Stream Text ======");
+          log("connectionState : ${snapshot.connectionState}");
+          log("hasData : ${snapshot.hasData}");
+          log("data : ${snapshot.data}");
+          log("============================\n\n\n");
+
           if (snapshot.connectionState == ConnectionState.active) {
             /// 서버로부터 Data 수신
             /// 받은 데이터 중, 이메일 인증 완료 메시지를 받았을 때에만 데이터 리턴되어야 함.
