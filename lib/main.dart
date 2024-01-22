@@ -8,7 +8,7 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:uni_links/uni_links.dart';
 import 'package:wooyeon_flutter/models/pref.dart';
-import 'package:wooyeon_flutter/screens/login/login.dart';
+import 'package:wooyeon_flutter/screens/chat/chat_detail.dart';
 import 'package:wooyeon_flutter/screens/login/register/register_email_input.dart';
 import 'package:wooyeon_flutter/screens/login/register/register_success.dart';
 import 'package:wooyeon_flutter/service/login/auto_login/auth.dart';
@@ -17,6 +17,7 @@ import 'firebase_options.dart';
 
 import 'loading.dart';
 import 'models/controller/chat_controller.dart';
+import 'models/state/navigationbar_state.dart';
 import 'screens/main_screen.dart';
 import 'config/palette.dart';
 
@@ -33,26 +34,31 @@ Future<void> main() async {
   String? fcmToken = await FirebaseMessaging.instance.getToken();
   print('FCM Token: $fcmToken');
 
+  // Foreground
   FirebaseMessaging.onMessage.listen((RemoteMessage? message) {
     if (message != null) {
       if (message.notification != null) {
         debugPrint(message.notification!.title);
         debugPrint(message.notification!.body);
-        debugPrint(message.data["click_action"]);
+        debugPrint(message.data["type"]);
+        _handleNavigate(message);
       }
     }
   });
 
+  // background 에서 fcm 으로 실행
   FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage? message) {
     if (message != null) {
       if (message.notification != null) {
         debugPrint(message.notification!.title);
         debugPrint(message.notification!.body);
-        debugPrint(message.data["click_action"]);
+        debugPrint(message.data["type"]);
+        _handleNavigate(message);
       }
     }
   });
 
+  // Terminate
   FirebaseMessaging.instance
       .getInitialMessage()
       .then((RemoteMessage? message) {
@@ -60,11 +66,11 @@ Future<void> main() async {
       if (message.notification != null) {
         debugPrint(message.notification!.title);
         debugPrint(message.notification!.body);
-        debugPrint(message.data["click_action"]);
+        debugPrint(message.data["type"]);
+        _handleNavigate(message);
       }
     }
   });
-
 
   initializeDateFormatting('ko_KR', null).then((_) {
     runApp(const MyApp());
@@ -72,6 +78,21 @@ Future<void> main() async {
 
   if (await Permission.notification.isDenied) {
     await Permission.notification.request();
+  }
+}
+
+// FCM message를 받아 적절한 페이지로 라우팅
+_handleNavigate(RemoteMessage message){
+  if(message.data['type'] == 'chat'){
+    // type == chat 이라면, massage.data['chatRoomId']를 통해 해당 채팅방으로 이동하도록
+    Get.find<NavigationBarState>().setInx(3);
+    // 이후 특정 채팅방으로 이동
+    int chatRoomId = int.parse(message.data['chatRoomId']);
+    Get.to(ChatDetail(chatRoomId: chatRoomId));
+  }
+  else if(message.data['type'] == 'match'){
+    // type == match 라면, 바텀 네비게이션바의 '매치'로 이동하도록
+    Get.find<NavigationBarState>().setInx(2);
   }
 }
 
