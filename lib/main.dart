@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -22,6 +23,10 @@ import 'models/state/navigationbar_state.dart';
 import 'screens/main_screen.dart';
 import 'config/palette.dart';
 
+late AndroidNotificationChannel channel;
+late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
+
+
 Future<void> main() async {
   // WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   // FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
@@ -30,6 +35,7 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  await setupFlutterNotifications();
 
   // FCM 토큰 받아오기 from Firebase
   String? fcmToken = await FirebaseMessaging.instance.getToken();
@@ -39,14 +45,15 @@ Future<void> main() async {
     FcmService.postFcmToken(fcmToken: fcmToken);
   }
 
-  // Foreground
+  // Foreground 에서 FCM 메세지 수신 직후, 내부 알림 띄우기
   FirebaseMessaging.onMessage.listen((RemoteMessage? message) {
     if (message != null) {
       if (message.notification != null) {
         debugPrint(message.notification!.title);
         debugPrint(message.notification!.body);
         debugPrint(message.data["type"]);
-        _handleNavigate(message);
+        // 내부 알림 띄우기
+        _showFlutterNotification(message);
       }
     }
   });
@@ -86,6 +93,57 @@ Future<void> main() async {
   }
 }
 
+Future<void> setupFlutterNotifications() async {
+  channel = const AndroidNotificationChannel(
+    'high_importance_channel', // id
+    'High Importance Notifications', // title
+    description:
+    'This channel is used for important notifications.', // description
+    importance: Importance.high,
+  );
+
+  flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
+  /// Create an Android Notification Channel.
+  ///
+  /// We use this channel in the `AndroidManifest.xml` file to override the
+  /// default FCM channel to enable heads up notifications.
+  await flutterLocalNotificationsPlugin
+      .resolvePlatformSpecificImplementation<
+      AndroidFlutterLocalNotificationsPlugin>()
+      ?.createNotificationChannel(channel);
+
+  /// Update the iOS foreground notification presentation options to allow
+  /// heads up notifications.
+  await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
+    alert: true,
+    badge: true,
+    sound: true,
+  );
+}
+
+void _showFlutterNotification(RemoteMessage message) {
+  RemoteNotification? notification = message.notification;
+  AndroidNotification? android = message.notification?.android;
+  if (notification != null && android != null) {
+    flutterLocalNotificationsPlugin.show(
+      notification.hashCode,
+      notification.title,
+      notification.body,
+      NotificationDetails(
+        android: AndroidNotificationDetails(
+          channel.id,
+          channel.name,
+          channelDescription: channel.description,
+          // TODO add a proper drawable resource to android, for now using
+          //      one that already exists in example app.
+          icon: 'launch_background',
+        ),
+      ),
+    );
+  }
+}
+
 // FCM message를 받아 적절한 페이지로 라우팅
 _handleNavigate(RemoteMessage message){
   if(message.data['type'] == 'chat'){
@@ -99,7 +157,11 @@ _handleNavigate(RemoteMessage message){
     // type == match 라면, 바텀 네비게이션바의 '매치'로 이동하도록
     Get.find<NavigationBarState>().setInx(2);
   }
+  else{
+    debugPrint("_handleNavigate : message.data is missing");
+  }
 }
+
 
 class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
