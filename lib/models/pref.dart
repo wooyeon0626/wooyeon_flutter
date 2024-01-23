@@ -24,6 +24,11 @@ class Pref {
     return prefs.getString(key);
   }
 
+  Future<void> delete(String key) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.remove(key);
+  }
+
   Future<void> saveProfile() async {
     final prefs = await SharedPreferences.getInstance();
 

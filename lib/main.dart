@@ -16,8 +16,9 @@ import 'screens/main_screen.dart';
 import 'config/palette.dart';
 
 void main() {
-  // WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
-  // FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  //FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  final EmailAuth sseClient = Get.put(EmailAuth());
   initializeDateFormatting('ko_KR', null).then((_) {
     runApp(const MyApp());
   });
@@ -32,9 +33,6 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> with WidgetsBindingObserver{
   final Auth _auth = Auth();
-  bool? _isEmailAuth;
-  bool _isLoading = true;
-  bool isDeepLinkHandled = false;
 
   @override
   void initState() {
@@ -49,10 +47,17 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver{
   }
 
   @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
+  void didChangeAppLifecycleState(AppLifecycleState state) async {
     super.didChangeAppLifecycleState(state);
-    log("[STATE] ${AppLifecycleState.resumed}");
-    log("[FLAG] $isDeepLinkHandled");
+
+    final String? emailVerify = await Pref.instance.get('emailVerify');
+
+    log("[STATE] $state, [EMAIL] $emailVerify");
+
+    if(state == AppLifecycleState.resumed && emailVerify != null) {
+      final EmailAuth emailAuth = Get.find();
+      emailAuth.resendRequest();
+    }
   }
 
   @override
@@ -69,7 +74,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver{
         primarySwatch: ColorService.createMaterialColor(Palette.primary),
         fontFamily: 'Pretendard',
       ),
-      home: _isEmailAuth != null ? (_isEmailAuth! ? RegisterSuccess() : RegisterEmailInput()) : FutureBuilder<bool>(
+      home: FutureBuilder<bool>(
         future: _auth.autoLogin(),
         builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
