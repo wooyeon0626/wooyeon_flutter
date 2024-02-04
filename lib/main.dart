@@ -5,8 +5,6 @@ import 'package:get/get.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:wooyeon_flutter/models/pref.dart';
 import 'package:wooyeon_flutter/screens/login/login.dart';
-import 'package:wooyeon_flutter/screens/login/register/register_email_input.dart';
-import 'package:wooyeon_flutter/screens/login/register/register_success.dart';
 import 'package:wooyeon_flutter/service/login/auto_login/auth.dart';
 import 'package:wooyeon_flutter/service/login/register/email_auth.dart';
 

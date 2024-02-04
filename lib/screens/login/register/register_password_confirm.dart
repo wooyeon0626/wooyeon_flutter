@@ -2,8 +2,11 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:wooyeon_flutter/screens/login/register/register_success.dart';
+import 'package:wooyeon_flutter/widgets/next_button_async.dart';
 
 import '../../../config/palette.dart';
+import '../../../service/login/register/password_auth.dart';
+import '../../../utils/transition.dart';
 import '../../../widgets/basic_textfield.dart';
 import '../../../widgets/next_button.dart';
 
@@ -99,14 +102,26 @@ class _RegisterPasswordConfirmState extends State<RegisterPasswordConfirm> {
                         valueListenable: password,
                         builder: (context, passwordValue, child) {
                           //todo : 여기서 백엔드에 비밀번호 전송
+                          final ctx = context;
 
                           return Padding(
                               padding: const EdgeInsets.symmetric(
                                   vertical: 10),
-                              child: NextButton(
+                              child: NextButtonAsync(
                                 text: "다음",
                                 isActive: buttonActive,
-                                nextPage: RegisterSuccess(),
+                                func: () async {
+                                  final passwordAuth = PasswordAuth();
+                                  await passwordAuth.sendPassword(passwordValue);
+
+                                  WidgetsBinding.instance
+                                      .addPostFrameCallback((_) {
+                                    navigateHorizontally(
+                                      context: ctx,
+                                      widget: RegisterSuccess(),
+                                    );
+                                  });
+                                },
                               ));
                         }),
                   ),
