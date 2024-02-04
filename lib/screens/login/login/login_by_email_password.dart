@@ -1,6 +1,7 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:wooyeon_flutter/screens/login/login/login_success.dart';
 
 import '../../../config/palette.dart';
 import '../../../utils/transition.dart';
@@ -71,17 +72,18 @@ class LoginByEmailPassword extends StatelessWidget {
                       "비밀번호를\n입력해주세요",
                       style: TextStyle(
                         color: Palette.black,
-                        fontSize: 44,
-                        letterSpacing: -2.5,
+                        fontSize: 32,
+                        letterSpacing: -1,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
                     const SizedBox(
-                      height: 40,
+                      height: 20,
                     ),
                     BasicTextField(
                       hintText: "비밀번호를 입력해주세요.",
                       controller: textFieldController,
-                      inputType: TextInputType.phone,
+                      inputType: TextInputType.visiblePassword,
                       autoFocus: true,
                     ),
                   ],
@@ -111,7 +113,7 @@ class LoginByEmailPassword extends StatelessWidget {
                                           .addPostFrameCallback((_) {
                                         navigateHorizontally(
                                             context: ctx,
-                                            widget: LoginByEmail());
+                                            widget: LoginSuccess());
                                         });
                                     },
                                   );

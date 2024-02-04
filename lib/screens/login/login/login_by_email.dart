@@ -70,12 +70,13 @@ class LoginByEmail extends StatelessWidget {
                       "이메일을\n입력해주세요",
                       style: TextStyle(
                         color: Palette.black,
-                        fontSize: 44,
-                        letterSpacing: -2.5,
+                        fontSize: 32,
+                        letterSpacing: -1,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
                     const SizedBox(
-                      height: 40,
+                      height: 20,
                     ),
                     BasicTextField(
                       hintText: "이메일을 입력해주세요.",

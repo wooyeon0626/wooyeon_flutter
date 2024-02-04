@@ -8,6 +8,7 @@ import 'package:wooyeon_flutter/config/palette.dart';
 import 'package:wooyeon_flutter/models/pref.dart';
 import 'package:wooyeon_flutter/screens/login/login/login_by_email.dart';
 import 'package:wooyeon_flutter/screens/login/register/register_email_input.dart';
+import 'package:wooyeon_flutter/screens/login/register/register_password_confirm.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -31,11 +32,11 @@ class _LoginState extends State<Login> {
 
   Future<bool> permission() async {
     Map<Permission, PermissionStatus> status =
-    await [Permission.location, Permission.phone].request();
+        await [Permission.location, Permission.phone].request();
 
     bool flag = true;
     status.forEach((key, value) async {
-      if(!(await key.isGranted)) {
+      if (!(await key.isGranted)) {
         flag = false;
       }
       log('[Permission Status] $key : $value');
@@ -46,7 +47,6 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -76,7 +76,8 @@ class _LoginState extends State<Login> {
               child: InkWell(
                 onTap: () {
                   //todo: access token이 있는지 없는지 체크??
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => LoginByEmail()));
+                  Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => LoginByEmail()));
                 },
                 child: Container(
                   height: 70,
@@ -115,7 +116,9 @@ class _LoginState extends State<Login> {
               padding: const EdgeInsets.symmetric(vertical: 20),
               child: TextButton(
                 onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterEmailInput()));
+                  // TODO : REGISTER EMAIL INPUT
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => RegisterEmailInput()));
                 },
                 child: const Text(
                   "회원가입",

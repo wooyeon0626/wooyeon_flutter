@@ -1,8 +1,11 @@
+import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:wooyeon_flutter/screens/login/login/login_by_email.dart';
 import 'package:wooyeon_flutter/screens/login/register_profile/rp_name.dart';
 import '../../../config/palette.dart';
 import '../../../widgets/next_button.dart';
+import '../login.dart';
 
 class RegisterSuccess extends StatelessWidget {
   RegisterSuccess({super.key});
@@ -15,6 +18,17 @@ class RegisterSuccess extends StatelessWidget {
       resizeToAvoidBottomInset: true,
       backgroundColor: Colors.white,
       appBar: AppBar(
+        leadingWidth: 80,
+        leading: IconButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          icon: const Icon(
+            EvaIcons.arrowIosBack,
+            color: Palette.black,
+          ),
+          iconSize: 40,
+        ),
         backgroundColor: Colors.white,
         systemOverlayStyle: const SystemUiOverlayStyle(
           statusBarColor: Colors.white,
@@ -39,14 +53,15 @@ class RegisterSuccess extends StatelessWidget {
                     Image.asset(
                       "assets/image/wooyeon_text.png",
                       fit: BoxFit.cover,
-                      width: 110,
+                      width: 80,
                     ),
                     const Text(
                       "에 오신",
                       style: TextStyle(
                         color: Palette.black,
-                        fontSize: 44,
-                        letterSpacing: -2.5,
+                        fontSize: 32,
+                        letterSpacing: -1,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
                   ],
@@ -55,14 +70,15 @@ class RegisterSuccess extends StatelessWidget {
                   "것을 환영해요!",
                   style: TextStyle(
                     color: Palette.black,
-                    fontSize: 44,
-                    letterSpacing: -2.5,
+                    fontSize: 32,
+                    letterSpacing: -1,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
                 const Padding(
-                  padding: EdgeInsets.only(top: 60),
+                  padding: EdgeInsets.only(top: 20),
                   child: Text(
-                    "성공적으로 계정이 생성되었어요.\n이제 당신을 알아가는 시간을 가져볼게요!",
+                    "성공적으로 계정이 생성되었어요.\n로그인 화면에서 로그인을 해주세요!",
                     style: TextStyle(
                       color: Palette.grey,
                       fontSize: 16,
@@ -79,11 +95,11 @@ class RegisterSuccess extends StatelessWidget {
                 func: () {
                   Navigator.of(context).pushAndRemoveUntil(
                     MaterialPageRoute(
-                        builder: (BuildContext context) => const RPName()),
+                        builder: (BuildContext context) => LoginByEmail()),
                     (Route<dynamic> route) => route.isFirst,
                   );
                 },
-                text: "프로필 등록하기",
+                text: "로그인 화면으로",
                 isActive: buttonActive),
               ),
             ),
