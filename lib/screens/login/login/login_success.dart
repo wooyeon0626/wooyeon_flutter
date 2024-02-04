@@ -47,15 +47,15 @@ class LoginSuccess extends StatelessWidget {
                     fontWeight: FontWeight.bold),
               ),
               const SizedBox(
-                height: 40,
+                height: 20,
               ),
               const Padding(
-                padding: EdgeInsets.only(top: 40),
+                padding: EdgeInsets.only(top: 20),
                 child: Text(
-                  "근처에 xx명의 친구들이 xx님을 찾고있어요!",
+                  "근처에 xx명의 친구들이\nxx님을 찾고있어요!",
                   style: TextStyle(
                     color: Palette.black,
-                    fontSize: 24,
+                    fontSize: 18,
                   ),
                 ),
               ),

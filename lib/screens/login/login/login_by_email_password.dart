@@ -1,13 +1,15 @@
+import 'dart:developer';
+
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:wooyeon_flutter/screens/login/login/login_success.dart';
+import 'package:wooyeon_flutter/service/login/auto_login/auth.dart';
 
 import '../../../config/palette.dart';
 import '../../../utils/transition.dart';
 import '../../../widgets/basic_textfield.dart';
 import '../../../widgets/next_button_async.dart';
-import 'login_by_email.dart';
 
 class LoginByEmailPassword extends StatelessWidget {
   final buttonActive = ValueNotifier<bool>(false);
@@ -15,7 +17,7 @@ class LoginByEmailPassword extends StatelessWidget {
   final String email;
 
   final RegExp passwordValidator = RegExp(
-    r'',
+    r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$',
   );
 
   LoginByEmailPassword({super.key, required this.email});
@@ -78,6 +80,18 @@ class LoginByEmailPassword extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      email,
+                      style: const TextStyle(
+                        color: Palette.primary,
+                        fontSize: 18,
+                        letterSpacing: -1,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    const SizedBox(
                       height: 20,
                     ),
                     BasicTextField(
@@ -108,13 +122,19 @@ class LoginByEmailPassword extends StatelessWidget {
                                     text: "다음",
                                     isActive: buttonActive,
                                     func: () async {
+                                      final auth = Auth();
+                                      bool loginState = await auth.login(email, passwordValue);
 
-                                      WidgetsBinding.instance
-                                          .addPostFrameCallback((_) {
-                                        navigateHorizontally(
-                                            context: ctx,
-                                            widget: LoginSuccess());
+                                      if(loginState) {
+                                        WidgetsBinding.instance
+                                            .addPostFrameCallback((_) {
+                                          navigateHorizontally(
+                                              context: ctx,
+                                              widget: LoginSuccess());
                                         });
+                                      } else {
+                                        log("[ERROR] 로그인 실패 : loginState false");
+                                      }
                                     },
                                   );
                                 },
