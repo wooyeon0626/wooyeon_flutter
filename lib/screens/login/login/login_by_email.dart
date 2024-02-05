@@ -1,24 +1,22 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:wooyeon_flutter/models/pref.dart';
-import 'package:wooyeon_flutter/screens/login/register/register_code_waiting.dart';
-import 'package:wooyeon_flutter/service/login/register/email_auth.dart';
-import 'package:wooyeon_flutter/widgets/basic_textfield.dart';
-import 'package:wooyeon_flutter/widgets/next_button.dart';
 
 import '../../../config/palette.dart';
 import '../../../utils/transition.dart';
+import '../../../widgets/basic_textfield.dart';
+import '../../../widgets/next_button_async.dart';
+import 'login_by_email_password.dart';
 
-class RegisterEmailInput extends StatelessWidget {
-  RegisterEmailInput({super.key});
-
+class LoginByEmail extends StatelessWidget {
   final buttonActive = ValueNotifier<bool>(false);
   final email = ValueNotifier<String>("");
 
-  final RegExp phoneValidator = RegExp(
+  final RegExp emailValidator = RegExp(
     r'^[a-zA-Z\d._%+-]+@[a-zA-Z\d.-]+\.[a-zA-Z]{2,}$',
   );
+
+  LoginByEmail({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +24,7 @@ class RegisterEmailInput extends StatelessWidget {
 
     textFieldController.addListener(() {
       email.value = textFieldController.text;
-      buttonActive.value = phoneValidator.hasMatch(textFieldController.text);
+      buttonActive.value = emailValidator.hasMatch(textFieldController.text);
     });
 
     return Scaffold(
@@ -86,16 +84,6 @@ class RegisterEmailInput extends StatelessWidget {
                       inputType: TextInputType.emailAddress,
                       autoFocus: true,
                     ),
-                    const Padding(
-                      padding: EdgeInsets.only(top: 20),
-                      child: Text(
-                        "입력한 이메일로 인증코드를 발송하므로, 꼭 확인 가능한 메일 주소를 적어주세요",
-                        style: TextStyle(
-                          color: Palette.grey,
-                          fontSize: 12,
-                        ),
-                      ),
-                    ),
                   ],
                 ),
                 Align(
@@ -105,18 +93,29 @@ class RegisterEmailInput extends StatelessWidget {
                     child: ValueListenableBuilder<String>(
                         valueListenable: email,
                         builder: (context, emailValue, child) {
-                          //todo : 여기서 백엔드에 이메일 전송
-
-                          Pref.instance.save('email_address', emailValue);
 
                           return Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 10),
-                              child: NextButton(
-                                text: "다음",
-                                isActive: buttonActive,
-                                nextPage: RegisterCodeWaiting(
-                                    email: emailValue),
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 10),
+                              child: Builder(
+                                builder: (newContext) {
+                                  // 새로운 context를 변수에 저장
+                                  final ctx = newContext;
+
+                                  return NextButtonAsync(
+                                    text: "다음",
+                                    isActive: buttonActive,
+                                    func: () async {
+
+                                      WidgetsBinding.instance
+                                          .addPostFrameCallback((_) {
+                                        navigateHorizontally(
+                                          context: ctx,
+                                          widget: LoginByEmailPassword(email: emailValue,));
+                                      });
+                                    },
+                                  );
+                                },
                               ));
                         }),
                   ),
@@ -128,4 +127,5 @@ class RegisterEmailInput extends StatelessWidget {
       ),
     );
   }
+
 }

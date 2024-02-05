@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:get/route_manager.dart';
 import 'package:wooyeon_flutter/screens/main_screen.dart';
 import 'package:wooyeon_flutter/service/login/auto_login/auth.dart';
 
@@ -8,10 +7,8 @@ import '../../../config/palette.dart';
 import '../../../widgets/next_button.dart';
 
 class LoginSuccess extends StatelessWidget {
-  final String phone;
-  final String code;
 
-  LoginSuccess({required this.phone, required this.code, super.key});
+  LoginSuccess({super.key});
 
   final buttonActive = ValueNotifier<bool>(true);
 
@@ -50,15 +47,15 @@ class LoginSuccess extends StatelessWidget {
                     fontWeight: FontWeight.bold),
               ),
               const SizedBox(
-                height: 40,
+                height: 20,
               ),
               const Padding(
-                padding: EdgeInsets.only(top: 40),
+                padding: EdgeInsets.only(top: 20),
                 child: Text(
-                  "근처에 xx명의 친구들이 xx님을 찾고있어요!",
+                  "근처에 xx명의 친구들이\nxx님을 찾고있어요!",
                   style: TextStyle(
                     color: Palette.black,
-                    fontSize: 24,
+                    fontSize: 18,
                   ),
                 ),
               ),
@@ -69,7 +66,6 @@ class LoginSuccess extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(vertical: 40),
                       child: NextButton(
                           func: () {
-                            Auth().login(phone, code);
                             Navigator.pushAndRemoveUntil(
                               context,
                               MaterialPageRoute(builder: (BuildContext context) => const MainScreen()),

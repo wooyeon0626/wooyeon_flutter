@@ -4,29 +4,31 @@ import 'package:jwt_decode/jwt_decode.dart';
 class TokenStorage {
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
 
-  Future<void> saveToken(String token) async {
-    await _storage.write(key: 'jwt_token', value: token);
+  Future<void> saveToken({required String token, bool refresh = false}) async {
+    if(!refresh){
+      await _storage.write(key: 'access_token', value: token);
+    } else {
+      await _storage.write(key: 'refresh_token', value: token);
+    }
   }
 
-  Future<String?> getToken() async {
-    return await _storage.read(key: 'jwt_token');
+  Future<String?> getToken({bool refresh = false}) async {
+    if(!refresh) {
+      return await _storage.read(key: 'access_token');
+    } else {
+      return await _storage.read(key: 'refresh_token');
+    }
   }
-
-  // Future<bool> isTokenExpired() async {
-  //   String? token = await getToken();
-  //   if (token == null) {
-  //     return true;
-  //   }
-  //   Map<String, dynamic> payload = Jwt.parseJwt(token);
-  //   DateTime expiryDate = DateTime.fromMillisecondsSinceEpoch(payload['exp'] * 1000);
-  //   return DateTime.now().isAfter(expiryDate);
-  // }
 
   Future<bool> isTokenExpired() async {
     return false;
   }
 
-  Future<void> deleteToken() async {
-    await _storage.delete(key: 'jwt_token');
+  Future<void> deleteToken({bool refresh = false}) async {
+    if(!refresh) {
+      await _storage.delete(key: 'access_token');
+    } else {
+      await _storage.delete(key: 'refresh_token');
+    }
   }
 }

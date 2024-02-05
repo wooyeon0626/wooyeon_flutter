@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 class GenderPicker extends StatefulWidget {
-  const GenderPicker({Key? key}) : super(key: key);
+  final Function(bool) onGenderChanged;
+  final bool initGender;
+  const GenderPicker({Key? key, required this.onGenderChanged, this.initGender = true}) : super(key: key);
 
   @override
   State<GenderPicker> createState() => _GenderPickerState();
@@ -9,16 +11,27 @@ class GenderPicker extends StatefulWidget {
 
 class _GenderPickerState extends State<GenderPicker>
     with SingleTickerProviderStateMixin {
-  bool _isMale = true;
+  late bool _isMale;
   late final AnimationController _controller;
+
+  void _updateGender(bool isMale) {
+    setState(() {
+      _isMale = isMale;
+    });
+    widget.onGenderChanged(isMale);
+  }
 
   @override
   void initState() {
     super.initState();
+    _isMale = widget.initGender;
     _controller = AnimationController(
       duration: const Duration(milliseconds: 50), // Animation duration shortened
       vsync: this,
     );
+    if(!_isMale) {
+      _controller.forward();
+    }
   }
 
   @override
@@ -60,12 +73,10 @@ class _GenderPickerState extends State<GenderPicker>
                   GestureDetector(
                     behavior: HitTestBehavior.translucent,
                     onTap: () {
-                      _controller.reverse().then((value) => setState(() {
-                        _isMale = true;
-                      }));
+                      _controller.reverse().then((value) => _updateGender(true));
                     },
                     child: Padding(
-                      padding: EdgeInsets.all(15.0), // increase as needed
+                      padding: const EdgeInsets.all(15.0), // increase as needed
                       child: Text(
                         '남자',
                         style: TextStyle(
@@ -80,12 +91,10 @@ class _GenderPickerState extends State<GenderPicker>
                   GestureDetector(
                     behavior: HitTestBehavior.translucent,
                     onTap: () {
-                      _controller.forward().then((value) => setState(() {
-                        _isMale = false;
-                      }));
+                      _controller.forward().then((value) => _updateGender(false));
                     },
                     child: Padding(
-                      padding: EdgeInsets.all(15.0), // increase as needed
+                      padding: const EdgeInsets.all(15.0), // increase as needed
                       child: Text(
                         '여자',
                         style: TextStyle(

@@ -1,34 +1,41 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:wooyeon_flutter/models/pref.dart';
-import 'package:wooyeon_flutter/screens/login/register/register_code_waiting.dart';
-import 'package:wooyeon_flutter/service/login/register/email_auth.dart';
-import 'package:wooyeon_flutter/widgets/basic_textfield.dart';
-import 'package:wooyeon_flutter/widgets/next_button.dart';
+import 'package:wooyeon_flutter/screens/login/register/register_success.dart';
+import 'package:wooyeon_flutter/widgets/next_button_async.dart';
 
 import '../../../config/palette.dart';
+import '../../../service/login/register/password_auth.dart';
 import '../../../utils/transition.dart';
+import '../../../widgets/basic_textfield.dart';
+import '../../../widgets/next_button.dart';
 
-class RegisterEmailInput extends StatelessWidget {
-  RegisterEmailInput({super.key});
+class RegisterPasswordConfirm extends StatefulWidget {
+  final String password;
+  const RegisterPasswordConfirm({super.key, required this.password});
 
+  @override
+  State<RegisterPasswordConfirm> createState() => _RegisterPasswordConfirmState();
+}
+
+class _RegisterPasswordConfirmState extends State<RegisterPasswordConfirm> {
   final buttonActive = ValueNotifier<bool>(false);
-  final email = ValueNotifier<String>("");
+  final password = ValueNotifier<String>("");
 
-  final RegExp phoneValidator = RegExp(
-    r'^[a-zA-Z\d._%+-]+@[a-zA-Z\d.-]+\.[a-zA-Z]{2,}$',
-  );
+  TextEditingController textFieldController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+
+    textFieldController.addListener(() {
+      password.value = textFieldController.text;
+      buttonActive.value = (widget.password == textFieldController.text);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController textFieldController = TextEditingController();
-
-    textFieldController.addListener(() {
-      email.value = textFieldController.text;
-      buttonActive.value = phoneValidator.hasMatch(textFieldController.text);
-    });
-
     return Scaffold(
       resizeToAvoidBottomInset: true,
       backgroundColor: Colors.white,
@@ -47,7 +54,6 @@ class RegisterEmailInput extends StatelessWidget {
         backgroundColor: Colors.white,
         systemOverlayStyle: const SystemUiOverlayStyle(
           statusBarColor: Colors.white,
-
           statusBarIconBrightness: Brightness.dark, // 안드로이드용 (어두운 아이콘)
           statusBarBrightness: Brightness.light, // iOS용 (어두운 아이콘)
         ),
@@ -69,7 +75,7 @@ class RegisterEmailInput extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
-                      "이메일을\n입력해주세요",
+                      "비밀번호를\n재입력해주세요",
                       style: TextStyle(
                         color: Palette.black,
                         fontSize: 32,
@@ -81,20 +87,10 @@ class RegisterEmailInput extends StatelessWidget {
                       height: 20,
                     ),
                     BasicTextField(
-                      hintText: "이메일을 입력해주세요.",
+                      hintText: "비밀번호를 다시 입력해주세요.",
                       controller: textFieldController,
-                      inputType: TextInputType.emailAddress,
+                      inputType: TextInputType.visiblePassword,
                       autoFocus: true,
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.only(top: 20),
-                      child: Text(
-                        "입력한 이메일로 인증코드를 발송하므로, 꼭 확인 가능한 메일 주소를 적어주세요",
-                        style: TextStyle(
-                          color: Palette.grey,
-                          fontSize: 12,
-                        ),
-                      ),
                     ),
                   ],
                 ),
@@ -103,20 +99,29 @@ class RegisterEmailInput extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 40),
                     child: ValueListenableBuilder<String>(
-                        valueListenable: email,
-                        builder: (context, emailValue, child) {
-                          //todo : 여기서 백엔드에 이메일 전송
-
-                          Pref.instance.save('email_address', emailValue);
+                        valueListenable: password,
+                        builder: (context, passwordValue, child) {
+                          //todo : 여기서 백엔드에 비밀번호 전송
+                          final ctx = context;
 
                           return Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 10),
-                              child: NextButton(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 10),
+                              child: NextButtonAsync(
                                 text: "다음",
                                 isActive: buttonActive,
-                                nextPage: RegisterCodeWaiting(
-                                    email: emailValue),
+                                func: () async {
+                                  final passwordAuth = PasswordAuth();
+                                  await passwordAuth.sendPassword(passwordValue);
+
+                                  WidgetsBinding.instance
+                                      .addPostFrameCallback((_) {
+                                    navigateHorizontally(
+                                      context: ctx,
+                                      widget: RegisterSuccess(),
+                                    );
+                                  });
+                                },
                               ));
                         }),
                   ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wooyeon_flutter/config/palette.dart';
 
 class BasicTextField extends StatelessWidget {
   final String hintText;
@@ -15,6 +16,7 @@ class BasicTextField extends StatelessWidget {
       keyboardType: inputType,
       decoration: InputDecoration(
         hintText: hintText,
+        hintStyle: const TextStyle(color: Palette.grey, fontWeight: FontWeight.w300),
         border: const UnderlineInputBorder(),
       ),
       autofocus: autoFocus,

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:wooyeon_flutter/screens/login/login.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:uni_links/uni_links.dart';
 import 'package:wooyeon_flutter/models/pref.dart';
@@ -32,6 +33,7 @@ Future<void> main() async {
   // FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
   WidgetsFlutterBinding.ensureInitialized();
+  final EmailAuth sseClient = Get.put(EmailAuth());
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -170,13 +172,10 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> with WidgetsBindingObserver{
   final Auth _auth = Auth();
-  bool? _isEmailAuth;
-  bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    _initUniLinks();
     WidgetsBinding.instance.addObserver(this);
   }
 
@@ -187,102 +186,16 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver{
   }
 
   @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
+  void didChangeAppLifecycleState(AppLifecycleState state) async {
     super.didChangeAppLifecycleState(state);
-    if (state == AppLifecycleState.resumed) {
-      _initUniLinksForeground();
-    }
-  }
 
-  _initUniLinks() async {
-    final initialLink = await getInitialLink();
+    final String? emailVerify = await Pref.instance.get('emailVerify');
 
-    log('[State] initialLink : $initialLink');
+    log("[STATE] $state, [EMAIL] $emailVerify");
 
-    if (initialLink != null) {
-      _handleIncomingLink(initialLink);
-    }
-  }
-
-  _initUniLinksForeground() async {
-    final initialLink = await getInitialLink();
-
-    log('[State] initialLink : $initialLink');
-
-    if (initialLink != null) {
-      _handleIncomingLinkForeground(initialLink);
-    }
-  }
-
-  void _verifyTokenWithBackend(String token) async {
-    // TODO: 백엔드와 통신하여 토큰 검증
-    final String? email = await Pref.instance.get('email_address');
-
-    if(email == null) {
-      return;
-    } else {
-      bool isTokenValid = await EmailAuth().sendEmailVerifyRequest(email: email, token: token);
-
-      setState(() {
-        _isEmailAuth = isTokenValid;
-        _isLoading = false;
-      });
-    }
-  }
-
-  Future<bool> _verifyTokenWithBackendForeground(String token) async {
-    // TODO: 백엔드와 통신하여 토큰 검증
-    final String? email = await Pref.instance.get('email_address');
-
-    if(email == null) {
-      return false;
-    } else {
-      bool isTokenValid = await EmailAuth().sendEmailVerifyRequest(email: email, token: token);
-
-      if (isTokenValid) {
-        return true;
-      } else {
-        return false;
-      }
-    }
-  }
-
-
-  void _handleIncomingLink(String link) {
-    final uri = Uri.parse(link);
-
-    log('[State] uri : ${uri.host}');
-
-    if (uri.host == 'email_auth') {
-      final token = uri.queryParameters['token'];
-
-      log('[State] token : $token');
-
-      if (token != null) {
-        _verifyTokenWithBackend(token);
-      }
-    }
-  }
-
-  void _handleIncomingLinkForeground(String link) {
-    final uri = Uri.parse(link);
-
-    log('[State] uri : ${uri.host}');
-
-    if (uri.host == 'email_auth') {
-      final token = uri.queryParameters['token'];
-
-      log('[State] token : $token');
-
-      if (token != null) {
-        _verifyTokenWithBackendForeground(token).then((value) {
-          if(value) {
-            Get.to(RegisterSuccess());
-          } else {
-            Get.to(RegisterEmailInput());
-          }
-        });
-      }
+    if(state == AppLifecycleState.resumed && emailVerify != null) {
+      final EmailAuth emailAuth = Get.find();
+      emailAuth.resendRequest();
     }
   }
 
@@ -300,7 +213,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver{
         primarySwatch: ColorService.createMaterialColor(Palette.primary),
         fontFamily: 'Pretendard',
       ),
-      home: _isEmailAuth != null ? (_isEmailAuth! ? RegisterSuccess() : RegisterEmailInput()) : FutureBuilder<bool>(
+      home: FutureBuilder<bool>(
         future: _auth.autoLogin(),
         builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
