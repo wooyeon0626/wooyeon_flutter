@@ -1,33 +1,79 @@
-class RecommendProfiles {
-  int userId;
+class RecommendProfileModel {
+  // ToDo : 속성 API에 맞게 바꾸기
+  // ToDo : 속성 바꾼 후에, recommend widget들에 들어가는 값도 맞추어 수정
+  String userCode;
   String gender;
   String nickname;
-  List<String> profilePhoto;
   String birthday;
   String locationInfo;
+  String gpsLocationInfo;
   String? mbti;
   String? intro;
+  bool authenticatedAccount;
   List<String>? hobby;
   List<String>? interest;
-  bool authenticatedAccount;
+  List<String> profilePhoto;
 
-  RecommendProfiles(
-      {required this.userId,
-      required this.gender,
-      required this.nickname,
-      required this.profilePhoto,
-      required this.birthday,
-      required this.locationInfo,
-      this.mbti,
-      this.intro,
-      this.hobby,
-      this.interest,
-      required this.authenticatedAccount,});
+  RecommendProfileModel({
+    required this.userCode,
+    required this.gender,
+    required this.nickname,
+    required this.birthday,
+    required this.locationInfo,
+    required this.gpsLocationInfo,
+    required this.authenticatedAccount,
+    required this.profilePhoto,
+    this.mbti,
+    this.intro,
+    this.hobby,
+    this.interest,
+  });
+
+  factory RecommendProfileModel.fromJsom(Map<String, dynamic> json) {
+    /* ToDo : 실제 API 값으로 수정
+    *  birthday, authenticatedAccount, hobby, interest, profilePhoto
+    */
+
+    final String userCode = json['userCode'];
+    final String gender = json['gender'];
+    final String nickname = json['nickname'];
+    final String birthday = json['birthday'];
+    //final String birthday= json['birthday'];
+    final String locationInfo = json['locationInfo'];
+    final String gpsLocationInfo = json['gpsLocationInfo'];
+    final String? mbti = json['mbti'];
+    final String? intro = json['intro'];
+    final bool authenticatedAccount = true;
+    final List<String>? hobby = ["취미1", "취미2"];
+    final List<String>? interest = ["관심사1", "관심사2", "관심사3"];
+    final List<String> profilePhoto = [
+      "https://i.imgur.com/PyVmvKL.jpeg",
+      "https://i.imgur.com/KMnZXmG.jpeg",
+      "https://i.imgur.com/mbcfBjq.jpeg"
+    ];
+
+    return RecommendProfileModel(
+      userCode: userCode,
+      gender: gender,
+      nickname: nickname,
+      birthday: birthday,
+      locationInfo: locationInfo,
+      gpsLocationInfo: gpsLocationInfo,
+      authenticatedAccount: authenticatedAccount,
+      profilePhoto: profilePhoto,
+      mbti: mbti,
+      intro: intro,
+      hobby: hobby,
+      interest: interest,
+    );
+  }
 }
 
-List<RecommendProfiles> recommendProfiles = [
-  RecommendProfiles(
-    userId: 1,
+// dummy Data
+List<RecommendProfileModel> dummyRecommendProfiles = [
+  RecommendProfileModel(
+    gpsLocationInfo: "3km",
+    userCode: "1",
     gender: 'M',
     nickname: "유저1",
     profilePhoto: [
@@ -44,8 +90,9 @@ List<RecommendProfiles> recommendProfiles = [
     hobby: ['취미1', '취미2', '취미3'],
     authenticatedAccount: true,
   ),
-  RecommendProfiles(
-    userId: 2,
+  RecommendProfileModel(
+    gpsLocationInfo: "3km",
+    userCode: "2",
     gender: 'F',
     nickname: "DOGE",
     profilePhoto: [
@@ -64,8 +111,9 @@ List<RecommendProfiles> recommendProfiles = [
     hobby: ['취미1', '취미2', '취미3'],
     authenticatedAccount: false,
   ),
-  RecommendProfiles(
-    userId: 3,
+  RecommendProfileModel(
+    gpsLocationInfo: "3km",
+    userCode: "3",
     gender: 'F',
     nickname: "점메추",
     profilePhoto: [
@@ -79,8 +127,9 @@ List<RecommendProfiles> recommendProfiles = [
     hobby: ['취미1', '취미2', '취미3'],
     authenticatedAccount: true,
   ),
-  RecommendProfiles(
-    userId: 4,
+  RecommendProfileModel(
+    gpsLocationInfo: "3km",
+    userCode: "4",
     gender: 'M',
     nickname: "닉네임 최대 몇 자?",
     profilePhoto: [
@@ -99,8 +148,9 @@ List<RecommendProfiles> recommendProfiles = [
     locationInfo: '부산시 부산진구',
     authenticatedAccount: false,
   ),
-  RecommendProfiles(
-    userId: 5,
+  RecommendProfileModel(
+    gpsLocationInfo: "3km",
+    userCode: "5",
     gender: 'M',
     nickname: "GIF",
     profilePhoto: [

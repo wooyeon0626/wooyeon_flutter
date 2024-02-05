@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:wooyeon_flutter/models/data/recommend_profile_model.dart';
 import 'package:wooyeon_flutter/widgets/image_slider.dart';
-import '../../models/data/recommend_data.dart';
 
 class BackgroundProfile extends StatefulWidget {
-  final RecommendProfiles profile;
+  final RecommendProfileModel profile;
 
   const BackgroundProfile(this.profile, {super.key});
 

@@ -2,16 +2,16 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:swipable_stack/swipable_stack.dart';
+import 'package:wooyeon_flutter/models/data/recommend_profile_model.dart';
 import 'package:wooyeon_flutter/utils/util.dart';
 import 'package:wooyeon_flutter/widgets/recommend/card_controller_in_detail.dart';
 import 'package:wooyeon_flutter/widgets/tag_item.dart';
 
 import '../../config/palette.dart';
-import '../../models/data/recommend_data.dart';
 import '../../widgets/image_slider.dart';
 
 class RecommendationDetail extends StatefulWidget {
-  final RecommendProfiles profile;
+  final RecommendProfileModel profile;
   final SwipableStackController controller;
 
   const RecommendationDetail(this.profile, this.controller, {super.key});
