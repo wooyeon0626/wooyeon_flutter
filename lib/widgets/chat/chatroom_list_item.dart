@@ -23,11 +23,11 @@ class ChatRoomListItem extends StatelessWidget {
         if (chatRoom == null)
           return Container(); // This chat room doesn't exist
 
-        int unChecked = 0;
-        if (chatRoom.chat.isNotEmpty) {
-          unChecked =
-              chatRoom.chat.where((chat) => chat.isCheck == false).length;
-        }
+        // int unChecked = 0;
+        // if (chatRoom.chat.isNotEmpty) {
+        //   unChecked =
+        //       chatRoom.chat.where((chat) => chat.isCheck == false).length;
+        // }
 
         return InkWell(
           onTap: () {
@@ -62,7 +62,7 @@ class ChatRoomListItem extends StatelessWidget {
               children: <Widget>[
                 CircleAvatar(
                   backgroundImage:
-                      NetworkImage(chatRoom.matched.profilePhoto[0]),
+                      NetworkImage(chatRoom.profilePhoto),
                   radius: 32,
                 ),
                 const SizedBox(width: 15),
@@ -76,7 +76,7 @@ class ChatRoomListItem extends StatelessWidget {
                           Row(
                             children: [
                               Text(
-                                chatRoom.matched.nickname,
+                                chatRoom.nickname,
                                 style: const TextStyle(
                                     fontWeight: FontWeight.bold, fontSize: 20),
                               ),
@@ -124,8 +124,8 @@ class ChatRoomListItem extends StatelessWidget {
                               ),
                             ),
                           ),
-                          if (unChecked > 0)
-                            NewMessageNotification(unChecked.toString()),
+                          if (chatRoom.unReadChatCount > 0)
+                            NewMessageNotification(chatRoom.unReadChatCount.toString()),
                         ],
                       ),
                     ],
@@ -146,7 +146,7 @@ class ChatRoomListItem extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(chatRoom.matched.nickname),
+          title: Text(chatRoom.nickname),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,

@@ -14,7 +14,6 @@ class ChatData {
 
   Map<String, dynamic> toMap() {
     return {
-      'chatId': chatId,
       'message': message,
       'sendTime': sendTime,
       // Todo : 'sender': "my_uuid 혹은, jwt 토큰 사용 시 필요 없음"
@@ -22,18 +21,15 @@ class ChatData {
     };
   }
 
-  factory ChatData.fromMap(
-      {required Map<String, dynamic> map, required bool isSender}) {
+  factory ChatData.fromJson(Map<String, dynamic> json) {
     return ChatData(
-      chatId: map['chatId'],
-      isSender: isSender,
-      message: map['message'],
-      sendTime: map['sendTime'],
-      isCheck: false,
+      chatId: json['chatId'],
+      isSender: (json['isSender'] == 1),
+      message: json['message'],
+      sendTime: json['sendTime'],
+      isCheck: (json['isCheck'] == 1),
     );
   }
-
-
 }
 
 List<ChatData> chatDataList = [

@@ -3,19 +3,25 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:wooyeon_flutter/models/data/chat_data.dart';
+import 'package:wooyeon_flutter/service/chat/chat_service.dart';
 import '../data/chat_room_data.dart';
 
 class ChatController extends GetxController {
+  // key : chatRoomId, value : ChatRoom
   RxMap<int, ChatRoom> chatRooms =
       {for (var room in chatRoomData) room.chatRoomId: room}.obs;
   RxMap<int, ChatRoom> newMatchedChatRooms =
       {for (var room in chatRoomData) room.chatRoomId: room}.obs;
+
   final ScrollController scrollController = ScrollController();
   final showButton = false.obs;
 
   @override
-  void onInit() {
+  Future<void> onInit() async {
     super.onInit();
+
+    // Todo : load chatRoom from API
+    //chatRooms.value = await ChatService.getChatRoomList();
     _updateNewMatchedChatRooms();
 
     scrollController.addListener(() {
@@ -33,6 +39,15 @@ class ChatController extends GetxController {
   void onClose() {
     scrollController.dispose();
     super.onClose();
+  }
+
+  /*
+      API 를 통해, 특정 chatRoomId 에 대한, 채팅 데이터 load
+   */
+  Future<void> loadChatData(int chatRoomId) async {
+    ChatRoom room = chatRooms[chatRoomId]!;
+    room.chat = await ChatService.getChatData(chatRoomId);
+    update();
   }
 
   /*
@@ -58,6 +73,7 @@ class ChatController extends GetxController {
           break;
         }
       }
+      room.unReadChatCount = 0;
       update();
     }
   }
@@ -130,8 +146,8 @@ class ChatController extends GetxController {
   /*
     pin to top 속성 toggle 하는 함수
   */
-  void togglePin(int chatRoomId){
-    if(chatRooms[chatRoomId] != null){
+  void togglePin(int chatRoomId) {
+    if (chatRooms[chatRoomId] != null) {
       chatRooms[chatRoomId]!.pinToTop = !chatRooms[chatRoomId]!.pinToTop;
       update();
     }
