@@ -70,7 +70,7 @@ Future<void> main() async {
     }
   });
 
-  // Terminate
+  // Terminate 에서 fcm 으로 실행
   FirebaseMessaging.instance
       .getInitialMessage()
       .then((RemoteMessage? message) {
@@ -135,9 +135,7 @@ void _showFlutterNotification(RemoteMessage message) {
           channel.id,
           channel.name,
           channelDescription: channel.description,
-          // TODO add a proper drawable resource to android, for now using
-          //      one that already exists in example app.
-          icon: 'launch_background',
+          icon: 'ic_launcher',
         ),
       ),
     );
@@ -158,7 +156,7 @@ _handleNavigate(RemoteMessage message){
     Get.find<NavigationBarState>().setInx(2);
   }
   else{
-    debugPrint("_handleNavigate : message.data is missing");
+    debugPrint("_handleNavigate() : message.data is missing");
   }
 }
 
