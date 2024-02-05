@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "334119766135",
+    "project_id": "wooyeon-fcm",
+    "storage_bucket": "wooyeon-fcm.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:334119766135:android:850fb033ed8335985ade72",
+        "android_client_info": {
+          "package_name": "com.wooyeon.yeon.wooyeon_flutter"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDti9NPvuxynb9kzqf_QWn2YvNPbsPgwJk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

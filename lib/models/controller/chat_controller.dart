@@ -1,19 +1,28 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:wooyeon_flutter/models/data/chat_data.dart';
+import 'package:wooyeon_flutter/service/chat/chat_service.dart';
 import '../data/chat_room_data.dart';
 
 class ChatController extends GetxController {
+  // key : chatRoomId, value : ChatRoom
   RxMap<int, ChatRoom> chatRooms =
       {for (var room in chatRoomData) room.chatRoomId: room}.obs;
-  RxList<ChatRoom> frequentChatting = List<ChatRoom>.empty(growable: true).obs;
+  RxMap<int, ChatRoom> newMatchedChatRooms =
+      {for (var room in chatRoomData) room.chatRoomId: room}.obs;
+
   final ScrollController scrollController = ScrollController();
   final showButton = false.obs;
 
   @override
-  void onInit() {
+  Future<void> onInit() async {
     super.onInit();
-    _updateFrequentChatting();
+
+    // Todo : load chatRoom from API
+    //chatRooms.value = await ChatService.getChatRoomList();
+    _updateNewMatchedChatRooms();
 
     scrollController.addListener(() {
       if (scrollController.position.atEdge) {
@@ -32,55 +41,63 @@ class ChatController extends GetxController {
     super.onClose();
   }
 
-  void addMessage(int chatRoomId, String message) {
+  /*
+      API 를 통해, 특정 chatRoomId 에 대한, 채팅 데이터 load
+   */
+  Future<void> loadChatData(int chatRoomId) async {
+    ChatRoom room = chatRooms[chatRoomId]!;
+    room.chat = await ChatService.getChatData(chatRoomId);
+    update();
+  }
+
+  /*
+      chatRoomId 를 통해, 해당 채팅방에 ChatData 추가
+   */
+  void addChatData(int chatRoomId, ChatData chatData) {
     ChatRoom room = chatRooms[chatRoomId]!;
 
-    int newChatId = room.chat == null || room.chat!.isEmpty
-        ? 0
-        : room.chat!.last.chatId + 1;
-
-    ChatData newChat = ChatData(
-        chatId: newChatId,
-        isSender: true,
-        message: message,
-        sendTime: DateTime.now(),
-        isCheck: true);
-
-    room.chat ??= <ChatData>[];
-
-    room.chat!.add(newChat);
+    room.chat.add(chatData);
     update();
 
-    _updateFrequentChatting();
+    _updateNewMatchedChatRooms();
   }
 
   void markChatsAsChecked(int chatRoomId) {
     ChatRoom? room = chatRooms[chatRoomId];
 
-    if (room != null && room.chat != null) {
-      for (var chat in room.chat!.reversed) {
+    if (room != null && room.chat.isNotEmpty) {
+      for (var chat in room.chat.reversed) {
         if (!chat.isCheck) {
           chat.isCheck = true;
         } else {
           break;
         }
       }
+      room.unReadChatCount = 0;
       update();
     }
   }
 
-  void _updateFrequentChatting() {
-    List<ChatRoom> sortedRooms = List.from(chatRooms.values);
-    sortedRooms.sort((a, b) => a.frequent.compareTo(b.frequent));
-    frequentChatting.value = sortedRooms.take(6).toList();
+  void _updateNewMatchedChatRooms() {
+    List<ChatRoom> rooms = List.from(chatRooms.values);
+    Map<int, ChatRoom> noChatRooms = {};
+
+    for (int i = 0; i < rooms.length; i++) {
+      if (rooms[i].chat.isEmpty) {
+        noChatRooms[i] = rooms[i];
+        log(rooms[i].chatRoomId.toString());
+      }
+    }
+
+    newMatchedChatRooms.value = noChatRooms;
   }
 
   bool isContinuous(int chatRoomId, int index) {
     ChatRoom? room = chatRooms[chatRoomId];
 
-    if (room != null && room.chat != null) {
+    if (room != null && room.chat.isNotEmpty) {
       if (index >= 1 &&
-          room.chat![index].isSender == room.chat![index - 1].isSender) {
+          room.chat[index].isSender == room.chat[index - 1].isSender) {
         if (diffDate(chatRoomId, index)) {
           return false;
         }
@@ -94,11 +111,11 @@ class ChatController extends GetxController {
   bool isDifferent(int chatRoomId, int index) {
     ChatRoom? room = chatRooms[chatRoomId];
 
-    if (room != null && room.chat != null) {
-      if (index == room.chat!.length - 1) {
+    if (room != null && room.chat.isNotEmpty) {
+      if (index == room.chat.length - 1) {
         return true;
-      } else if (index < room.chat!.length &&
-          room.chat![index].isSender == room.chat![index + 1].isSender) {
+      } else if (index < room.chat.length &&
+          room.chat[index].isSender == room.chat[index + 1].isSender) {
         return true;
       }
       return false;
@@ -109,20 +126,30 @@ class ChatController extends GetxController {
   bool diffDate(int chatRoomId, int index) {
     ChatRoom? room = chatRooms[chatRoomId];
 
-    if (room != null && room.chat != null) {
+    if (room != null && room.chat.isNotEmpty) {
       if (index == 0) {
         return true;
       } else {
-        final date1 = DateTime(room.chat![index].sendTime.year,
-            room.chat![index].sendTime.month, room.chat![index].sendTime.day);
+        final date1 = DateTime(room.chat[index].sendTime.year,
+            room.chat[index].sendTime.month, room.chat[index].sendTime.day);
         final date2 = DateTime(
-            room.chat![index - 1].sendTime.year,
-            room.chat![index - 1].sendTime.month,
-            room.chat![index - 1].sendTime.day);
+            room.chat[index - 1].sendTime.year,
+            room.chat[index - 1].sendTime.month,
+            room.chat[index - 1].sendTime.day);
 
         return date1 != date2;
       }
     }
     return false;
+  }
+
+  /*
+    pin to top 속성 toggle 하는 함수
+  */
+  void togglePin(int chatRoomId) {
+    if (chatRooms[chatRoomId] != null) {
+      chatRooms[chatRoomId]!.pinToTop = !chatRooms[chatRoomId]!.pinToTop;
+      update();
+    }
   }
 }
