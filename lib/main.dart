@@ -135,7 +135,7 @@ void _showFlutterNotification(RemoteMessage message) {
           channel.id,
           channel.name,
           channelDescription: channel.description,
-          icon: 'ic_launcher',
+          icon: 'mipmap/ic_launcher',
         ),
       ),
     );
