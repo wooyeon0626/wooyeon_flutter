@@ -17,7 +17,7 @@ class LoginByEmailPassword extends StatelessWidget {
   final String email;
 
   final RegExp passwordValidator = RegExp(
-    r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$',
+    r'^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z\d])[A-Za-z\d\S]{8,}$',
   );
 
   LoginByEmailPassword({super.key, required this.email});
