@@ -6,13 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'package:wooyeon_flutter/screens/login/login.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:uni_links/uni_links.dart';
 import 'package:wooyeon_flutter/models/pref.dart';
 import 'package:wooyeon_flutter/screens/chat/chat_detail.dart';
-import 'package:wooyeon_flutter/screens/login/register/register_email_input.dart';
-import 'package:wooyeon_flutter/screens/login/register/register_success.dart';
+import 'package:wooyeon_flutter/screens/login/login.dart';
 import 'package:wooyeon_flutter/service/fcm/fcm_service.dart';
 import 'package:wooyeon_flutter/service/login/auto_login/auth.dart';
 import 'package:wooyeon_flutter/service/login/register/email_auth.dart';
@@ -221,7 +218,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver{
               return const MainScreen();
             } else {
               // Login() 무시, MainScreen 우선 실행
-              return const MainScreen();//Login();
+              return const Login();
             }
           } else {
             return const Loading();

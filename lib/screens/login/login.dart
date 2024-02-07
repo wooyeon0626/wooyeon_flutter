@@ -9,6 +9,7 @@ import 'package:wooyeon_flutter/models/pref.dart';
 import 'package:wooyeon_flutter/screens/login/login/login_by_email.dart';
 import 'package:wooyeon_flutter/screens/login/register/register_email_input.dart';
 import 'package:wooyeon_flutter/screens/login/register/register_password_confirm.dart';
+import 'package:wooyeon_flutter/screens/login/register_profile/rp_name.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -118,7 +119,7 @@ class _LoginState extends State<Login> {
                 onPressed: () {
                   // TODO : REGISTER EMAIL INPUT
                   Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => RegisterEmailInput()));
+                      builder: (context) => RPName()/*RegisterEmailInput()*/));
                 },
                 child: const Text(
                   "회원가입",
