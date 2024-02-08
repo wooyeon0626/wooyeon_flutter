@@ -97,6 +97,12 @@ class _RegisterCodeWaitingState extends State<RegisterCodeWaiting> {
                 log("[EMAIL AUTH] SSE 이메일 인증 이미 성공");
                 Pref.instance.delete('emailVerify');
                 return _EmailAuthSuccess();
+              } else if (data['statusName'] != null &&
+                  data['statusName'] == 'ExistsUser') {
+                /// 회원 존재
+                log("[EMAIL AUTH] 회원");
+                Pref.instance.delete('emailVerify');
+                return _EmailAuthUserExists(widget.email);
               } else if (data['emailAuth'] != null &&
                   data['emailAuth'] == 'success') {
                 /// 이메일 인증 성공
@@ -112,6 +118,58 @@ class _RegisterCodeWaitingState extends State<RegisterCodeWaiting> {
               return const Center(child: Text('데이터가 없습니다.'));
             }
           },
+        ),
+      ),
+    );
+  }
+}
+
+class _EmailAuthUserExists extends StatelessWidget {
+  final String email;
+
+  const _EmailAuthUserExists(this.email);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: double.infinity,
+      color: Colors.white,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 40),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              "이미 가입된\n이메일입니다!",
+              style: TextStyle(
+                color: Palette.black,
+                fontSize: 32,
+                letterSpacing: -1,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 5, top: 10),
+              child: Text(
+                email,
+                style: const TextStyle(
+                  color: Palette.primary,
+                  fontSize: 20,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+            ),
+            const Padding(
+              padding: EdgeInsets.only(top: 60),
+              child: Text(
+                "이미 가입된 이메일이에요. 혹시 비밀번호를 잊으셨나요?",
+                style: TextStyle(
+                  color: Palette.grey,
+                  fontSize: 14,
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -258,7 +316,9 @@ class _EmailAuthSuccessState extends State<_EmailAuthSuccess> {
                             child: NextButton(
                               text: "다음",
                               isActive: buttonActive,
-                              nextPage: RegisterPasswordConfirm(password: passwordValue,),
+                              nextPage: RegisterPasswordConfirm(
+                                password: passwordValue,
+                              ),
                             ));
                       }),
                 ),

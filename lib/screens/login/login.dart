@@ -119,7 +119,7 @@ class _LoginState extends State<Login> {
                 onPressed: () {
                   // TODO : REGISTER EMAIL INPUT
                   Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => RPName()/*RegisterEmailInput()*/));
+                      builder: (context) => RegisterEmailInput()));
                 },
                 child: const Text(
                   "회원가입",
