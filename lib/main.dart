@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +13,6 @@ import 'package:wooyeon_flutter/service/fcm/fcm_service.dart';
 import 'package:wooyeon_flutter/service/login/auto_login/auth.dart';
 import 'package:wooyeon_flutter/service/login/register/email_auth.dart';
 import 'firebase_options.dart';
-
 import 'loading.dart';
 import 'models/controller/chat_controller.dart';
 import 'models/state/navigationbar_state.dart';
@@ -24,13 +22,10 @@ import 'config/palette.dart';
 late AndroidNotificationChannel channel;
 late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
-
 Future<void> main() async {
-  // WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
-  // FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
-
   WidgetsFlutterBinding.ensureInitialized();
-  final EmailAuth sseClient = Get.put(EmailAuth());
+  Get.put(EmailAuth());
+
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -217,7 +212,6 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver{
             if (snapshot.data == true) {
               return const MainScreen();
             } else {
-              // Login() 무시, MainScreen 우선 실행
               return const Login();
             }
           } else {

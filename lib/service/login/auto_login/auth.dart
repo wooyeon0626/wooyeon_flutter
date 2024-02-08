@@ -73,5 +73,6 @@ class Auth{
 
   Future<void> logout() async {
     await _tokenStorage.deleteToken();
+    await _tokenStorage.deleteToken(refresh: true);
   }
 }

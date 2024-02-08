@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
+import 'package:wooyeon_flutter/models/token_storage.dart';
 
 import '../../../config/config.dart';
 
@@ -33,11 +34,5 @@ class LoginService {
     const url = '${Config.domain}/auth/logout';
 
     return Future.value(http.Response('{"token": "dummy_token"}', 200));
-  }
-
-  void reissue() {
-    const url = '${Config.domain}/auth/reissue-token';
-
-    return;
   }
 }

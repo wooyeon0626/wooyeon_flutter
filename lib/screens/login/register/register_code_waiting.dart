@@ -180,7 +180,7 @@ class _EmailAuthSuccessState extends State<_EmailAuthSuccess> {
   final password = ValueNotifier<String>("");
 
   final RegExp passwordValidator = RegExp(
-    r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$',
+    r'^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z\d])[A-Za-z\d\S]{8,}$',
   );
 
   TextEditingController textFieldController = TextEditingController();
