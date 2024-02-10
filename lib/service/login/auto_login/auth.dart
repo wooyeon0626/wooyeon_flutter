@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'package:dio/dio.dart';
 
 import '../../../models/token_storage.dart';
@@ -43,6 +44,7 @@ import 'login_service.dart';
 //     await _tokenStorage.deleteToken();
 //   }
 // }
+enum LoginState {success, profile, fail}
 
 class Auth{
   final LoginService _apiClient = LoginService();
@@ -59,16 +61,22 @@ class Auth{
     }
   }
 
-  Future<bool> login(String email, String password) async {
+  Future<LoginState> login(String email, String password) async {
     Response? response = await _apiClient.login(email, password);
     if(response != null) {
-      if(response.statusCode == 200 || response.statusCode == 201 || response.statusCode == 202 || response.statusCode == 204) {
+      if(response.statusCode! >= 200 && response.statusCode! <= 206) {
         await _tokenStorage.saveToken(token: response.data['accessToken']);
         await _tokenStorage.saveToken(token: response.data['refreshToken'], refresh: true);
-        return true;
+        log("[LOGIN STATE] success");
+        return LoginState.success;
+      } else if(response.statusCode == 3000){
+        await _tokenStorage.saveToken(token: response.data['accessToken']);
+        await _tokenStorage.saveToken(token: response.data['refreshToken'], refresh: true);
+        log("[LOGIN STATE] profile");
+        return LoginState.profile;
       }
     }
-    return false;
+    return LoginState.fail;
   }
 
   Future<void> logout() async {

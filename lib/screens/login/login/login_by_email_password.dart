@@ -3,7 +3,9 @@ import 'dart:developer';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:wooyeon_flutter/screens/login/login.dart';
 import 'package:wooyeon_flutter/screens/login/login/login_success.dart';
+import 'package:wooyeon_flutter/screens/login/register_profile/rp_name.dart';
 import 'package:wooyeon_flutter/service/login/auto_login/auth.dart';
 
 import '../../../config/palette.dart';
@@ -123,16 +125,24 @@ class LoginByEmailPassword extends StatelessWidget {
                                     isActive: buttonActive,
                                     func: () async {
                                       final auth = Auth();
-                                      bool loginState = await auth.login(email, passwordValue);
+                                      LoginState loginState = await auth.login(email, passwordValue);
 
-                                      if(loginState) {
+                                      if(loginState == LoginState.success) {
                                         WidgetsBinding.instance
                                             .addPostFrameCallback((_) {
                                           navigateHorizontally(
                                               context: ctx,
                                               widget: LoginSuccess());
                                         });
-                                      } else {
+                                      } else if(loginState == LoginState.profile) {
+                                        WidgetsBinding.instance
+                                            .addPostFrameCallback((_) {
+                                          navigateHorizontally(
+                                              context: ctx,
+                                              widget: const RPName());
+                                        });
+                                      }
+                                      else {
                                         log("[ERROR] 로그인 실패 : loginState false");
                                       }
                                     },
