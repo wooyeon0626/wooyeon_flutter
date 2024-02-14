@@ -65,14 +65,22 @@ class Auth{
     Response? response = await _apiClient.login(email, password);
     if(response != null) {
       if(response.statusCode! >= 200 && response.statusCode! <= 206) {
-        await _tokenStorage.saveToken(token: response.data['accessToken']);
-        await _tokenStorage.saveToken(token: response.data['refreshToken'], refresh: true);
-        log("[LOGIN STATE] success");
-        return LoginState.success;
+        /// 나중에 수정하기
+        if(response.data['statusCode'] == 3000){
+          await _tokenStorage.saveToken(token: response.data['accessToken']);
+          await _tokenStorage.saveToken(token: response.data['refreshToken'], refresh: true);
+          log("[LOGIN STATE] profile : ${response.statusCode}");
+          return LoginState.profile;
+        } else {
+          await _tokenStorage.saveToken(token: response.data['accessToken']);
+          await _tokenStorage.saveToken(token: response.data['refreshToken'], refresh: true);
+          log("[LOGIN STATE] success : ${response.statusCode}");
+          return LoginState.success;
+        }
       } else if(response.statusCode == 3000){
         await _tokenStorage.saveToken(token: response.data['accessToken']);
         await _tokenStorage.saveToken(token: response.data['refreshToken'], refresh: true);
-        log("[LOGIN STATE] profile");
+        log("[LOGIN STATE] profile : ${response.statusCode}");
         return LoginState.profile;
       }
     }
