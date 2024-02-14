@@ -12,7 +12,7 @@ class Matched extends StatelessWidget {
       init: Get.find<ChatController>(),
       builder: (controller) => Padding(
         padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
-        child: ChatRoomListView(controller.newMatchedChatRooms),
+        child: ChatRoomListView(controller.newMatchedChatRoomList),
       ),
     );
   }

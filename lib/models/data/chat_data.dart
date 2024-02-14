@@ -23,11 +23,11 @@ class ChatData {
 
   factory ChatData.fromJson(Map<String, dynamic> json) {
     return ChatData(
-      chatId: json['chatId'],
-      isSender: (json['isSender'] == 1),
+      chatId: -1,//json['chatId'],
+      isSender: json['isSender'],
       message: json['message'],
-      sendTime: json['sendTime'],
-      isCheck: (json['isCheck'] == 1),
+      sendTime: DateTime.parse(json['sendTime']),
+      isCheck: (json['isChecked'] == 1),
     );
   }
 }

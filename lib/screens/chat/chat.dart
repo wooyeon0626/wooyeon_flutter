@@ -13,6 +13,13 @@ class Chat extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    debugPrint("--------------------------");
+    debugPrint("Chat build");
+    debugPrint("--------------------------");
+    final ChatController chatController = Get.find();
+    chatController.loadChatRooms();
+
     return GetBuilder<ChatController>(
       init: Get.find<ChatController>(),
       builder: (controller) => Padding(
@@ -28,7 +35,7 @@ class Chat extends StatelessWidget {
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.only(top: 20),
-                child: ChatRoomListView(controller.chatRooms),
+                child: ChatRoomListView(controller.chatRoomList),
               ),
             ),
           ],

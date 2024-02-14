@@ -36,6 +36,7 @@ Future<void> main() async {
   debugPrint('FCM Token: $fcmToken');
   if(fcmToken != null){
     // FCM 토큰 전송 to Backend
+    // Todo : 회원가입 완료 후, 전송해야,, 아니면 토큰 없어서 걍 튕겨버림,,
     FcmService.postFcmToken(fcmToken: fcmToken);
   }
 

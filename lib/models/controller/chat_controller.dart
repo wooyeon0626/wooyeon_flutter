@@ -10,19 +10,25 @@ class ChatController extends GetxController {
   // key : chatRoomId, value : ChatRoom
   RxMap<int, ChatRoom> chatRooms =
       {for (var room in chatRoomData) room.chatRoomId: room}.obs;
-  RxMap<int, ChatRoom> newMatchedChatRooms =
-      {for (var room in chatRoomData) room.chatRoomId: room}.obs;
+  RxList<ChatRoom> chatRoomList = <ChatRoom>[].obs;
+  RxList<ChatRoom> newMatchedChatRoomList = <ChatRoom>[].obs;
 
   final ScrollController scrollController = ScrollController();
   final showButton = false.obs;
 
+  Future<void> loadChatRooms() async {
+    // API 를 통해 chat room list 가져오기
+    chatRooms.value = await ChatService.getChatRoomList();
+    // newMatchedChatRooms update
+    _updateNewMatchedChatRooms();
+    // chatRoomList update
+    chatRoomList.value = List.from(chatRooms.values);
+    chatRoomList.sort(_compareChatOrder);
+  }
+
   @override
   Future<void> onInit() async {
     super.onInit();
-
-    // Todo : load chatRoom from API
-    //chatRooms.value = await ChatService.getChatRoomList();
-    _updateNewMatchedChatRooms();
 
     scrollController.addListener(() {
       if (scrollController.position.atEdge) {
@@ -80,16 +86,15 @@ class ChatController extends GetxController {
 
   void _updateNewMatchedChatRooms() {
     List<ChatRoom> rooms = List.from(chatRooms.values);
-    Map<int, ChatRoom> noChatRooms = {};
+    List<ChatRoom> noChatRoomList = [];
 
     for (int i = 0; i < rooms.length; i++) {
       if (rooms[i].chat.isEmpty) {
-        noChatRooms[i] = rooms[i];
-        log(rooms[i].chatRoomId.toString());
+        noChatRoomList.add(rooms[i]);
       }
     }
 
-    newMatchedChatRooms.value = noChatRooms;
+    newMatchedChatRoomList.value = noChatRoomList;
   }
 
   bool isContinuous(int chatRoomId, int index) {
@@ -150,6 +155,37 @@ class ChatController extends GetxController {
     if (chatRooms[chatRoomId] != null) {
       chatRooms[chatRoomId]!.pinToTop = !chatRooms[chatRoomId]!.pinToTop;
       update();
+    }
+  }
+
+  /*
+    chatRoom 순서 정렬, pinToTop 속성, chat 데이터 유무 및 마지막 채팅 시간 고려
+  */
+  int _compareChatOrder(ChatRoom a, ChatRoom b) {
+    if (a.pinToTop && b.pinToTop) {
+      if (a.chat.isEmpty && b.chat.isEmpty) {
+        return 0;
+      } else if (a.chat.isEmpty && b.chat.isNotEmpty) {
+        return 1;
+      } else if (a.chat.isNotEmpty && b.chat.isEmpty) {
+        return -1;
+      } else {
+        return b.chat.last.sendTime.compareTo(a.chat.last.sendTime); // 내림치순
+      }
+    } else if (a.pinToTop && b.pinToTop == false) {
+      return -1;
+    } else if (a.pinToTop == false && b.pinToTop) {
+      return 1;
+    } else {
+      if (a.chat.isEmpty && b.chat.isEmpty) {
+        return 0;
+      } else if (a.chat.isEmpty && b.chat.isNotEmpty) {
+        return 1;
+      } else if (a.chat.isNotEmpty && b.chat.isEmpty) {
+        return -1;
+      } else {
+        return b.chat.last.sendTime.compareTo(a.chat.last.sendTime); // 내림치순
+      }
     }
   }
 }

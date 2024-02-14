@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'package:http/http.dart' as http;
+import 'package:flutter/widgets.dart';
+import 'package:wooyeon_flutter/utils/jwt_utils.dart';
 import '../../config/config.dart';
 
 class FcmService {
@@ -9,21 +10,19 @@ class FcmService {
   // POST 요청 : FCM Token
   static Future<void> postFcmToken({required String fcmToken}) async {
     final url = Uri.parse('$baseUrl/fcm/token');
-    final response = await http.post(
-      url,
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
+    final response = await jwtPostRequest(
+      url: url,
+      body: <String, String>{
+        'fcm_token': fcmToken,
       },
-      body: jsonEncode(<String, String>{
-        'token': fcmToken,
-      }),
     );
 
-    if (response.statusCode >= 200 && response.statusCode <= 206) {
-      log("Post FCM Token success");
-      log(response.body);
-    } else {
-      log("Error with status code : ${response.statusCode}");
+    if (response == null) {
+      log('postFcmToken() : response == null 에러 발생');
+      throw Error();
     }
+
+    debugPrint(
+        'postFcmToken() response : ${jsonDecode(utf8.decode(response.bodyBytes)).toString()}');
   }
 }

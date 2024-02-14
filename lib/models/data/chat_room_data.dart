@@ -21,33 +21,23 @@ class ChatRoom {
   });
 
   factory ChatRoom.fromJson(Map<String, dynamic> json) {
-    final int chatRoomId = json['chatRoomId'];
-    final String nickname = json['nickname'];
+    final int chatRoomId = json['matchId'];
+    final String nickname = json['name'];
     final String profilePhoto = json['profilePhoto'];
     final bool pinToTop = (json['pinToTop'] == 1);
-    final String? recentMessage = json['recentMessage'];
-    final String? recentTimeString = json['recentTime'];
-    final bool? isSender =
-        (json['isSender'] == null) ? null : (json['isSender'] == 1);
+    final String? recentMessage = json['lastMessage'];
+    final String? recentTimeString = json['lastTime'];
     final int unReadChatCount = json['unReadChatCount'];
 
     List<ChatData> chat = [];
     // 최근 채팅이 존재하면,
-    if (recentMessage != null && recentTimeString != null && isSender != null) {
-      DateTime recentTime = DateTime(
-        int.parse(recentTimeString.split(',')[0]),
-        int.parse(recentTimeString.split(',')[1]),
-        int.parse(recentTimeString.split(',')[2]),
-        int.parse(recentTimeString.split(',')[3]),
-        int.parse(recentTimeString.split(',')[4]),
-        int.parse(recentTimeString.split(',')[5]),
-        int.parse(recentTimeString.split(',')[7]),
-      );
+    if (recentMessage != null && recentTimeString != null) {
+      DateTime recentTime = DateTime.parse(recentTimeString);
 
       chat = [
         ChatData(
           chatId: 0,
-          isSender: isSender,
+          isSender: true,
           message: recentMessage,
           sendTime: recentTime,
           isCheck: true,
