@@ -4,21 +4,22 @@ import 'package:wooyeon_flutter/widgets/chat/chatroom_list_item.dart';
 
 import '../../models/controller/chat_controller.dart';
 
-class ChatRoomListView extends StatelessWidget {
+class NewMatchedChatRoomListView extends StatelessWidget {
   final ChatController chatController;
 
-  const ChatRoomListView(this.chatController, {Key? key}) : super(key: key);
+  const NewMatchedChatRoomListView(this.chatController, {Key? key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Obx(
       () => ListView.builder(
-        itemCount: chatController.chatRoomList.length,
+        itemCount: chatController.newMatchedChatRoomList.length,
         itemBuilder: (context, index) {
           return Column(
             children: [
               ChatRoomListItem(
-                chatRoomId: chatController.chatRoomList[index].chatRoomId,
+                chatRoomId: chatController.newMatchedChatRoomList[index].chatRoomId,
               ),
               const SizedBox(
                 height: 20,

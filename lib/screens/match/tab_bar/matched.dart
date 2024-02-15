@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:wooyeon_flutter/models/controller/chat_controller.dart';
-import 'package:wooyeon_flutter/widgets/chat/chatroom_listview.dart';
+import 'package:wooyeon_flutter/widgets/chat/new_matched_chatroom_listview.dart';
 
 class Matched extends StatelessWidget {
   const Matched({super.key});
@@ -12,7 +12,7 @@ class Matched extends StatelessWidget {
       init: Get.find<ChatController>(),
       builder: (controller) => Padding(
         padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
-        child: ChatRoomListView(controller.newMatchedChatRoomList),
+        child: NewMatchedChatRoomListView(controller),
       ),
     );
   }
