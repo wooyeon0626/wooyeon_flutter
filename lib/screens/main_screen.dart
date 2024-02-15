@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:wooyeon_flutter/models/state/navigationbar_state.dart';
+import 'package:wooyeon_flutter/service/fcm/fcm_service.dart';
 import '../config/palette.dart';
 
 var iconList = [
@@ -26,6 +27,9 @@ class _MainScreen extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // FCM 발급 후, backend 에 전송
+    FcmService.postFcmToken();
+
     double bodyHeight = MediaQuery.of(context).size.height -
         AppBar().preferredSize.height -
         MediaQuery.of(context).padding.top -

@@ -9,7 +9,6 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:wooyeon_flutter/models/pref.dart';
 import 'package:wooyeon_flutter/screens/chat/chat_detail.dart';
 import 'package:wooyeon_flutter/screens/login/login.dart';
-import 'package:wooyeon_flutter/service/fcm/fcm_service.dart';
 import 'package:wooyeon_flutter/service/login/auto_login/auth.dart';
 import 'package:wooyeon_flutter/service/login/register/email_auth.dart';
 import 'firebase_options.dart';
@@ -31,14 +30,14 @@ Future<void> main() async {
   );
   await setupFlutterNotifications();
 
-  // FCM 토큰 받아오기 from Firebase
-  String? fcmToken = await FirebaseMessaging.instance.getToken();
-  debugPrint('FCM Token: $fcmToken');
-  if(fcmToken != null){
-    // FCM 토큰 전송 to Backend
-    // Todo : 회원가입 완료 후, 전송해야,, 아니면 토큰 없어서 걍 튕겨버림,,
-    FcmService.postFcmToken(fcmToken: fcmToken);
-  }
+  // // FCM 토큰 받아오기 from Firebase
+  // String? fcmToken = await FirebaseMessaging.instance.getToken();
+  // debugPrint('FCM Token: $fcmToken');
+  // if(fcmToken != null){
+  //   // FCM 토큰 전송 to Backend
+  //   // Todo : 회원가입 완료 후, 전송해야,, 아니면 토큰 없어서 걍 튕겨버림,,
+  //   FcmService.postFcmToken(fcmToken: fcmToken);
+  // }
 
   // Foreground 에서 FCM 메세지 수신 직후, 내부 알림 띄우기
   FirebaseMessaging.onMessage.listen((RemoteMessage? message) {
