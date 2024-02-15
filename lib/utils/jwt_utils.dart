@@ -86,7 +86,7 @@ Future<http.Response?> jwtPostRequest(
   header['Authorization'] = 'Bearer ${await tokenStorage.getToken()}';
 
   try {
-    final response = await http.post(url, headers: header, body: body);
+    final response = await http.post(url, headers: header, body: jsonEncode(body));
 
     if (response.statusCode >= 200 && response.statusCode <= 206) {
       return response;

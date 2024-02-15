@@ -7,6 +7,7 @@ import 'package:stomp_dart_client/stomp_config.dart';
 import 'package:stomp_dart_client/stomp_frame.dart';
 import 'package:wooyeon_flutter/models/data/chat_data.dart';
 import 'package:wooyeon_flutter/models/data/chat_room_data.dart';
+import 'package:wooyeon_flutter/models/token_storage.dart';
 import 'package:wooyeon_flutter/widgets/chat/bottom_sheet_textfield.dart';
 import 'package:wooyeon_flutter/widgets/chat/chat_listview.dart';
 import '../../config/config.dart';
@@ -26,13 +27,14 @@ class _ChatDetailState extends State<ChatDetail> {
   late ChatController chatController;
   StompClient? stompClient;
 
-  // Todo : socketUrl 확인
-  final socketUrl = '${Config.domain}/chat/stomp';
-
-  void onConnect(StompFrame frame) {
+  // on stomp connect 시 동작, subscribe callback 함수 등록
+  Future<void> onConnect(StompFrame frame) async {
     stompClient!.subscribe(
-      // Todo : destination 확인
-      destination: '/${widget.chatRoomId}',
+      destination: '/queue/chat/room',
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer ${await TokenStorage().getToken()}',
+      },
       // subscribe callback
       callback: (StompFrame frame) {
         if (frame.body != null) {
@@ -45,12 +47,45 @@ class _ChatDetailState extends State<ChatDetail> {
     );
   }
 
-  sendMessage(Map<String, dynamic> chatData) {
-    setState(() {
-      stompClient!.send(
-        // Todo : destination 확인
-          destination: '/${widget.chatRoomId}', body: json.encode(chatData));
-    });
+  // stomp 를 통해 message 전송
+  Future<void> sendMessage(
+      {required int roomId, required String message}) async {
+    stompClient!.send(
+      destination: '/chat/message',
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer ${await TokenStorage().getToken()}',
+      },
+      body: jsonEncode(
+        <String, dynamic>{
+          'roomId': roomId,
+          'message': message,
+        },
+      ),
+    );
+  }
+
+  // init stomp client, stomp 연결 시도
+  Future<void> initStompClient() async {
+    // init StompClient
+    if (stompClient == null) {
+      stompClient = StompClient(
+        config: StompConfig.sockJS(
+          url: '${Config.domain}/ws/chat',
+          onConnect: onConnect,
+          onWebSocketError: (dynamic error) => debugPrint(error.toString()),
+          stompConnectHeaders: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Authorization': 'Bearer ${await TokenStorage().getToken()}',
+          },
+          webSocketConnectHeaders: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Authorization': 'Bearer ${await TokenStorage().getToken()}',
+          },
+        ),
+      );
+      stompClient!.activate();
+    }
   }
 
   @override
@@ -65,17 +100,8 @@ class _ChatDetailState extends State<ChatDetail> {
       chatController.markChatsAsChecked(widget.chatRoomId);
     });
 
-    // init StompClient
-    if (stompClient == null) {
-      stompClient = StompClient(
-        config: StompConfig.sockJS(
-          url: socketUrl,
-          onConnect: onConnect,
-          onWebSocketError: (dynamic error) => debugPrint(error.toString()),
-        ),
-      );
-      stompClient!.activate();
-    }
+    // stomp 연결 시도
+    initStompClient();
   }
 
   @override
@@ -89,11 +115,10 @@ class _ChatDetailState extends State<ChatDetail> {
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: true,
-        appBar:
-        PreferredSize(
+        appBar: PreferredSize(
           preferredSize: const Size.fromHeight(130),
           child: SafeArea(
-            child:Row(
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Padding(
@@ -117,8 +142,7 @@ class _ChatDetailState extends State<ChatDetail> {
                         padding: const EdgeInsets.all(8.0),
                         child: CircleAvatar(
                           backgroundImage: NetworkImage(controller
-                              .chatRooms[widget.chatRoomId]!
-                              .profilePhoto),
+                              .chatRooms[widget.chatRoomId]!.profilePhoto),
                           radius: 36,
                         ),
                       ),
@@ -177,31 +201,25 @@ class _ChatDetailState extends State<ChatDetail> {
                   child: BottomSheetTextField(
                     hintText: '메시지를 입력하세요',
                     onSubmitted: (String message) {
-
                       /**/ //Todo : 해당 부분 삭제
-                      ChatRoom room = controller.chatRooms[widget.chatRoomId]!;
-
-                      int newChatId =
-                          room.chat.isEmpty ? 0 : room.chat.last.chatId + 1;
-
-                      ChatData newChat = ChatData(
-                          chatId: newChatId,
-                          isSender: true,
-                          message: message,
-                          sendTime: DateTime.now(),
-                          isCheck: true);
-
-                      controller.addChatData(widget.chatRoomId, newChat);
+                      // ChatRoom room = controller.chatRooms[widget.chatRoomId]!;
+                      //
+                      // int newChatId =
+                      //     room.chat.isEmpty ? 0 : room.chat.last.chatId + 1;
+                      //
+                      // ChatData newChat = ChatData(
+                      //     chatId: newChatId,
+                      //     isSender: true,
+                      //     message: message,
+                      //     sendTime: DateTime.now(),
+                      //     isCheck: true);
+                      //
+                      // controller.addChatData(widget.chatRoomId, newChat);
                       /**/
 
-                      // Map<String, dynamic> newChatToSend = {};
-                      // newChatToSend['message'] = message;
-                      // // Todo : DateTime 어떻게 보내고 받을지?
-                      // newChatToSend['sendTime'] = DateTime.now();
-                      // // Todo : sender의 uuid 보내주어야?, 아님 stomp message 헤더에 jwt 토큰?
-                      // newChatToSend['sender'] = 'my_uuid?';
-                      // // stompClient.send()
-                      // sendMessage(newChatToSend);
+                      /**/ //Todo : 해당 부분 추가
+                      sendMessage(roomId: widget.chatRoomId, message: message);
+                      /**/
                     },
                   ),
                 ),
