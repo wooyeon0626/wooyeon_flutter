@@ -6,7 +6,6 @@ import 'package:stomp_dart_client/stomp.dart';
 import 'package:stomp_dart_client/stomp_config.dart';
 import 'package:stomp_dart_client/stomp_frame.dart';
 import 'package:wooyeon_flutter/models/data/chat_data.dart';
-import 'package:wooyeon_flutter/models/data/chat_room_data.dart';
 import 'package:wooyeon_flutter/models/token_storage.dart';
 import 'package:wooyeon_flutter/widgets/chat/bottom_sheet_textfield.dart';
 import 'package:wooyeon_flutter/widgets/chat/chat_listview.dart';
@@ -51,16 +50,43 @@ class _ChatDetailState extends State<ChatDetail> {
   Future<void> sendMessage(
       {required int roomId, required String message}) async {
     stompClient!.send(
+      destination: '/app/chat/message',
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer ${await TokenStorage().getToken()}',
+      },
+      body: jsonEncode(
+        <String, dynamic>{'roomId': roomId, 'message': message, 'type': 'TALK'},
+      ),
+    );
+  }
+
+  // stomp 를 통해, backend 에게, ENTER 신호 전송
+  Future<void> enterStomp({required int roomId}) async {
+    stompClient!.send(
+      // Todo : '/app/chat/message', 바꿔야 동작함
       destination: '/chat/message',
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'Bearer ${await TokenStorage().getToken()}',
       },
       body: jsonEncode(
-        <String, dynamic>{
-          'roomId': roomId,
-          'message': message,
-        },
+        <String, dynamic>{'roomId': roomId, 'type': 'ENTER'},
+      ),
+    );
+  }
+
+  // stomp 를 통해, backend 에게, QUIT 신호 전송
+  Future<void> quitStomp({required int roomId}) async {
+    stompClient!.send(
+      // Todo : '/app/chat/message', 바꿔야 동작함
+      destination: '/chat/message',
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer ${await TokenStorage().getToken()}',
+      },
+      body: jsonEncode(
+        <String, dynamic>{'roomId': roomId, 'type': 'QUIT'},
       ),
     );
   }
@@ -88,6 +114,21 @@ class _ChatDetailState extends State<ChatDetail> {
     }
   }
 
+  Future<void> activateAndEnterStomp(int roomId) async {
+    // stomp 연결 시도
+    await initStompClient();
+    // stomp 를 통해, backend 에게, ENTER 신호 전송
+    await enterStomp(roomId: roomId);
+  }
+
+  Future<void> quitAndDeactivateStomp(
+      StompClient stompClient, int roomId) async {
+    // stomp 를 통해, backend 에게, QUIT 신호 전송
+    await quitStomp(roomId: roomId);
+    // stomp client 연결 해제
+    stompClient.deactivate();
+  }
+
   @override
   void initState() {
     super.initState();
@@ -100,14 +141,13 @@ class _ChatDetailState extends State<ChatDetail> {
       chatController.markChatsAsChecked(widget.chatRoomId);
     });
 
-    // stomp 연결 시도
-    initStompClient();
+    activateAndEnterStomp(widget.chatRoomId);
   }
 
   @override
   void dispose() {
     super.dispose();
-    stompClient!.deactivate();
+    quitAndDeactivateStomp(stompClient!, widget.chatRoomId);
   }
 
   @override
