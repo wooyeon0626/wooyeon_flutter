@@ -20,10 +20,6 @@ class TokenStorage {
     }
   }
 
-  Future<bool> isTokenExpired() async {
-    return false;
-  }
-
   Future<void> deleteToken({bool refresh = false}) async {
     if(!refresh) {
       await _storage.delete(key: 'access_token');

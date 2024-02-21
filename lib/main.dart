@@ -9,6 +9,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:wooyeon_flutter/models/pref.dart';
 import 'package:wooyeon_flutter/screens/chat/chat_detail.dart';
 import 'package:wooyeon_flutter/screens/login/login.dart';
+import 'package:wooyeon_flutter/screens/login/register_profile/rp_name.dart';
 import 'package:wooyeon_flutter/service/fcm/fcm_service.dart';
 import 'package:wooyeon_flutter/service/login/auto_login/auth.dart';
 import 'package:wooyeon_flutter/service/login/register/email_auth.dart';
@@ -34,7 +35,7 @@ Future<void> main() async {
   // FCM 토큰 받아오기 from Firebase
   String? fcmToken = await FirebaseMessaging.instance.getToken();
   debugPrint('FCM Token: $fcmToken');
-  if(fcmToken != null){
+  if (fcmToken != null) {
     // FCM 토큰 전송 to Backend
     FcmService.postFcmToken(fcmToken: fcmToken);
   }
@@ -65,9 +66,7 @@ Future<void> main() async {
   });
 
   // Terminate 에서 fcm 으로 실행
-  FirebaseMessaging.instance
-      .getInitialMessage()
-      .then((RemoteMessage? message) {
+  FirebaseMessaging.instance.getInitialMessage().then((RemoteMessage? message) {
     if (message != null) {
       if (message.notification != null) {
         debugPrint(message.notification!.title);
@@ -92,7 +91,7 @@ Future<void> setupFlutterNotifications() async {
     'high_importance_channel', // id
     'High Importance Notifications', // title
     description:
-    'This channel is used for important notifications.', // description
+        'This channel is used for important notifications.', // description
     importance: Importance.high,
   );
 
@@ -104,7 +103,7 @@ Future<void> setupFlutterNotifications() async {
   /// default FCM channel to enable heads up notifications.
   await flutterLocalNotificationsPlugin
       .resolvePlatformSpecificImplementation<
-      AndroidFlutterLocalNotificationsPlugin>()
+          AndroidFlutterLocalNotificationsPlugin>()
       ?.createNotificationChannel(channel);
 
   /// Update the iOS foreground notification presentation options to allow
@@ -137,23 +136,20 @@ void _showFlutterNotification(RemoteMessage message) {
 }
 
 // FCM message를 받아 적절한 페이지로 라우팅
-_handleNavigate(RemoteMessage message){
-  if(message.data['type'] == 'chat'){
+_handleNavigate(RemoteMessage message) {
+  if (message.data['type'] == 'chat') {
     // type == chat 이라면, massage.data['chatRoomId']를 통해 해당 채팅방으로 이동하도록
     Get.find<NavigationBarState>().setInx(3);
     // 이후 특정 채팅방으로 이동
     int chatRoomId = int.parse(message.data['chatRoomId']);
     Get.to(ChatDetail(chatRoomId: chatRoomId));
-  }
-  else if(message.data['type'] == 'match'){
+  } else if (message.data['type'] == 'match') {
     // type == match 라면, 바텀 네비게이션바의 '매치'로 이동하도록
     Get.find<NavigationBarState>().setInx(2);
-  }
-  else{
+  } else {
     debugPrint("_handleNavigate() : message.data is missing");
   }
 }
-
 
 class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -162,7 +158,7 @@ class MyApp extends StatefulWidget {
   State<MyApp> createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MyApp> with WidgetsBindingObserver{
+class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   final Auth _auth = Auth();
 
   @override
@@ -185,7 +181,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver{
 
     log("[STATE] $state, [EMAIL] $emailVerify");
 
-    if(state == AppLifecycleState.resumed && emailVerify != null) {
+    if (state == AppLifecycleState.resumed && emailVerify != null) {
       final EmailAuth emailAuth = Get.find();
       emailAuth.resendRequest();
     }
@@ -193,7 +189,6 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver{
 
   @override
   Widget build(BuildContext context) {
-
     return GetMaterialApp(
       initialBinding: BindingsBuilder(() {
         Get.put(ChatController());
@@ -205,12 +200,14 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver{
         primarySwatch: ColorService.createMaterialColor(Palette.primary),
         fontFamily: 'Pretendard',
       ),
-      home: FutureBuilder<bool>(
+      home: FutureBuilder<LoginState>(
         future: _auth.autoLogin(),
-        builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+        builder: (BuildContext context, AsyncSnapshot<LoginState> snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            if (snapshot.data == true) {
+            if (snapshot.data == LoginState.success) {
               return const MainScreen();
+            } else if (snapshot.data == LoginState.profile) {
+              return const RPName();
             } else {
               return const Login();
             }

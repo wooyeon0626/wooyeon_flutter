@@ -30,6 +30,7 @@ class LoginService {
     }
   }
 
+  /// 로그아웃 API && 로컬 로그아웃
   Future<http.Response> logout(String phone, String code) {
     const url = '${Config.domain}/auth/logout';
 
