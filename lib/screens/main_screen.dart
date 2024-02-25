@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
@@ -5,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:wooyeon_flutter/models/state/navigationbar_state.dart';
 import '../config/palette.dart';
+import '../service/recommend/gps_service.dart';
 
 var iconList = [
   EvaIcons.compass,
@@ -23,6 +26,21 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreen extends State<MainScreen> {
   final controller = Get.put(NavigationBarState());
+
+  void initGpsInfo() async {
+    bool state = await GpsService().sendGps();
+    if(state) {
+      log('The GPS was sent successfully');
+    } else {
+      log('There was a problem sending GPS.');
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    initGpsInfo();
+  }
 
   @override
   Widget build(BuildContext context) {
