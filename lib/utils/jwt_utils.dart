@@ -29,14 +29,14 @@ Future<http.Response?> jwtGetRequest(
   header ??= <String, String>{};
 
   header['Content-Type'] = 'application/json; charset=UTF-8';
-  header['Authorization'] = 'Bearer ${tokenStorage.getToken()}';
+  header['Authorization'] = 'Bearer ${await tokenStorage.getToken()}';
 
   try {
     final response = await http.get(url, headers: header);
 
     if (response.statusCode >= 200 && response.statusCode <= 206) {
       return response;
-    } else if (response.statusCode == 4004) {
+    } else if (response.statusCode == 4004) { // TODO : response.body['statusCode'] == 4004로 수정 필요
       // access token 만료
       final reissueUrl = Uri.parse('${Config.domain}/auth/reissue-token');
 
@@ -81,8 +81,8 @@ Future<http.Response?> jwtPostRequest(
 
   header ??= <String, String>{};
 
-  header['Content-Type'] = 'application/json; charset=UTF-8';
-  header['Authorization'] = 'Bearer ${tokenStorage.getToken()}';
+  //header['Content-Type'] = 'application/json; charset=UTF-8';
+  header['Authorization'] = 'Bearer ${await tokenStorage.getToken()}';
 
   try {
     final response = await http.post(url, headers: header, body: body);
