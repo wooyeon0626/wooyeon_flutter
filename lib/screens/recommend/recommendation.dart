@@ -1,8 +1,10 @@
 import 'dart:developer' as dev;
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:swipable_stack/swipable_stack.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:wooyeon_flutter/service/recommend/gps_service.dart';
 import 'package:wooyeon_flutter/service/recommend/recommend_service.dart';
 import 'package:wooyeon_flutter/widgets/recommend/background_profile.dart';
 import 'package:wooyeon_flutter/widgets/recommend/card_controller.dart';
@@ -77,10 +79,20 @@ class _RecommendationState extends State<Recommendation> {
     }
   }
 
+  void initGpsInfo() async {
+    bool state = await GpsService().sendGps();
+    if(state) {
+      log('The GPS was sent successfully');
+    } else {
+      log('There was a problem sending GPS.');
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     // ToDo : fetch RecommendProfileList from API
+    initGpsInfo();
     initRecommendProfiles();
     controller = SwipableStackController()..addListener(_listenController);
   }
