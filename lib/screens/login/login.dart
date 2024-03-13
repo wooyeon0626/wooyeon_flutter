@@ -7,6 +7,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:wooyeon_flutter/config/palette.dart';
 import 'package:wooyeon_flutter/models/pref.dart';
 import 'package:wooyeon_flutter/screens/login/login/login_by_email.dart';
+import 'package:wooyeon_flutter/screens/login/login/login_by_phone.dart';
 import 'package:wooyeon_flutter/screens/login/register/register_email_input.dart';
 import 'package:wooyeon_flutter/screens/login/register/register_password_confirm.dart';
 import 'package:wooyeon_flutter/screens/login/register_profile/rp_name.dart';
@@ -19,6 +20,8 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  final bool state = false;
+
   Future<void> _profileDataLoad() async {
     await Pref.instance.loadProfile();
     log("Profile loaded.");
@@ -72,47 +75,89 @@ class _LoginState extends State<Login> {
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 40),
-              child: InkWell(
-                onTap: () {
-                  //todo: access token이 있는지 없는지 체크??
-                  Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => LoginByEmail()));
-                },
-                child: Container(
-                  height: 70,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: Colors.transparent,
-                    border: const Border.fromBorderSide(
-                      BorderSide(
-                        color: Colors.white,
-                        width: 1.5,
-                      ),
-                    ),
-                    borderRadius: BorderRadius.circular(100),
-                  ),
-                  child: const Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        EvaIcons.emailOutline,
-                        color: Colors.white,
-                      ),
-                      SizedBox(width: 10),
-                      Text(
-                        '이메일로 로그인',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
+            state
+                ? Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 40),
+                    child: InkWell(
+                      onTap: () {
+                        //todo: access token이 있는지 없는지 체크??
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => LoginByEmail()));
+                      },
+                      child: Container(
+                        height: 70,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: Colors.transparent,
+                          border: const Border.fromBorderSide(
+                            BorderSide(
+                              color: Colors.white,
+                              width: 1.5,
+                            ),
+                          ),
+                          borderRadius: BorderRadius.circular(100),
+                        ),
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              EvaIcons.emailOutline,
+                              color: Colors.white,
+                            ),
+                            SizedBox(width: 10),
+                            Text(
+                              '이메일로 로그인',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                    ],
+                    ),
+                  )
+                : Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 40),
+                    child: InkWell(
+                      onTap: () {
+                        //todo: access token이 있는지 없는지 체크??
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => const LoginByPhone()));
+                      },
+                      child: Container(
+                        height: 70,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: Colors.transparent,
+                          border: const Border.fromBorderSide(
+                            BorderSide(
+                              color: Colors.white,
+                              width: 1.5,
+                            ),
+                          ),
+                          borderRadius: BorderRadius.circular(100),
+                        ),
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              EvaIcons.phoneOutline,
+                              color: Colors.white,
+                            ),
+                            SizedBox(width: 10),
+                            Text(
+                              '전화번호로 로그인',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
-                ),
-              ),
-            ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 20),
               child: TextButton(
