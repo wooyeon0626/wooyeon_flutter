@@ -1,15 +1,12 @@
+import 'dart:convert';
 import 'dart:developer';
 
-import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:wooyeon_flutter/config/config.dart';
 import 'package:wooyeon_flutter/utils/jwt_utils.dart';
 
 class GpsService {
-  Dio dio = Dio();
-
   Future<bool> sendGps() async {
     const url = '${Config.domain}/users/profile/gps';
 
@@ -18,14 +15,19 @@ class GpsService {
 
       log("[gpsLocation] ${position.latitude}|${position.longitude}");
 
+      // String jsonBody = json.encode(
+      //     {"gpsLocation": "${position.latitude}|${position.longitude}"});
+
       final response = await jwtPostRequest(
           url: Uri.parse(url),
-          body: {'gpsLocation': "${position.latitude}|${position.longitude}"});
+          body: "${position.latitude}|${position.longitude}");
 
       if (response == null) {
         log("[gpsService] response null");
         return false;
       } else if (response.statusCode >= 200 && response.statusCode <= 206) {
+        final String responseBody = jsonDecode(utf8.decode(response.bodyBytes));
+        log('[SEND GPS RESPONSE BODY] $responseBody');
         return true;
       } else {
         return false;

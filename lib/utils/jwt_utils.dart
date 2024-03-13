@@ -76,12 +76,12 @@ Future<http.Response?> jwtGetRequest(
 }
 
 Future<http.Response?> jwtPostRequest(
-    {Map<String, String>? header, required Uri url, required Map<String, String> body}) async {
+    {Map<String, String>? header, required Uri url, required dynamic body}) async {
   TokenStorage tokenStorage = TokenStorage();
 
   header ??= <String, String>{};
 
-  //header['Content-Type'] = 'application/json; charset=UTF-8';
+  header['Content-Type'] = 'application/json; charset=UTF-8';
   header['Authorization'] = 'Bearer ${await tokenStorage.getToken()}';
 
   try {
@@ -118,10 +118,10 @@ Future<http.Response?> jwtPostRequest(
         Get.offAll(const Login());
       }
     } else {
-      log('만료 이외의 JWT 인증 실패');
+      log('만료 이외의 JWT 인증 실패 : ${response.statusCode}');
       await tokenStorage.deleteToken();
       await tokenStorage.deleteToken(refresh: true);
-      Get.offAll(const Login());
+      Get.offAll(() => const Login());
     }
   } catch (e) {
     log('[JWT UTIL FUNC] 에러 발생: $e');
