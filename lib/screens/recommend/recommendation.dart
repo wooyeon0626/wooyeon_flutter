@@ -22,7 +22,9 @@ class Recommendation extends StatefulWidget {
 }
 
 class _RecommendationState extends State<Recommendation> {
-  List<RecommendProfileModel> recommendProfiles = [];
+  List<RecommendProfileModel> recommendProfiles = [
+    RecommendProfileModel(userCode: 'testuser', gender: 'M', nickname: '우연', birthday: '20000101', locationInfo: 'LOC', gpsLocationInfo: 'GPS', authenticatedAccount: true, profilePhoto: ['https://i.imgur.com/saNUcyy.png'], intro: '우연 어플리케이션 테스트 프로필입니다.')
+  ];
   bool isLoading = true;
   int swipedIndex = -1;
   late final SwipableStackController controller;
@@ -31,7 +33,7 @@ class _RecommendationState extends State<Recommendation> {
 
   // init recommendProfiles from API
   void initRecommendProfiles() async {
-    recommendProfiles = await RecommendService.getRecommendProfileList();
+    //recommendProfiles = await RecommendService.getRecommendProfileList();
     isLoading = false;
     setState(() {});
   }
