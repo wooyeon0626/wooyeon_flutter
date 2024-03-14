@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 import 'package:dio/dio.dart';
+import 'package:get/get.dart' hide Response;
 
 import '../../../config/config.dart';
 import '../../../models/token_storage.dart';
@@ -10,7 +11,7 @@ enum LoginState { success, profile, fail }
 
 class Auth {
   final LoginService _apiClient = LoginService();
-  final TokenStorage _tokenStorage = TokenStorage();
+  final TokenStorage _tokenStorage = Get.find();
 
   /// 자동 로그인 구현 필요
   Future<LoginState> autoLogin() async {

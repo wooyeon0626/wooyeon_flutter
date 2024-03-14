@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:wooyeon_flutter/models/pref.dart';
+import 'package:wooyeon_flutter/models/token_storage.dart';
 import 'package:wooyeon_flutter/screens/chat/chat_detail.dart';
 import 'package:wooyeon_flutter/screens/login/login.dart';
 import 'package:wooyeon_flutter/screens/login/register_profile/rp_name.dart';
@@ -26,6 +27,7 @@ late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Get.put(EmailAuth());
+  Get.put(TokenStorage());
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,

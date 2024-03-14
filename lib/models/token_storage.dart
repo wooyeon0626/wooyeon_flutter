@@ -1,7 +1,8 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:get/get.dart';
 import 'package:jwt_decode/jwt_decode.dart';
 
-class TokenStorage {
+class TokenStorage extends GetxController {
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
 
   Future<void> saveToken({required String token, bool refresh = false}) async {
